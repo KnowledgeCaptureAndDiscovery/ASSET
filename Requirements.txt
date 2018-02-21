@@ -1,0 +1,9 @@
+    Be able to do workflow sketches, connecting different components together in an eye-catchy way.
+    Each box should be able to connect to any of the other boxes.
+    Each box should be easy to delete from the sketch. When a box is deleted, the arrows that connect to it are deleted too.
+    There cannot be arrows that connect no steps. That is, we are dealing with a connected graph.
+    In the beginning, we will be assuming the graph to be acyclic too.
+    You should be able to drag and drop items from the lateral and lower menus into the steps of the workflow.
+    The menus should be able to be loaded from either a local file or an external web service.
+    Users should be able to import/export previous sketches and their metadata.
+    You should be able to add comments/annotations to the steps of the sketch.
