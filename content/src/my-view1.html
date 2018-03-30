@@ -10,39 +10,117 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/gestures.html">
 
 <dom-module id="my-view1">
   <template>
-    <div class="options">
+    <style>
+      #sides{
+      margin:0;
+      }
+      #left{
+      float:left;
+      width:20%;
+      overflow:hidden;
+      }
+      #right{
+      float:left;
+      width:80%;
+      overflow:hidden;
+      }
+      #footer{
+        float:left;
+        height:80%;
+        overflow:hidden;
+      }
 
-      <input type = "button" value = "Demo Button 1">
-      <input type = "button" value = "Demo Button 2">
-      <input type = "button" value = "Demo Button 3">
-      <input type = "button" value = "Demo Button 4">
-      <input type = "button" value = "Demo Button 5">
+</style>
+    <div id="top">
+      <div id="left">
 
+        <paper-icon-button toggles raised class="green" value = "Common Tasks" on-click="displayFooter1"> </paper-icon-button><br>
+        <paper-icon-button toggles raised class="green" value = "Fragments" on-click="displayFooter2"></paper-icon-button> <br>
+        <paper-icon-button toggles raised class="green" value = "Earthcube" on-click="displayFooter3"></paper-icon-button> <br>
+        <paper-icon-button toggles raised class="green" value = "Various Canvas" on-click="displayFooter4"> </paper-icon-button><br>
+        <paper-icon-button toggles raised class="green" value = "Blank Canvas" on-click="displayFooter5"></paper-icon-button>
+
+      </div>
+
+      <div id = "right">
+        <!-- CANVAS WILL COME HERE -->
+      </div>
     </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-
-    <div class ="canvas">
-      ______________________________________
-      <br>
-      <input type="text">
-
+    <div id = "footer">
+<!-- 
+        return stuff here on user clicks -->
+              <!-- <img id="search-icon"
+          src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" /> -->
+          <dom-repeat items ="{{tasks}}" as="task">
+            <template>
+              <div class="task">
+                <input type="text" value ="{{task.name}}">
+              </div>
+            </template>
+          </dom-repeat>
     </div>
+
+
   </template>
 
   <script>
     class MyView1 extends Polymer.Element {
       static get is() { return 'my-view1'; }
+      static get properties(){
+        return{
+          tasks:{
+            type: Array,
+            value : () => []
+          }
+        }
+      }
+
+      displayFooter1(){
+        const newValue={
+          name: 'button one was clicked'
+        };
+
+        this.push('tasks', newTask)
+      }
+
+      displayFooter2(){
+        const newValue={
+          name: 'button two was clicked'
+        };
+
+        this.push('tasks', newTask)
+      }
+
+      displayFooter3(){
+        const newValue={
+          name: 'button three was clicked'
+        };
+
+        this.push('tasks', newTask)
+      }
+
+      displayFooter4(){
+        const newValue={
+          name: 'button four was clicked'
+        };
+
+        this.push('tasks', newTask)
+      }
+
+      displayFooter5(){
+        const newValue={
+          name: 'button five was clicked'
+        };
+
+        this.push('tasks', newTask)
+      }
     }
 
     window.customElements.define(MyView1.is, MyView1);
