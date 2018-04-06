@@ -19,13 +19,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         padding: 10px;
       }
+
     </style>
 
     <div class="card">
-      <div class="circle">3</div>
-      <h1>View Three</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <canvas id="myCanvas1" width="80" height="50" style="border:1px solid #000000;"></canvas>
+
+
+      
+      <canvas id="myCanvas2" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas3" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas4" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas5" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas6" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas7" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas8" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas9" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas10" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas11" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas12" width="80" height="50" style="border:1px solid #000000;"></canvas>
     </div>
   </template>
 
@@ -35,5 +47,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     window.customElements.define(MyView3.is, MyView3);
+
+    var canvas = document.querySelector('body /deep/ #myCanvas');
+    var ctx = canvas.getContext("2d");
+    ctx.font = "30px Arial";
+    ctx.fillText("Hello World",10,50);
+
   </script>
 </dom-module>

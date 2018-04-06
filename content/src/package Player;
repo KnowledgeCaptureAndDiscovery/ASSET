@@ -1,0 +1,238 @@
+package Player;
+import NetworkedGameSetup.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+import NetworkedGameSetup.ChatMessage;
+
+public class Player {
+
+	private ObjectInputStream ois;
+	private ObjectOutputStream oos;
+	Socket s;
+	
+	public Player() {
+		
+			Scanner scan = null; 
+			Socket s;
+	
+			while(true) {
+				try {
+					scan = new Scanner(System.in);
+					System.out.print("Enter IP address: ");
+					String ip = scan.nextLine();
+					System.out.print("Enter port: ");
+					int port = scan.nextInt();
+					scan.nextLine();
+					
+					if(port >= 1024 && port <= 65535) {	
+						s = new Socket(ip, port);
+						break;
+					}
+					
+					System.out.println("Invalid parameters.");
+					continue;
+					
+				} catch (NumberFormatException ex) {
+					System.out.println("Please enter a valid port");
+					continue;
+				} catch (IOException ioe) {
+					System.out.println("Invalid parameters.");
+					continue;
+				} catch(InputMismatchException ex) {
+					System.out.println("Invalid input type.");
+					continue;
+				}
+			}
+			try {
+				ois = new ObjectInputStream(s.getInputStream());
+				oos = new ObjectOutputStream(s.getOutputStream());
+				
+				System.out.println("Welcome to BlackJack!");
+				System.out.println("Please choose from one of the options below");
+				System.out.println("1) Start Game");
+				System.out.println("2) Join Game");
+				
+				while(true) {
+				
+					String choice = scan.nextLine();
+
+					if(choice.equals("1")) {
+						System.out.print("Enter number of players: ");
+						while(true) {
+							int numOfPlayers = scan.nextInt();
+							scan.nextLine();
+							if(numOfPlayers>=1 && numOfPlayers<=3) {
+								System.out.print("Enter game name: ");
+								while(true) {
+									String gameName = scan.nextLine();
+									ChatMessage gn = new ChatMessage("checkGameName", gameName);
+									oos.writeObject(gn);
+									ChatMessage num = new ChatMessage("num", Integer.toString(numOfPlayers));
+									oos.writeObject(num);
+									oos.flush();
+									ChatMessage validationResponse = null;
+									try {									
+										validationResponse = (ChatMessage) ois.readObject(); //here
+									} catch (ClassNotFoundException ex) {
+										
+									}
+									
+									if(validationResponse.getMessage().equals("true")) {
+										System.out.print("Enter Username: ");
+										while(true) {
+											String username = scan.nextLine();
+											ChatMessage un = new ChatMessage("checkUserName", username);
+											oos.writeObject(un);
+											oos.flush();
+											ChatMessage userValidationResponse = null;
+											try {
+												userValidationResponse = (ChatMessage) ois.readObject();
+											} catch (ClassNotFoundException ex) {
+												
+											}
+											if(userValidationResponse.getMessage().equals("true")) {
+												if(numOfPlayers!=1) {
+													System.out.println("Waiting for " + (numOfPlayers-1) + " more to join...");
+												}
+												else {
+													ChatMessage start = new ChatMessage("start", username);
+													oos.writeObject(start);
+													oos.flush();
+													this.run();
+												}
+												this.run();
+											} else {
+												System.out.print("Username already in use, enter again: ");
+												continue;
+											}
+											break;
+										}
+									} else {
+										System.out.print("Game with same name already exists, enter new name: ");
+										continue;
+									}
+									break;
+								}
+							} else {
+								System.out.print("Invalid input. Enter again: "); continue;
+							}
+							break;
+						}
+					} else if(choice.equals("2")) {
+						System.out.print("Enter name of game to join: ");
+						while(true) {
+							String gamename = scan.nextLine();
+							ChatMessage gn = new ChatMessage("joinUserToGame", gamename);
+							oos.writeObject(gn);
+							oos.flush();
+							ChatMessage gameValidationResponse = null;
+							try {
+								gameValidationResponse = (ChatMessage) ois.readObject();
+							} catch (ClassNotFoundException ex) {
+								
+							}
+							if(gameValidationResponse.getMessage().equals("true")) {
+								System.out.print("Enter Username: ");
+								while(true) {
+									String username = scan.nextLine();
+									ChatMessage un = new ChatMessage("checkUserName", username);
+									oos.writeObject(un);
+									oos.flush();
+									ChatMessage userValidationResponse = null;
+									try {
+										userValidationResponse = (ChatMessage) ois.readObject();
+									} catch (ClassNotFoundException ex) {
+										
+									}
+									if(userValidationResponse.getMessage().equals("true")) {
+										System.out.println("The game will start shortly.");
+										ChatMessage start = new ChatMessage("start", username);
+										oos.writeObject(start);
+										oos.flush();
+										this.run();
+									} else {
+										System.out.print("Username already in use, enter again: ");
+										continue;
+									}
+									break;
+								}
+							} else {
+								System.out.print("Game either not found or full, enter again: ");
+								continue;
+							}
+							break;
+						}
+					} else {
+						System.out.print("Invalid choice, enter again: "); continue;
+					}
+					
+					break;
+				}
+					
+			} catch(IOException ex) {
+				
+			}
+	}
+	
+	public void sendMessageToServerThread(ChatMessage cm) {
+		try {
+			oos.writeObject(cm);
+			oos.flush();
+		} catch (IOException ioe) {
+			System.out.println("ioe: " + ioe.getMessage());
+		}
+	}
+	
+	public void run() {
+		try {
+			Scanner scanner = new Scanner(System.in);
+			while(true) {
+				// Messages sent back from the corresponding server thread
+				ChatMessage cm = (ChatMessage) ois.readObject();
+				// System.out.println(cm.getMessage());	
+				// Just read the above message and act accordingly like based on the type 
+				// In most case its just going to be print and take some form of input
+				// Option 1
+				if(cm.getType().equals("onlyPrint")) {
+					System.out.println(cm.getMessage());
+				}
+				// Option 2
+				if(cm.getType().equals("getBet")) {
+					System.out.print(cm.getMessage());
+					String input = scanner.nextLine();
+					System.out.println("You bet " + input + " chips.");
+					ChatMessage betAmount = new ChatMessage("bet", input);
+					sendMessageToServerThread(betAmount);
+				}
+				// Option 3
+				if(cm.getType().equals("getInput")) {
+					System.out.print(cm.getMessage());
+					String input = scanner.nextLine();
+					// System.out.println("You bet " + input + " chips.");
+					ChatMessage hitOrStay = new ChatMessage("takeInput", input);
+					sendMessageToServerThread(hitOrStay);
+				}
+				if(cm.getType().equals("close")) {
+					System.out.print(cm.getMessage());
+					return;
+				}
+			
+			}
+		} catch (IOException ioe) {
+			System.out.println("ioe in Player.run(): " + ioe.getMessage());
+		} catch (ClassNotFoundException cnfe) {
+			System.out.println("cnfe: " + cnfe.getMessage());
+		}
+	}
+	
+	public static void main(String [] args) {
+		System.out.println("Welcome to Black Jack!");
+		Player player = new Player();
+	}
+	
+}

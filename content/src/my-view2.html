@@ -10,30 +10,209 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/polymer/lib/utils/gestures.html">
+<link rel="lazy-import" href="icon-row1.html">
 
 <dom-module id="my-view2">
   <template>
-    <style include="shared-styles">
-      :host {
-        display: block;
-
-        padding: 10px;
+    <style>
+      #sides{
+      margin:0;
       }
-    </style>
+      #left{
+      float:left;
+      width:20%;
+      overflow:hidden;
+      }
+      #right{
+      float:left;
+      width:80%;
+      overflow:hidden;
+      }
+      #footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: red;
+      color: white;
+      text-align: center;
+}
 
-    <div class="card">
-      <div class="circle">2</div>
-      <h1>View Two</h1>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.</p>
-      <p>Id nam odio natum malorum, tibique copiosae expetenda mel ea.Detracto suavitate repudiandae no eum. Id adhuc minim soluta nam.Id nam odio natum malorum, tibique copiosae expetenda mel ea.</p>
+</style>
+    <div id="top">
+      <div id="left">
+
+        <input type="button" value = "Common Tasks" on-click="displayFooter1"> <br>
+        <input type="button" value = "Fragments" on-click="displayFooter2"> <br>
+        <input type="button" value = "Earthcube" on-click="displayFooter3"> <br>
+        <input type="button" value = "Various Canvas" on-click="displayFooter4"> <br>
+        <input type="button" value = "Blank Canvas" on-click="displayFooter5"> <br>
+      </div>
+
+      <div id = "right">
+        CANVAS WILL COME HERE
+      </div>
     </div>
+
+    <div id = "footer">
+<!-- 
+        return stuff here on user clicks -->
+              <!-- <img id="search-icon"
+          src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" /> -->
+          <dom-repeat items ="{{tasks}}" as="task">
+            <template>
+              <div class="task">
+                <input type="text" value ="{{task.name}}">
+              </div>
+            </template>
+          </dom-repeat>
+    </div>
+
   </template>
 
   <script>
-    class MyView2 extends Polymer.Element {
+
+    $.getJSON("sample.json", function (data) {
+    $.each(data, function (index, value) {
+       console.log(value);
+    });
+    });
+
+    //var obj = JSON.parse('{ "CommonTasks":["Common Task value 1","Common Task value 2","Common Task value 3","Common Task value 4","Common Task value 5"], "Fragments":["Fragments value 1","Fragments value 2","Fragments value 3","Fragments value 4","Fragments value 5"], "Earthcube":["Earthcube value 1","Earthcube value 2","Earthcube value 3","Earthcube value 4","Earthcube value 5"], "VariousCanvas":["Various Canvas value 1","Various Canvas value 2","Various Canvas value 3","Various Canvas value 4","Various Canvas value 5"], "BlankCanvas":["Blank Canvas value 1","Blank Canvas value 2","Blank Canvas value 3","Blank Canvas value 4","Blank Canvas value 5"]}');
+
+    var obj = JSON.parse(data);
+
+    class MyView1 extends Polymer.Element {
       static get is() { return 'my-view2'; }
+      static get properties(){
+        return{
+          tasks:{
+            type: HTMLCanvasElement,
+            value : () => []
+          }
+        }
+      }
+
+      displayFooter1(){
+        const newValue1={
+          name: obj.CommonTasks[0]
+        };
+        this.push('tasks', newValue1)
+        const newValue2={
+          name: obj.CommonTasks[1]
+        };
+        this.push('tasks', newValue2)
+        const newValue3={
+          name: obj.CommonTasks[2]
+        };
+        this.push('tasks', newValue3)
+        const newValue4={
+          name: obj.CommonTasks[3]
+        };
+        this.push('tasks', newValue4)
+        const newValue5={
+          name: obj.CommonTasks[4]
+        };
+        this.push('tasks', newValue5)
+      }
+
+      displayFooter2(){
+        const newValue1={
+          name: obj.Fragments[0]
+        };
+        this.push('tasks', newValue1)
+        const newValue2={
+          name: obj.Fragments[1]
+        };
+        this.push('tasks', newValue2)
+        const newValue3={
+          name: obj.Fragments[2]
+        };
+        this.push('tasks', newValue3)
+        const newValue4={
+          name: obj.Fragments[3]
+        };
+        this.push('tasks', newValue4)
+        const newValue5={
+          name: obj.Fragments[4]
+        };
+        this.push('tasks', newValue5)
+      }
+
+      displayFooter3(){
+        const newValue1={
+          name: obj.Earthcube[0]
+        };
+        this.push('tasks', newValue1)
+        const newValue2={
+          name: obj.Earthcube[1]
+        };
+        this.push('tasks', newValue2)
+        const newValue3={
+          name: obj.Earthcube[2]
+        };
+        this.push('tasks', newValue3)
+        const newValue4={
+          name: obj.Earthcube[3]
+        };
+        this.push('tasks', newValue4)
+        const newValue5={
+          name: obj.Earthcube[4]
+        };
+        this.push('tasks', newValue5)
+      }
+
+      displayFooter4(){
+        const newValue1={
+          name: obj.VariousCanvas[0]
+        };
+        this.push('tasks', newValue1)
+        const newValue2={
+          name: obj.VariousCanvas[1]
+        };
+        this.push('tasks', newValue2)
+        const newValue3={
+          name: obj.VariousCanvas[2]
+        };
+        this.push('tasks', newValue3)
+        const newValue4={
+          name: obj.VariousCanvas[3]
+        };
+        this.push('tasks', newValue4)
+        const newValue5={
+          name: obj.VariousCanvas[4]
+        };
+        this.push('tasks', newValue5)
+      }
+
+      displayFooter5(){
+        const newValue1={
+          name: obj.BlankCanvas[0]
+        };
+        this.push('tasks', newValue1)
+        const newValue2={
+          name: obj.BlankCanvas[1]
+        };
+        this.push('tasks', newValue2)
+        const newValue3={
+          name: obj.BlankCanvas[2]
+        };
+        this.push('tasks', newValue3)
+        const newValue4={
+          name: obj.BlankCanvas[3]
+        };
+        this.push('tasks', newValue4)
+        const newValue5={
+          name: obj.BlankCanvas[4]
+        };
+        this.push('tasks', newValue5)
+      }
     }
 
-    window.customElements.define(MyView2.is, MyView2);
+    window.customElements.define(MyView1.is, MyView1);
   </script>
 </dom-module>
+

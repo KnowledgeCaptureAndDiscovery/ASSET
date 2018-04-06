@@ -1,0 +1,37 @@
+    function loadJSON(callback) {
+    var xobj = new XMLHttpRequest();
+    xobj.overrideMimeType("application/json");
+    xobj.open('GET', 'file.json', true);
+    xobj.onreadystatechange = function() {
+        if (xobj.readyState == 4 && xobj.status == "200") {
+
+            // .open will NOT return a value but simply returns undefined in async mode so use a callback
+            callback(xobj.responseText);
+
+        }
+    }
+    xobj.send(null);
+    }
+
+    loadJSON(function(response) {
+    obj = JSON.parse(response);
+    });
+
+
+    ----------------------------------------------
+
+        
+    var request;
+    if(window.XMLHttpRequest){
+      request = new XMLHttpRequest();
+    } else{
+      request = new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    request.open('GET', 'sample.json');
+    request.onreadystatechange = funtion();{
+      if((request.readyState===4) && (request.status===200)){
+        obj = JSON.parse(request.responseText);
+        console.log(obj);
+      }
+    }
+    request.send();
