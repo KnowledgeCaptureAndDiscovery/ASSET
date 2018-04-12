@@ -11,7 +11,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/gestures.html">
 
 <dom-module id="my-view1">
@@ -37,14 +37,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
 </style>
+<paper-button toggles raised class="indigo" on-click="displayFooter1">Common Tasks</paper-button><br>
     <div id="top">
       <div id="left">
 
-        <paper-icon-button toggles raised class="green" value = "Common Tasks" on-click="displayFooter1"> </paper-icon-button><br>
-        <paper-icon-button toggles raised class="green" value = "Fragments" on-click="displayFooter2"></paper-icon-button> <br>
-        <paper-icon-button toggles raised class="green" value = "Earthcube" on-click="displayFooter3"></paper-icon-button> <br>
-        <paper-icon-button toggles raised class="green" value = "Various Canvas" on-click="displayFooter4"> </paper-icon-button><br>
-        <paper-icon-button toggles raised class="green" value = "Blank Canvas" on-click="displayFooter5"></paper-icon-button> <br>
+        <paper-button toggles raised class="indigo" on-click="displayFooter1">Common Tasks</paper-button><br>
+        <paper-button class="green">Fragments</paper-button> <br>
+        <paper-button toggles raised class="green" on-click="displayFooter3">Earthcube</paper-button> <br>
+        <paper-button toggles raised class="green" on-click="displayFooter4">Various Canvas </paper-button><br>
+        <paper-button toggles raised class="green" on-click="displayFooter5">Blank Canvas</paper-button> <br>
       </div>
 
       <div id = "right">

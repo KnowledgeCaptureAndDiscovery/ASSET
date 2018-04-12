@@ -16,28 +16,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style include="shared-styles">
       :host {
         display: block;
-
         padding: 10px;
       }
 
     </style>
 
     <div class="card">
-      <canvas id="myCanvas1" width="80" height="50" style="border:1px solid #000000;"></canvas>
-
-
-      
-      <canvas id="myCanvas2" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas3" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas4" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas5" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas6" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas7" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas8" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas9" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas10" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas11" width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas12" width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas1" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas2" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas3" onclick=trial(this) onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas4" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas5" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas6" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas7" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas8" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas9" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas10" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas11" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas12" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
     </div>
   </template>
 
@@ -45,13 +41,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     class MyView3 extends Polymer.Element {
       static get is() { return 'my-view3'; }
     }
+    
+    function trial(ele) {
+      var img = new Image();
+      img.src = "/images/" + ele.id + ".png";
+      //console.log("This  : " + ele);
+      var ctx=ele.getContext("2d");
+      ctx.drawImage(img,1,1);
+    }
 
     window.customElements.define(MyView3.is, MyView3);
-
-    var canvas = document.querySelector('body /deep/ #myCanvas');
-    var ctx = canvas.getContext("2d");
-    ctx.font = "30px Arial";
-    ctx.fillText("Hello World",10,50);
 
   </script>
 </dom-module>

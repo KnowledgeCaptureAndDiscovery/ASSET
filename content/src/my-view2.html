@@ -53,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
 
       <div id = "right">
-        CANVAS WILL COME HERE
+        <canvas height="500" width="900" style="border:1px solid #000000;"></canvas>
       </div>
     </div>
 
@@ -65,7 +65,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <dom-repeat items ="{{tasks}}" as="task">
             <template>
               <div class="task">
-                <input type="text" value ="{{task.name}}">
+                <!-- <input type="text" value ="{{task.name}}"> -->
+                <canvas height="30" width="150" style="background-color:aqua;"></canvas>
               </div>
             </template>
           </dom-repeat>
@@ -74,8 +75,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-
-    var obj = JSON.parse('{ "CommonTasks":["Common Task value 1","Common Task value 2","Common Task value 3","Common Task value 4","Common Task value 5"], "Fragments":["Fragments value 1","Fragments value 2","Fragments value 3","Fragments value 4","Fragments value 5"], "Earthcube":["Earthcube value 1","Earthcube value 2","Earthcube value 3","Earthcube value 4","Earthcube value 5"], "VariousCanvas":["Various Canvas value 1","Various Canvas value 2","Various Canvas value 3","Various Canvas value 4","Various Canvas value 5"], "BlankCanvas":["Blank Canvas value 1","Blank Canvas value 2","Blank Canvas value 3","Blank Canvas value 4","Blank Canvas value 5"]}');
+    var obj = new XMLHttpRequest();
+    obj.open("GET", "content.json", false);
+    obj.send();
+    obj = JSON.parse(obj.responseText);
+    //var obj = JSON.parse('{ "CommonTasks":["Common Task value 1","Common Task value 2","Common Task value 3","Common Task value 4","Common Task value 5"], "Fragments":["Fragments value 1","Fragments value 2","Fragments value 3","Fragments value 4","Fragments value 5"], "Earthcube":["Earthcube value 1","Earthcube value 2","Earthcube value 3","Earthcube value 4","Earthcube value 5"], "VariousCanvas":["Various Canvas value 1","Various Canvas value 2","Various Canvas value 3","Various Canvas value 4","Various Canvas value 5"], "BlankCanvas":["Blank Canvas value 1","Blank Canvas value 2","Blank Canvas value 3","Blank Canvas value 4","Blank Canvas value 5"]}');
 
     class MyView1 extends Polymer.Element {
       static get is() { return 'my-view2'; }
@@ -89,9 +93,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       displayFooter1(){
+        for(var i=0; i<5; i++){
+          console.log(obj.CommonTasks[i]);
+          this.pop('tasks');
+        }
+
         const newValue1={
           name: obj.CommonTasks[0]
         };
+
+        // while(this.length > 0){
+        //   this.pop();
+        // }
+        
         this.push('tasks', newValue1)
         const newValue2={
           name: obj.CommonTasks[1]
@@ -112,9 +126,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       displayFooter2(){
+
+        for(var i=0; i<5; i++){
+          console.log(obj.Fragments[i]);
+          this.pop('tasks');
+        }
+
         const newValue1={
           name: obj.Fragments[0]
         };
+
+
+        // while(this.length > 0){
+        //   this.pop();
+        // }
+
         this.push('tasks', newValue1)
         const newValue2={
           name: obj.Fragments[1]
@@ -135,9 +161,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       displayFooter3(){
+
+        for(var i=0; i<5; i++){
+          console.log(obj.Earthcube[i]);
+          this.pop('tasks');
+        }
+
         const newValue1={
           name: obj.Earthcube[0]
         };
+
+        // while(this.length > 0){
+        //   this.pop();
+        // }
         this.push('tasks', newValue1)
         const newValue2={
           name: obj.Earthcube[1]
@@ -158,32 +194,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       displayFooter4(){
+
+        for(var i=0; i<5; i++){
+          console.log(obj.VariousCanvas[i]);
+          this.pop('tasks');
+        }
+        
         const newValue1={
           name: obj.VariousCanvas[0]
         };
-        this.push('tasks', newValue1)
+        
+      //  while(this.length > 0){
+      //     this.pop();
+      //   }
+        //this.push('tasks', newValue1)
         const newValue2={
           name: obj.VariousCanvas[1]
         };
-        this.push('tasks', newValue2)
+        //this.push('tasks', newValue2)
         const newValue3={
           name: obj.VariousCanvas[2]
         };
-        this.push('tasks', newValue3)
+        //this.push('tasks', newValue3)
         const newValue4={
           name: obj.VariousCanvas[3]
         };
-        this.push('tasks', newValue4)
+        //this.push('tasks', newValue4)
         const newValue5={
           name: obj.VariousCanvas[4]
         };
-        this.push('tasks', newValue5)
+        this.push('tasks', [newValue1, newValue2, newValue3, newValue4, newValue5])
       }
 
       displayFooter5(){
+
+        for(var i=0; i<5; i++){
+          console.log(obj.BlankCanvas[i]);
+          this.pop('tasks');
+        }
+
         const newValue1={
           name: obj.BlankCanvas[0]
         };
+
+        // while(this.length > 0){
+        //   this.pop();
+        // }
+
         this.push('tasks', newValue1)
         const newValue2={
           name: obj.BlankCanvas[1]
