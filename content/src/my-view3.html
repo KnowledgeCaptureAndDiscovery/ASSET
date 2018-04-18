@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-canvas/src/paper-canvas.html">
 
 <dom-module id="my-view3">
   <template>
@@ -24,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="card">
       <canvas id="myCanvas1" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
       <canvas id="myCanvas2" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
-      <canvas id="myCanvas3" onclick=trial(this) onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
+      <canvas id="myCanvas3" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
       <canvas id="myCanvas4" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
       <canvas id="myCanvas5" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
       <canvas id="myCanvas6" onclick=trial(this) width="80" height="50" style="border:1px solid #000000;"></canvas>
@@ -45,9 +46,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     function trial(ele) {
       var img = new Image();
       img.src = "/images/" + ele.id + ".png";
-      //console.log("This  : " + ele);
+      console.log("This  : " + ele);
       var ctx=ele.getContext("2d");
-      ctx.drawImage(img,1,1);
+      ctx.drawImage(img,0,0,80,50);
     }
 
     window.customElements.define(MyView3.is, MyView3);

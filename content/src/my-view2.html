@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/polymer/lib/utils/gestures.html">
 <link rel="lazy-import" href="icon-row1.html">
 
@@ -36,7 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       left: 0;
       bottom: 0;
       width: 100%;
-      background-color: red;
+      background-color: aqua;
       color: white;
       text-align: center;
 }
@@ -45,11 +46,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="top">
       <div id="left">
 
-        <input type="button" value = "Common Tasks" on-click="displayFooter1"> <br>
-        <input type="button" value = "Fragments" on-click="displayFooter2"> <br>
-        <input type="button" value = "Earthcube" on-click="displayFooter3"> <br>
-        <input type="button" value = "Various Canvas" on-click="displayFooter4"> <br>
-        <input type="button" value = "Blank Canvas" on-click="displayFooter5"> <br>
+        <paper-button toggles raised class="indigo" on-click="displayFooter1"> Common Task</paper-button>
+        <paper-button toggles raised class="indigo" on-click="displayFooter2"> Fragments</paper-button>
+        <paper-button toggles raised class="indigo" on-click="displayFooter3"> Earthcube</paper-button>
+        <paper-button toggles raised class="indigo" on-click="displayFooter4"> Various Canvas</paper-button>
+        <paper-button toggles raised class="indigo" on-click="displayFooter5"> Blank</paper-button>
       </div>
 
       <div id = "right">
@@ -64,10 +65,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-128.png" /> -->
           <dom-repeat items ="{{tasks}}" as="task">
             <template>
-              <div class="task">
-                <!-- <input type="text" value ="{{task.name}}"> -->
-                <canvas height="30" width="150" style="background-color:aqua;"></canvas>
-              </div>
+              <!-- <div class="task"> -->
+                <canvas class="task" id={{task.name}} onclick=t(this) height="50" width="80" style="background-color:white;"></canvas>
+              <!-- </div> -->
             </template>
           </dom-repeat>
     </div>
@@ -108,19 +108,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         this.push('tasks', newValue1)
         const newValue2={
-          name: obj.CommonTasks[1]
+          name: obj.CommonTasks[1].image
         };
         this.push('tasks', newValue2)
         const newValue3={
-          name: obj.CommonTasks[2]
+          name: obj.CommonTasks[2].image
         };
         this.push('tasks', newValue3)
         const newValue4={
-          name: obj.CommonTasks[3]
+          name: obj.CommonTasks[3].image
         };
         this.push('tasks', newValue4)
         const newValue5={
-          name: obj.CommonTasks[4]
+          name: obj.CommonTasks[4].image
         };
         this.push('tasks', newValue5)
       }
@@ -259,6 +259,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
         this.push('tasks', newValue5)
       }
+    }
+
+    // function t(element) {
+    //   console.log("in here  : " + element);
+    //   var ctx = element.getContext('2d');
+    //   ctx.font="20px Georgia";
+    //   ctx.fillText(obj.CommonTasks[0].image,10,50);     
+    // }
+
+    function t(element) {
+      var img = new Image();
+      img.src = obj.CommonTasks[0].image;
+      console.log("This  : " + img.src);
+      var ctx=element.getContext("2d");
+      ctx.drawImage(img,0,0,80,50);
     }
 
     window.customElements.define(MyView1.is, MyView1);
