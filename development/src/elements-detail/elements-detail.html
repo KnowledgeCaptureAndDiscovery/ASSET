@@ -1,0 +1,147 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+
+<dom-module id="elements-detail">
+
+	<template>
+
+	    <dom-repeat items="{{elementsImage}}" as="elementimage">
+			<template>
+				<img src="{{elementimage}}" height="75px" on-click="displayName" style="border: 1px solid black" ondragstart="startedElementDrag(event)" draggable="true">
+          	</template>
+		</dom-repeat>
+
+	</template>
+
+	<script>
+		class ElementsDetail extends Polymer.Element {
+		
+			static get is() { return 'elements-detail'; }
+
+			static get properties() {
+				return {
+					elementsType: {
+						type: Array,
+						value: () => []
+					},
+
+					elementsImage: {
+						type: Array,
+						value: () => []
+					},
+
+					src: {
+						type: String,
+						value: ""
+					},
+
+					type: {
+						type: String,
+						value: ""
+					},
+
+					target: {
+						type: String,
+						value: ""
+					},
+
+					dataJSON: {
+						type: Object,
+						value: {}	
+					},
+
+					popupFlag: {
+						type: Number,
+						value: 1
+					}
+				};
+			}
+
+			ready() {
+			  	super.ready();
+			  	
+			  	var dataJSON;
+			    var requestObject;
+			    var targetArea = document.getElementById(this.target);
+			    requestObject = new XMLHttpRequest();
+			    requestObject.open("GET", this.src, false);
+			    requestObject.send();
+
+			    dataJSON = JSON.parse(requestObject.responseText);
+
+			    var i = 0;
+				
+			    for(i = 0; i < dataJSON.workflowElements.length; i++) {
+			    	if( dataJSON.workflowElements[i].name == this.type) {
+			    		this.dataJSON = dataJSON.workflowElements[i];
+			    		localStorage.setItem("activeWorkflowElement", JSON.stringify(dataJSON.workflowElements[i]));
+			    		break;
+			    	}
+			    }
+
+			    if( i == dataJSON.workflowElements.length ) {
+			    	
+			    } else {
+			    	for(var j = 0; j < dataJSON.workflowElements[i].elements.length; j++) {
+						this.push("elementsImage", dataJSON.workflowElements[i].elements[j].imageSource);
+			    	}
+
+			    	$("#populateDetailsSection").fadeIn(2000);
+			    }
+
+			}
+
+			displayName(element) {
+
+				// var popupContainer = Polymer.dom((Polymer.dom(this.root).querySelector("elements-detail")).root).querySelector("popupContainer");
+
+				// console.log("popupContainer : " + popupContainer);
+				// return;
+
+				if( this.popupFlag == 0 ) {
+					this.popupFlag = 1;
+					closePopup();
+				} else {
+					this.popupFlag = 0;
+					for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
+						if( element.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
+							this.popupFlag = 0;
+							popupFunction(this.dataJSON.elements[i].elementName, element.clientX, element.clientY);
+						}
+					}
+				}
+				
+			}
+
+			closePopupBox() {
+				return;
+				closePopup();
+			}
+
+			// handleTrack(e) {
+			// 	console.log("Jsss")
+		 //        switch(e.detail.state) {
+			// 		case 'start':
+			//             console.log('Tracking started!');
+			//             break;
+			// 		case 'track':
+			//             console.log('Being dragged!');
+			//             break;
+			// 		case 'end':
+			// 			console.log('Tracking ended!');
+			// 			break;
+			// 	}
+			// }
+
+		}
+
+		customElements.define(ElementsDetail.is, ElementsDetail);
+
+		function startedElementDrag(e) {
+			localStorage.setItem("currentDragElement", e.target.getAttribute("src"));
+		}
+	</script>
+
+</dom-module>

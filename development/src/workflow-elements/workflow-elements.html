@@ -1,0 +1,84 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+
+
+<dom-module id="workflow-elements">
+
+	<template>
+
+		<style is="custom-style">
+			paper-button.indigo {
+				background-color: var(--paper-indigo-500);
+				color: white;
+			}
+	    </style>
+	    <dom-repeat items="{{workflowElements}}" as="workflowElement">
+			<template>
+				<paper-button toggles raised class="indigo" id={{workflowElement}} on-click=populateElements style="width: 90%; text-align: center;">{{workflowElement}}</paper-button><br><br>
+          	</template>
+		</dom-repeat>
+		
+
+	</template>
+
+	<script>
+		class WorkflowElements extends Polymer.Element {
+		
+			static get is() { return 'workflow-elements'; }
+
+			static get properties() {
+				return {
+					workflowElements: {
+						type: Array,
+						value: () => []
+					},
+
+					src: {
+						type: String,
+						value: ""
+					}
+				};
+			}
+
+			ready() {
+			  	super.ready();
+			  	console.log("Ready : " + this.src);
+
+			  	var dataJSON;
+			    var requestObject;
+			    requestObject = new XMLHttpRequest();
+			    requestObject.open("GET", this.src, false);
+			    requestObject.send();
+
+			    dataJSON = JSON.parse(requestObject.responseText);
+
+
+			    for(var i = 0; i < dataJSON.workflowElements.length; i++) {
+			    	this.push('workflowElements', dataJSON.workflowElements[i].name);
+			    }
+
+			}
+
+			populateElements(element) {
+				
+				var elementDetail = '<elements-detail src="content.json" type="'+ element.target.getAttribute('id') +'" target="populateDetailsSection"></elements-detail>';
+				document.getElementById('populateDetailsSection').innerHTML = elementDetail;
+
+			}	
+
+		}
+
+		customElements.define(WorkflowElements.is, WorkflowElements);
+
+		function populateElementsss(s) {
+        console.log("heabishekre : " + s);
+      }
+	</script>
+
+
+
+</dom-module>

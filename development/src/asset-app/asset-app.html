@@ -1,0 +1,53 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../workflow-elements/workflow-elements.html">
+<link rel="import" href="../elements-detail/elements-detail.html">
+
+<dom-module id="asset-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div id="titleSection" style="border: 1px solid #ccc; text-align: center;"><h1>ASSET - Workflow Sketching<h1></div>
+
+    <div id="ContentSection" style="margin: 20px; margin-left: 0;">
+
+      <div id="leftSsection" style="border: 1px solid #ccc; float: left; width: 15%; text-align: center; padding: 10px;">
+        <workflow-elements id="asd" src="content.json"></workflow-elements>
+      </div>
+
+      <div id="rightSsection" style="float: right; width: 83%;">
+        <div>
+          <canvas id="workflowSketchCanvas" width="1565px" height="700px" style="border: 1px solid #ccc;" ondragover="allowDrop(event)" ondrop="drop(event)" onclick="canvasClick(event)"></canvas>
+        </div>
+        <div id="populateDetailsSection" style="margin-top: 10px; padding: 5px; border: 1px solid #ccc; width: 1555px; height: 85px"></div>
+      </div>
+      <div class="clr" style="clear: both;"></div>
+    </div>
+
+    <footer style="text-align: center;">
+      <a href="#" id="exportAnchor" onclick="exportSketch">Export Sketch</a>  |  <a href="#" id="importAnchor">Import Sketch</a>
+    </footer>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class AssetApp extends Polymer.Element {
+      static get is() { return 'asset-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'asset-app'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(AssetApp.is, AssetApp);
+  </script>
+</dom-module>

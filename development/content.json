@@ -1,0 +1,215 @@
+{
+	"workflowElements": [
+
+		{
+			"name": "Common Tasks",
+			"elements": [
+				{
+						
+					"elementName": "Query Database",
+					"imageSource": "/Images/CommonTasks/queryDatabase.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+						
+				{
+					"elementName": "Data Preparation",
+					"imageSource": "/Images/CommonTasks/dataPreparation.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+						
+				{
+					"elementName": "Download Data",
+					"imageSource": "/Images/CommonTasks/downloadData.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "Run Code",
+					"imageSource": "/Images/CommonTasks/runCode.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "Data",
+					"imageSource": "/Images/CommonTasks/data.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "Visualize",
+					"imageSource": "/Images/CommonTasks/visualize.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "TBD",
+					"imageSource": "/Images/CommonTasks/tbd.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				}
+					
+
+			]
+		},
+			
+		{
+			"name": "EarthCubeTools",
+			"elements": [
+
+				{		
+					"elementName": "CHORDS",
+					"imageSource": "/Images/EarthCubeTools/CHORDS.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+					
+				{
+					"elementName": "CINERGI",
+					"imageSource": "/Images/EarthCubeTools/CINERGI.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+					
+				{
+					"elementName": "DisConBB",
+					"imageSource": "/Images/EarthCubeTools/DisConBB.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName": "EarthSystemBridge",
+					"imageSource": "/Images/EarthCubeTools/EarthSystemBridge.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "GeoDeepDive",
+					"imageSource": "/Images/EarthCubeTools/GeoDeepDive.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "GeoDataSpace",
+					"imageSource": "/Images/EarthCubeTools/GeoDataSpace.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "GeoSemantics",
+					"imageSource": "/Images/EarthCubeTools/GeoSemantics.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				},
+				
+				{
+					"elementName" : "OntoSoft",
+					"imageSource": "/Images/EarthCubeTools/OntoSoft.png",
+					"properties": [
+						{
+							"description": {
+								"propertyName": "Description",
+								"propertyType": "String"
+							}
+						}
+					]
+				}
+				
+			]
+		}
+		
+	]
+}

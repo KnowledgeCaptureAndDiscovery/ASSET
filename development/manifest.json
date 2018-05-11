@@ -1,0 +1,7 @@
+{
+  "name": "asset",
+  "short_name": "asset",
+  "description": "Workflow sketching",
+  "start_url": "/",
+  "display": "standalone"
+}

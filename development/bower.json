@@ -1,0 +1,14 @@
+{
+  "name": "asset",
+  "description": "Workflow sketching",
+  "main": "index.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^2.0.0",
+	"paper-styles": "PolymerElements/paper-styles#^2.1.0",
+    "paper-button": "PolymerElements/paper-button#^2.1.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+  }
+}
