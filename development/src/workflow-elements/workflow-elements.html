@@ -10,15 +10,21 @@
 
 	<template>
 
-		<style is="custom-style">
-			paper-button.indigo {
-				background-color: var(--paper-indigo-500);
-				color: white;
-			}
-	    </style>
+		<style type="text/css">
+		
+	      paper-button.indigo {
+	        background-color: var(--paper-indigo-500);
+	        color: white;
+	        width: 90%;
+	        text-align: center;
+	      }
+
+		</style>
+
 	    <dom-repeat items="{{workflowElements}}" as="workflowElement">
 			<template>
-				<paper-button toggles raised class="indigo" id={{workflowElement}} on-click=populateElements style="width: 90%; text-align: center;">{{workflowElement}}</paper-button><br><br>
+				<paper-button toggles raised class="indigo" id={{workflowElement}} on-click=populateElements>{{workflowElement}}</paper-button>
+				<br><br>
           	</template>
 		</dom-repeat>
 		
@@ -40,43 +46,66 @@
 					src: {
 						type: String,
 						value: ""
+					},
+
+					target: {
+						type: String,
+						value: ""
+
 					}
 				};
 			}
 
 			ready() {
 			  	super.ready();
-			  	console.log("Ready : " + this.src);
 
 			  	var dataJSON;
 			    var requestObject;
-			    requestObject = new XMLHttpRequest();
-			    requestObject.open("GET", this.src, false);
-			    requestObject.send();
 
-			    dataJSON = JSON.parse(requestObject.responseText);
+			    try {
+
+				    requestObject = new XMLHttpRequest();
+				    requestObject.open("GET", this.src, false);
+				    requestObject.send();
+
+				    localStorage.setItem("sourceJSON", requestObject.responseText);
+
+				    dataJSON = JSON.parse(requestObject.responseText);
 
 
-			    for(var i = 0; i < dataJSON.workflowElements.length; i++) {
-			    	this.push('workflowElements', dataJSON.workflowElements[i].name);
-			    }
+				    for(var i = 0; i < dataJSON.workflowElements.length; i++) {
+				    	this.push('workflowElements', dataJSON.workflowElements[i].name);
+				    }
+				} catch(err) {
+
+					alert("Failed to load Workflow Elements : " + err.message);
+
+				}
+
 
 			}
 
 			populateElements(element) {
-				
-				var elementDetail = '<elements-detail src="content.json" type="'+ element.target.getAttribute('id') +'" target="populateDetailsSection"></elements-detail>';
-				document.getElementById('populateDetailsSection').innerHTML = elementDetail;
 
+				try {
+
+					var elementDetailElement = '<elements-detail ';
+					elementDetailElement +=  'src="' + this.src + '" ';
+					elementDetailElement += 'type="'+ element.target.getAttribute('id') +'" ';
+					elementDetailElement += 'target="' + this.target + '">';
+					elementDetailElement += '</elements-detail>';
+					populateWorkflowElementsDetail(elementDetailElement);
+				} catch(err) {
+
+					alert("Failed to initialize Workflow Sketching Elements : " + err.message);
+
+				}
 			}	
 
 		}
 
 		customElements.define(WorkflowElements.is, WorkflowElements);
 
-		function populateElementsss(s) {
-        console.log("heabishekre : " + s);
-      }
 	</script>
 
 

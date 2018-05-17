@@ -8,27 +8,124 @@
       :host {
         display: block;
       }
+
+      #titleSection {
+        border: 1px solid #ccc;
+        text-align: center;
+      }
+
+      #ContentSection {
+        margin: 20px; 
+        margin-left: 0;
+      }
+
+      #leftSsection {
+        border: 1px solid #ccc;
+        float: left;
+        width: 15%;
+        text-align: center;
+        padding: 10px;"
+      }
+
+      #rightSsection {
+        float: right;
+        width: 83%;
+      }
+
+      #populateDetailsSection {
+        margin-top: 10px;
+        padding: 5px;
+        border: 1px solid #ccc;
+        width: 1555px;
+        height: 85px;
+      }
+
+      .clr {
+        clear: both;
+      }
+
+      footer {
+        text-align: center;
+      }
+
+      /* Popup container - can be anything you want */
+      .popupContainer {
+        position: absolute;
+        display: inline-block;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      /* The actual popup */
+      .popupContainer .popuptext {
+        visibility: hidden;
+        width: 300px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 8px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 15%;
+        margin-left: -150px;
+      }
+
+      /* Popup arrow */
+      .popupContainer .popuptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+      }
+
+      /* Toggle this class - hide and show the popup */
+      .popupContainer .show {
+        visibility: visible;
+      }
+
+      #canvasContainerSection {
+        width: 1565px;
+        height: 700px;
+        border: 1px solid #ccc;
+        overflow: scroll;
+      }
+
     </style>
-    <div id="titleSection" style="border: 1px solid #ccc; text-align: center;"><h1>ASSET - Workflow Sketching<h1></div>
 
-    <div id="ContentSection" style="margin: 20px; margin-left: 0;">
+    <div id="titleSection"><h1>ASSET - Workflow Sketching<h1></div>
 
-      <div id="leftSsection" style="border: 1px solid #ccc; float: left; width: 15%; text-align: center; padding: 10px;">
+    <div id="ContentSection">
+
+      <div id="leftSsection">
         <workflow-elements id="asd" src="content.json"></workflow-elements>
       </div>
 
-      <div id="rightSsection" style="float: right; width: 83%;">
-        <div>
-          <canvas id="workflowSketchCanvas" width="1565px" height="700px" style="border: 1px solid #ccc;" ondragover="allowDrop(event)" ondrop="drop(event)" onclick="canvasClick(event)"></canvas>
+      <div id="rightSsection">
+        <div id="canvasContainerSection">
+          <canvas width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="canvasClick(event)"></canvas>
         </div>
-        <div id="populateDetailsSection" style="margin-top: 10px; padding: 5px; border: 1px solid #ccc; width: 1555px; height: 85px"></div>
+        <div id="populateDetailsSection"></div>
       </div>
-      <div class="clr" style="clear: both;"></div>
+      <div class="clr"></div>
     </div>
 
-    <footer style="text-align: center;">
-      <a href="#" id="exportAnchor" onclick="exportSketch">Export Sketch</a>  |  <a href="#" id="importAnchor">Import Sketch</a>
+    <footer>
+      <a href="#" id="exportAnchor">Export Sketch</a>  |  <a href="#" id="importAnchor">Import Sketch</a>
     </footer>
+
+    <div class="popupContainer" id="popupContainer">
+      <span class="popuptext" id="popup"></span>
+    </div>
+
   </template>
 
   <script>

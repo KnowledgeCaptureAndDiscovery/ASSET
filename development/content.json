@@ -10,10 +10,8 @@
 					"imageSource": "/Images/CommonTasks/queryDatabase.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -23,10 +21,8 @@
 					"imageSource": "/Images/CommonTasks/dataPreparation.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -36,10 +32,8 @@
 					"imageSource": "/Images/CommonTasks/downloadData.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -49,10 +43,8 @@
 					"imageSource": "/Images/CommonTasks/runCode.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -62,10 +54,8 @@
 					"imageSource": "/Images/CommonTasks/data.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -75,10 +65,8 @@
 					"imageSource": "/Images/CommonTasks/visualize.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -88,10 +76,8 @@
 					"imageSource": "/Images/CommonTasks/tbd.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				}
@@ -109,10 +95,8 @@
 					"imageSource": "/Images/EarthCubeTools/CHORDS.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -122,10 +106,8 @@
 					"imageSource": "/Images/EarthCubeTools/CINERGI.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -135,10 +117,8 @@
 					"imageSource": "/Images/EarthCubeTools/DisConBB.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -148,10 +128,8 @@
 					"imageSource": "/Images/EarthCubeTools/EarthSystemBridge.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -161,10 +139,8 @@
 					"imageSource": "/Images/EarthCubeTools/GeoDeepDive.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -174,10 +150,8 @@
 					"imageSource": "/Images/EarthCubeTools/GeoDataSpace.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -187,10 +161,8 @@
 					"imageSource": "/Images/EarthCubeTools/GeoSemantics.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				},
@@ -200,10 +172,8 @@
 					"imageSource": "/Images/EarthCubeTools/OntoSoft.png",
 					"properties": [
 						{
-							"description": {
-								"propertyName": "Description",
-								"propertyType": "String"
-							}
+							"propertyName": "Description",
+							"propertyType": "String"
 						}
 					]
 				}
