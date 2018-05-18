@@ -37,7 +37,8 @@
         padding: 5px;
         border: 1px solid #ccc;
         width: 1555px;
-        height: 85px;
+        height: 100px;
+		overflow: scroll;
       }
 
       .clr {
@@ -111,7 +112,7 @@
 
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="canvasClick(event)"></canvas>
+          <canvas width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="moveElementOnCanvas(event)" onclick="canvasClick(event)"></canvas>
         </div>
         <div id="populateDetailsSection"></div>
       </div>
