@@ -714,6 +714,9 @@ function deleteNode(id) {
 
 		while( true ) {
 
+			if(j >= g.edges.length)
+				break;
+
 			if( g.edges[j].from == id || g.edges[j].to == id ) {
 
 				g.edges.splice(j, 1);
@@ -722,9 +725,6 @@ function deleteNode(id) {
 			} else {
 				j++;
 			}
-
-			if(j >= g.edges.length)
-				break;
 
 		}
 
