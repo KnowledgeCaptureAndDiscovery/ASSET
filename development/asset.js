@@ -68,6 +68,12 @@ function canvasClick(e) {
 		
 		if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
 
+			if( checkForDeleteClick(g.mainObjects[i], x, y) == true ) {
+
+				deleteNode(g.mainObjects[i].id);
+				return;
+			}
+
 			if( checkForEdgeDrawClick(g.mainObjects[i], g.mainObjects[i].id, x, y) == true ) {
 				drawEdge(true);
 				return;
@@ -81,12 +87,12 @@ function canvasClick(e) {
 					var d = g.mainObjects[i].objectsArray[j].description;
 
 					var st = "<b>" + n + "</b>";
-					console.log(g.mainObjects[i].objectsArray[j]);
+					
 					for(var p = 0; p < g.mainObjects[i].objectsArray[j].properties.length; p++) {
 						st += "<br><b>" + g.mainObjects[i].objectsArray[j].properties[p].propertyName + " : </b>" + g.mainObjects[i].objectsArray[j].properties[p].propertyValue;
 					}
 
-					st += "<br>	<button onclick=editProperties()>Edit</button> <button onclick='closePopup()'>Close</button>";
+					st += "<br>	<button onclick=editProperties()>Edit</button> <button onclick=closePopup()>Close</button>";
 
 					var dispX = g.mainObjects[i].objectsArray[j].startX + ((g.mainObjects[i].objectsArray[j].endX - g.mainObjects[i].objectsArray[j].startX) / 2);
 
@@ -164,13 +170,22 @@ function drop(e) {
 	var g = JSON.parse(localStorage.getItem("globalJSON"));
 
 	if( index == -1) {
-		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 5), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [dropoObject]};
+		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [dropoObject]};
 		g.mainObjects.push(mainObject);
 		ctx.drawImage(imgElement ,startX, startY, w, h);
 
 		ctx.beginPath();
 		ctx.strokeStyle="black";
 		ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.strokeStyle="black";
+		ctx.moveTo(mainObject.endX - 10, mainObject.startY + 4);
+		ctx.lineTo(mainObject.endX - 4, mainObject.startY + 10);
+		ctx.moveTo(mainObject.endX - 4, mainObject.startY + 4);
+		ctx.lineTo(mainObject.endX - 10, mainObject.startY + 10);
+		ctx.rect(mainObject.endX - 12, mainObject.startY + 2, 10, 10);
 		ctx.stroke();
 
 		drawEdgeConnectors(mainObject.startX, mainObject.startY, mainObject.endX, mainObject.endY);
@@ -184,13 +199,27 @@ function drop(e) {
 
 		if( w > (g.mainObjects[index].endX - g.mainObjects[index].startX - 10) ) {
 			g.mainObjects[index].endX = g.mainObjects[index].objectsArray[0].startX + w + 5;
+
 		}
 
 		g.mainObjects[index].endY = g.mainObjects[index].endY + h + 10;
 		
 		g.mainObjects[index].objectsArray.push(dropoObject);
 
-		ctx.drawImage(imgElement, dropoObject.startX, dropoObject.startY, w, h);
+		// ctx.drawImage(imgElement, dropoObject.startX, dropoObject.startY, w, h);
+
+
+
+		for( var k = 0; k < g.mainObjects[index].objectsArray.length; k++ ) {
+
+			var difference = g.mainObjects[index].objectsArray[k].endX - g.mainObjects[index].objectsArray[k].startX;
+			difference = (g.mainObjects[index].endX - g.mainObjects[index].startX - difference) / 2;
+			
+			var originalWidth = g.mainObjects[index].objectsArray[k].endX - g.mainObjects[index].objectsArray[k].startX;
+			g.mainObjects[index].objectsArray[k].startX	 = g.mainObjects[index].startX + difference;
+			g.mainObjects[index].objectsArray[k].endX = g.mainObjects[index].objectsArray[k].startX + originalWidth;
+
+		}
 
 		drawToCanvas(g);
 
@@ -343,12 +372,38 @@ function checkForEdgeDrawClick(obj, i, x, y) {
 
 }
 
+function checkForDeleteClick(obj, x, y) {
+
+	try {
+
+		if( (x >= obj.endX - 12 && x <= obj.endX - 2 ) && ( y >= obj.startY + 2 && y <= obj.startY + 12 ) ) {
+
+			return true;
+		}
+
+		return false;
+
+	} catch(err) {
+		alert("Cannot delete edge : " + err.message);
+		return false;
+	}
+
+}
+
 function drawEdge(flag) {
 
 	try {
 
 		if( edgeArray.length < 2 )
 			return;
+
+		if( edgeArray[0].id == edgeArray[1].id ) {
+
+			edgeArray = [];
+			return;
+
+		}
+
 
 		var ctx = canvasElement.getContext('2d');
 
@@ -421,8 +476,17 @@ function drawToCanvas(js) {
 			indexDictionary[mainObject.id] = i;
 
 			ctx.beginPath();
-			ctx.strokeStyle="green";
+			ctx.strokeStyle="black";
 			ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.strokeStyle="black";
+			ctx.moveTo(mainObject.endX - 10, mainObject.startY + 4);
+			ctx.lineTo(mainObject.endX - 4, mainObject.startY + 10);
+			ctx.moveTo(mainObject.endX - 4, mainObject.startY + 4);
+			ctx.lineTo(mainObject.endX - 10, mainObject.startY + 10);
+			ctx.rect(mainObject.endX - 12, mainObject.startY + 2, 10, 10);
 			ctx.stroke();
 
 			for(var j = 0; j < mainObject.objectsArray.length; j++) {
@@ -608,4 +672,70 @@ function moveElementOnCanvas(e) {
 		alert("Failed to move element : " + err.message);
 	}
 
+}
+
+function importWorkflow(e) {
+
+	try {
+
+		var importText = "<center>Import Workflow Sketch</center><br><input type='file' id='fileToLoad'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
+
+		displayPopup(importText, e.clientX, e.clientY - 10);
+
+	} catch(err) {
+		alert("Could not import workflow sketch : " + err.message);
+	}
+}
+
+function loadWorkflowSketch() {
+
+}
+
+function deleteNode(id) {
+
+	try {
+
+		var g = JSON.parse(localStorage.getItem('globalJSON'));
+		var deletionFlag = false;
+
+		for( var i = 0; i < g.mainObjects.length; i++ ) {
+
+			if( g.mainObjects[i].id == id ) {
+
+				g.mainObjects.splice(i, 1);
+				deletionFlag = true;
+				break;
+
+			}
+
+		}
+
+		var j = 0;
+
+		while( true ) {
+
+			if( g.edges[j].from == id || g.edges[j].to == id ) {
+
+				g.edges.splice(j, 1);
+				deletionFlag = true;
+				
+			} else {
+				j++;
+			}
+
+			if(j >= g.edges.length)
+				break;
+
+		}
+
+		if(deletionFlag == true) {
+
+			localStorage.setItem("globalJSON", JSON.stringify(g));
+			importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+			drawToCanvas(g);
+		}
+
+	} catch(err) {
+		alert("Could not delete node : " + err.message);
+	}
 }
