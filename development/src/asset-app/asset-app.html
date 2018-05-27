@@ -24,7 +24,7 @@
         float: left;
         width: 15%;
         text-align: center;
-        padding: 10px;"
+        padding: 10px;
       }
 
       #rightSsection {
@@ -112,7 +112,7 @@
 
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="moveElementOnCanvas(event)" onclick="canvasClick(event)"></canvas>
+          <canvas onmousemove="highlightCanvasElement(event)" width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="moveElementOnCanvas(event)" onclick="canvasClick(event)"></canvas>
         </div>
         <div id="populateDetailsSection"></div>
       </div>

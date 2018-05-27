@@ -9,7 +9,7 @@
 
 	    <dom-repeat items="{{elementsImage}}" as="elementimage">
 			<template>
-				<img src="{{elementimage}}" height="75px" on-click="displayName" style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
+				<img src="{{elementimage}}" height="75px" on-mouseover="highlightElement" on-mouseout="removeHighlight" on-click="displayName" style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
           	</template>
 		</dom-repeat>
 
@@ -107,7 +107,7 @@
 
 			}
 
-			displayName(element) {
+			displayName(e) {
 
 				try {
 
@@ -118,9 +118,9 @@
 						this.popupFlag = 0;
 						
 						for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
-							if( element.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
+							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
 								this.popupFlag = 0;
-								displayPopup(this.dataJSON.elements[i].elementName, element.clientX, element.clientY);
+								displayPopup(this.dataJSON.elements[i].elementName, e.clientX, e.clientY);
 							}
 						}
 					}
@@ -131,6 +131,30 @@
 
 				}
 				
+			}
+
+			highlightElement(e) {
+
+				try {
+
+					e.target.setAttribute("style", "border: 2px solid blue");
+
+				} catch(err) {
+					console.log("Could Not highlight element : " + err.message);
+				}
+
+			}
+
+			removeHighlight(e) {
+
+				try {
+
+					e.target.setAttribute("style", "border: 1px solid black");
+
+				} catch(err) {
+					console.log("Could Not highlight element : " + err.message);
+				}
+
 			}
 
 		}

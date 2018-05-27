@@ -1,5 +1,5 @@
 
-var sourceJSON = null;
+var sourceJSON;
 var importAnchorElement;
 var assetAppElement;
 var popupElement;
@@ -8,6 +8,8 @@ var canvasElement;
 var editArray;
 var edgeArray;
 var moveElement;
+var mouseOverElement;
+var selectedElement;
 
 var globalJSON = {"mainObjects": [], "edges": []};
 
@@ -30,6 +32,9 @@ function initialize() {
 	canvasElement = Polymer.dom(assetAppElement.root).querySelector("#workflowSketchCanvas");
 
 	moveElement = null;
+	mouseOverElement = null;
+	selectedElement = null;
+	sourceJSON = null;
 
 	edgeArray = [];
 }
@@ -59,7 +64,7 @@ function allowDrop(e) {
 function canvasClick(e) {
 	
 	var rect = canvasElement.getBoundingClientRect();
-	var g = JSON.parse(localStorage.getItem("globalJSON"));
+	var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 	var x = e.clientX - rect.left;
 	var y = e.clientY - rect.top;
@@ -67,6 +72,9 @@ function canvasClick(e) {
 	for (var i = 0; i < g.mainObjects.length; i++) {
 		
 		if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
+
+			selectedElement = g.mainObjects[i].id;
+			drawToCanvas(g);
 
 			if( checkForDeleteClick(g.mainObjects[i], x, y) == true ) {
 
@@ -110,6 +118,8 @@ function canvasClick(e) {
 	}
 
 	closePopup();
+	selectedElement = null;
+	drawToCanvas(g);
 
 }
 
@@ -167,7 +177,7 @@ function drop(e) {
 	}
 	
 
-	var g = JSON.parse(localStorage.getItem("globalJSON"));
+	var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 	if( index == -1) {
 		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [dropoObject]};
@@ -226,6 +236,7 @@ function drop(e) {
 		drawEdgeConnectors(g.mainObjects[index].startX, g.mainObjects[index].startY, g.mainObjects[index].endX, g.mainObjects[index].endY);
 	}
 
+	globalJSON = g;
 
 	localStorage.setItem("globalJSON", JSON.stringify(g));
 
@@ -244,7 +255,7 @@ function checkifOverlapping(sx, sy, ex, ey) {
 
 	try {
 
-		globalJSON = JSON.parse(localStorage.getItem("globalJSON"));
+		globalJSON = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 		for(var i = 0; i < globalJSON.mainObjects.length; i++) {
 
@@ -270,7 +281,7 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
 function editProperties() {
 	try {
 
-		var g = JSON.parse(localStorage.getItem("globalJSON"));
+		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 		var editElement = g.mainObjects[editArray[0]].objectsArray[editArray[1]];
 		var editString = "<div style='text-align: left'><center><b>" + editElement.name + "</b></center>";
 
@@ -293,13 +304,15 @@ function editProperties() {
 
 function submitProperties() {
 	try {
-		var g = JSON.parse(localStorage.getItem("globalJSON"));
+		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 		for (var i = 0; i < g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties.length; i++) {
 			var property = g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyName;
 			var value = Polymer.dom(assetAppElement.root).querySelector("#" + property).value;
 			g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyValue = value;
 		}
+
+		globalJSON = g;
 
 		localStorage.setItem("globalJSON", JSON.stringify(g));
 		importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -396,6 +409,15 @@ function drawEdge(flag) {
 
 		if( edgeArray.length < 2 )
 			return;
+		
+		if( edgeArray.length > 2 ) {
+			var lastElement = edgeArray.pop(0);
+			edgeArray = [];
+			edgeArray.push(lastElement);
+			console.log("ASDASDSD : " + edgeArray.length);
+			return;
+		}
+			
 
 		if( edgeArray[0].id == edgeArray[1].id ) {
 
@@ -442,11 +464,12 @@ function drawEdge(flag) {
 		if(flag == false) {
 
 		} else {
-			console.log("illi");
-			var g = JSON.parse(localStorage.getItem("globalJSON"));
+			
+			var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 			g.edges.push({"from": edgeArray[0].id, "to": edgeArray[1].id, "fromSide": edgeArray[0].side, "toSide": edgeArray[1].side});
 
+			globalJSON = g;
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 		}
@@ -476,7 +499,13 @@ function drawToCanvas(js) {
 			indexDictionary[mainObject.id] = i;
 
 			ctx.beginPath();
-			ctx.strokeStyle="black";
+			if( selectedElement == mainObject.id ) {
+				ctx.strokeStyle = "green";
+			} else if( mouseOverElement == mainObject.id ) {
+				ctx.strokeStyle="orange";
+			} else {
+				ctx.strokeStyle="black";
+			}
 			ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
 			ctx.stroke();
 
@@ -498,9 +527,9 @@ function drawToCanvas(js) {
 
 				ctx.drawImage(imgElement, element.startX, element.startY, element.endX - element.startX, element.endY - element.startY);
 
-				if( mainObject.objectsArray.length > 1 ) {
+				if( mainObject.objectsArray.length > 1 && j < mainObject.objectsArray.length - 1 ) {
 					ctx.beginPath();
-					ctx.strokeStyle="green";
+					ctx.strokeStyle="black";
 					ctx.moveTo(mainObject.startX, element.endY + 5);
 					ctx.lineTo(mainObject.endX, element.endY + 5);
 					ctx.stroke();
@@ -512,29 +541,52 @@ function drawToCanvas(js) {
 
 		}
 
-		edgeArray = [];
+		// edgeArray = [];
 		
 		for(var i = 0; i < js.edges.length; i++) {
 
 			var fromID = js.edges[i].from;
 			var fromSide = js.edges[i].fromSide;
 			var fromCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[fromID]], fromSide);
-			checkForEdgeDrawClick(js.mainObjects[indexDictionary[fromID]], fromID, fromCoords.x, fromCoords.y);
+			// checkForEdgeDrawClick(js.mainObjects[indexDictionary[fromID]], fromID, fromCoords.x, fromCoords.y);
 
 
 			var toID = js.edges[i].to;
 			var toSide = js.edges[i].toSide;
 			var toCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[toID]], toSide);
-			checkForEdgeDrawClick(js.mainObjects[indexDictionary[toID]], toID, toCoords.x, toCoords.y);
+			// che	ckForEdgeDrawClick(js.mainObjects[indexDictionary[toID]], toID, toCoords.x, toCoords.y);
 
-			console.log(indexDictionary[fromID] + " | " + indexDictionary[toID]);
+			ctx.beginPath();
+			ctx.strokeStyle = "black";
+			ctx.moveTo(fromCoords.x, fromCoords.y);
+			
+			var arrowPath = new Path2D();		
 
-			console.log(fromCoords);
-			console.log(toCoords);
-			console.log(edgeArray);
+			if( toSide == "left" ) {
+				arrowPath.moveTo(toCoords.x, toCoords.y);
+				arrowPath.lineTo(toCoords.x - 10, toCoords.y - 10);
+				arrowPath.lineTo(toCoords.x - 10, toCoords.y + 10);
+				ctx.lineTo(toCoords.x - 10, toCoords.y);
+			} else if( toSide == "top" ) {
+				arrowPath.moveTo(toCoords.x, toCoords.y);
+				arrowPath.lineTo(toCoords.x - 10, toCoords.y - 10);
+				arrowPath.lineTo(toCoords.x + 10, toCoords.y - 10);
+				ctx.lineTo(toCoords.x, toCoords.y - 10);
+			}  else if( toSide == "right" ) {
+				arrowPath.moveTo(toCoords.x, toCoords.y);
+				arrowPath.lineTo(toCoords.x + 10, toCoords.y - 10);
+				arrowPath.lineTo(toCoords.x + 10, toCoords.y + 10);
+				ctx.lineTo(toCoords.x + 10, toCoords.y);
+			} else {
+				arrowPath.moveTo(toCoords.x, toCoords.y);
+				arrowPath.lineTo(toCoords.x - 10, toCoords.y + 10);
+				arrowPath.lineTo(toCoords.x + 10, toCoords.y + 10);
+				ctx.lineTo(toCoords.x, toCoords.y + 10);
+			}
 
+			ctx.stroke();
+			ctx.fill(arrowPath);
 
-			drawEdge(false);
 
 		}
 
@@ -555,23 +607,23 @@ function redrawEdgeHelper(obj, side) {
 
 		if( side == "left" ) {
 
-			coords.x = obj.startX - 3;
-			coords.y = midY - 3;
+			coords.x = obj.startX - 4;
+			coords.y = midY;
 
 		} else if( side == "top" ) {
 
-			coords.x = midX - 3;
-			coords.y = obj.startY - 3;
+			coords.x = midX;
+			coords.y = obj.startY - 4;
 
 		} else if( side == "right" ) {
 
-			coords.x = obj.endX - 3;
-			coords.y = midY - 3;
+			coords.x = obj.endX + 4;
+			coords.y = midY;
 
 		} else {
 
-			coords.x = midX - 3;
-			coords.y = obj.endY - 3;
+			coords.x = midX;
+			coords.y = obj.endY + 4;
 
 		}
 
@@ -591,7 +643,7 @@ function moveElementOnCanvas(e) {
 		var indexDictionary = {};
 
 		var rect = canvasElement.getBoundingClientRect();
-		var g = JSON.parse(localStorage.getItem("globalJSON"));
+		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
 
 		var x = e.clientX - rect.left;
 		var y = e.clientY - rect.top;
@@ -640,8 +692,6 @@ function moveElementOnCanvas(e) {
 			}
 		}
 
-		console.log("Index : " + indexDictionary[moveElement]);
-
 		var xDifference = sx - g.mainObjects[indexDictionary[moveElement]].startX;
 		var yDifference = sy - g.mainObjects[indexDictionary[moveElement]].startY;
 
@@ -660,7 +710,7 @@ function moveElementOnCanvas(e) {
 		}
 
 
-
+		globalJSON = g;
 		localStorage.setItem("globalJSON", JSON.stringify(g));
 		importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
@@ -695,7 +745,7 @@ function deleteNode(id) {
 
 	try {
 
-		var g = JSON.parse(localStorage.getItem('globalJSON'));
+		var g = globalJSON;//JSON.parse(localStorage.getItem('globalJSON'));
 		var deletionFlag = false;
 
 		for( var i = 0; i < g.mainObjects.length; i++ ) {
@@ -730,6 +780,7 @@ function deleteNode(id) {
 
 		if(deletionFlag == true) {
 
+			globalJSON = g;
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 			drawToCanvas(g);
@@ -737,5 +788,34 @@ function deleteNode(id) {
 
 	} catch(err) {
 		alert("Could not delete node : " + err.message);
+	}
+}
+
+function highlightCanvasElement(e) {
+	try {
+
+		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+		var rect = canvasElement.getBoundingClientRect();
+		var x = e.clientX - rect.left;
+		var y = e.clientY - rect.top;
+
+		for( var i = 0; i < g.mainObjects.length; i++ ) {
+
+			if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
+
+				mouseOverElement = g.mainObjects[i].id;
+				drawToCanvas(g);
+				return;
+
+			}
+
+		}
+
+		mouseOverElement = null;
+		drawToCanvas(g);
+
+
+	} catch(err) {
+		console.log("Could not highlight on canvas : " + err.message);
 	}
 }
