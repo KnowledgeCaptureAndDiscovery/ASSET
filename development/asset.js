@@ -1,4 +1,3 @@
-
 var sourceJSON;
 var importAnchorElement;
 var assetAppElement;
@@ -12,8 +11,6 @@ var mouseOverElement;
 var selectedElement;
 
 var globalJSON = {"mainObjects": [], "edges": []};
-
-initialize();
 
 function initialize() {
 	
@@ -64,7 +61,7 @@ function allowDrop(e) {
 function canvasClick(e) {
 	
 	var rect = canvasElement.getBoundingClientRect();
-	var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+	var g = globalJSON;
 
 	var x = e.clientX - rect.left;
 	var y = e.clientY - rect.top;
@@ -177,7 +174,7 @@ function drop(e) {
 	}
 	
 
-	var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+	var g = globalJSON;
 
 	if( index == -1) {
 		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [dropoObject]};
@@ -216,9 +213,6 @@ function drop(e) {
 		
 		g.mainObjects[index].objectsArray.push(dropoObject);
 
-		// ctx.drawImage(imgElement, dropoObject.startX, dropoObject.startY, w, h);
-
-
 
 		for( var k = 0; k < g.mainObjects[index].objectsArray.length; k++ ) {
 
@@ -255,7 +249,7 @@ function checkifOverlapping(sx, sy, ex, ey) {
 
 	try {
 
-		globalJSON = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+		globalJSON = globalJSON;
 
 		for(var i = 0; i < globalJSON.mainObjects.length; i++) {
 
@@ -281,7 +275,7 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
 function editProperties() {
 	try {
 
-		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+		var g = globalJSON;
 		var editElement = g.mainObjects[editArray[0]].objectsArray[editArray[1]];
 		var editString = "<div style='text-align: left'><center><b>" + editElement.name + "</b></center>";
 
@@ -304,7 +298,7 @@ function editProperties() {
 
 function submitProperties() {
 	try {
-		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+		var g = globalJSON;
 
 		for (var i = 0; i < g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties.length; i++) {
 			var property = g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyName;
@@ -465,7 +459,7 @@ function drawEdge(flag) {
 
 		} else {
 			
-			var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
+			var g = globalJSON;
 
 			g.edges.push({"from": edgeArray[0].id, "to": edgeArray[1].id, "fromSide": edgeArray[0].side, "toSide": edgeArray[1].side});
 
@@ -501,8 +495,14 @@ function drawToCanvas(js) {
 			ctx.beginPath();
 			if( selectedElement == mainObject.id ) {
 				ctx.strokeStyle = "green";
+				ctx.fillStyle="green";
+				ctx.fillRect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+				ctx.fillStyle="black";
 			} else if( mouseOverElement == mainObject.id ) {
 				ctx.strokeStyle="orange";
+				ctx.fillStyle="orange";
+				ctx.fillRect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+				ctx.fillStyle="black";
 			} else {
 				ctx.strokeStyle="black";
 			}
@@ -540,21 +540,16 @@ function drawToCanvas(js) {
 			}
 
 		}
-
-		// edgeArray = [];
 		
 		for(var i = 0; i < js.edges.length; i++) {
 
 			var fromID = js.edges[i].from;
 			var fromSide = js.edges[i].fromSide;
 			var fromCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[fromID]], fromSide);
-			// checkForEdgeDrawClick(js.mainObjects[indexDictionary[fromID]], fromID, fromCoords.x, fromCoords.y);
-
 
 			var toID = js.edges[i].to;
 			var toSide = js.edges[i].toSide;
 			var toCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[toID]], toSide);
-			// che	ckForEdgeDrawClick(js.mainObjects[indexDictionary[toID]], toID, toCoords.x, toCoords.y);
 
 			ctx.beginPath();
 			ctx.strokeStyle = "black";
@@ -636,99 +631,11 @@ function redrawEdgeHelper(obj, side) {
 
 }
 
-function moveElementOnCanvas(e) {
-
-	try {
-
-		var indexDictionary = {};
-
-		var rect = canvasElement.getBoundingClientRect();
-		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
-
-		var x = e.clientX - rect.left;
-		var y = e.clientY - rect.top;
-
-		for (var i = 0; i < g.mainObjects.length; i++) {
-
-			indexDictionary[g.mainObjects[i].id] = i;
-		
-			if( (x >= g.mainObjects[i].startX && x <= g.mainObjects[i].endX ) && ( y >= g.mainObjects[i].startY && y <= g.mainObjects[i].endY ) ) {
-				if( moveElement != null && moveElement != g.mainObjects[i].id ) {
-					alert("Illegal move onto another element");
-					moveElement = null;
-					return;
-				}
-
-				if( moveElement == null ) {
-					moveElement = g.mainObjects[i].id;
-					return;
-				}
-			}
-		}
-
-		var mainObject = g.mainObjects[indexDictionary[moveElement]];
-
-		var width, height;
-		width = mainObject.endX - mainObject.startX;
-		height = mainObject.endY - mainObject.startY;
-
-		var sx, sy, ex, ey;
-		sx = x - (width / 2);
-		sy = y - (height / 2);
-		ex = sx + width;
-		ey = sy + height;
-
-		for(var i = 0; i < globalJSON.mainObjects.length; i++) {
-
-			if( i == indexDictionary[moveElement] )
-				continue;
-
-			var overlapValue = isOverlap(sx, sy, ex, ey, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY);
-			
-			if( overlapValue == true ){
-				moveElement = null;
-				alert("Illegal move onto another element");
-				return;
-			}
-		}
-
-		var xDifference = sx - g.mainObjects[indexDictionary[moveElement]].startX;
-		var yDifference = sy - g.mainObjects[indexDictionary[moveElement]].startY;
-
-		g.mainObjects[indexDictionary[moveElement]].startX = sx;
-		g.mainObjects[indexDictionary[moveElement]].startY = sy;
-		g.mainObjects[indexDictionary[moveElement]].endX = ex;
-		g.mainObjects[indexDictionary[moveElement]].endY = ey;
-
-		for( var i = 0; i < g.mainObjects[indexDictionary[moveElement]].objectsArray.length; i++ ) {
-
-			g.mainObjects[indexDictionary[moveElement]].objectsArray[i].startX += xDifference;
-			g.mainObjects[indexDictionary[moveElement]].objectsArray[i].endX += xDifference;
-			g.mainObjects[indexDictionary[moveElement]].objectsArray[i].startY += yDifference;
-			g.mainObjects[indexDictionary[moveElement]].objectsArray[i].endY += yDifference;
-
-		}
-
-
-		globalJSON = g;
-		localStorage.setItem("globalJSON", JSON.stringify(g));
-		importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-
-		moveElement = null;
-
-		drawToCanvas(g);
-
-	} catch(err) {
-		alert("Failed to move element : " + err.message);
-	}
-
-}
-
 function importWorkflow(e) {
 
 	try {
 
-		var importText = "<center>Import Workflow Sketch</center><br><input type='file' id='fileToLoad'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
+		var importText = "<center>Import Workflow Sketch</center><br><input type='file' id='fileToLoad' accept='application/json'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
 
 		displayPopup(importText, e.clientX, e.clientY - 10);
 
@@ -739,13 +646,33 @@ function importWorkflow(e) {
 
 function loadWorkflowSketch() {
 
+	try {
+
+		var uploadFileElement = Polymer.dom(assetAppElement.root).querySelector("#fileToLoad").files[0];
+		var fileReader = new FileReader();
+
+		fileReader.onload = function(fileLoadedEvent) {
+			var textFromFileLoaded = fileLoadedEvent.target.result;
+			globalJSON = JSON.parse(textFromFileLoaded);
+			drawToCanvas(globalJSON);
+			closePopup();
+			localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+			importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+		};
+	  
+		fileReader.readAsText(uploadFileElement, "UTF-8");
+
+	} catch(err) {
+		alert("Cannot load Workflow from invalid JSON : " + err.message);
+	}
+
 }
 
 function deleteNode(id) {
 
 	try {
 
-		var g = globalJSON;//JSON.parse(localStorage.getItem('globalJSON'));
+		var g = globalJSON;
 		var deletionFlag = false;
 
 		for( var i = 0; i < g.mainObjects.length; i++ ) {
@@ -791,31 +718,132 @@ function deleteNode(id) {
 	}
 }
 
-function highlightCanvasElement(e) {
+var canvasDragElement = null;
+var originalDragElement = null;
+
+function mouseDownFunction(e) {
 	try {
-
-		var g = globalJSON;//JSON.parse(localStorage.getItem("globalJSON"));
-		var rect = canvasElement.getBoundingClientRect();
-		var x = e.clientX - rect.left;
-		var y = e.clientY - rect.top;
-
-		for( var i = 0; i < g.mainObjects.length; i++ ) {
-
+		var g = globalJSON;
+		var x = e.clientX - canvasElement.getBoundingClientRect().left;
+		var y = e.clientY - canvasElement.getBoundingClientRect().top;
+		for (var i = 0; i < g.mainObjects.length; i++) {
+		
 			if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
 
-				mouseOverElement = g.mainObjects[i].id;
-				drawToCanvas(g);
+				canvasDragElement = {"element": g.mainObjects[i], "offsetX": (e.clientX - g.mainObjects[i].startX), "offsetY": (e.clientY - g.mainObjects[i].startY)};
+				originalDragElement = JSON.parse(JSON.stringify(g.mainObjects[i]));
 				return;
 
 			}
+		}
+
+		canvasDragElement = null;
+
+	} catch(err) {
+		canvasDragElement = null;
+		console.log("Could not start drag : " + err.message);
+	}
+}
+
+function mouseMoveFunction(e) {
+	try {
+
+		if( canvasDragElement == null ) {
+
+			var g = globalJSON;
+			var rect = canvasElement.getBoundingClientRect();
+			var x = e.clientX - rect.left;
+			var y = e.clientY - rect.top;
+
+			for( var i = 0; i < g.mainObjects.length; i++ ) {
+
+				if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
+
+					mouseOverElement = g.mainObjects[i].id;
+					drawToCanvas(g);
+					return;
+
+				}
+
+			}
+
+			mouseOverElement = null;
+			drawToCanvas(g);
+
+		} else {
+			console.log("here");
+			var g = globalJSON;
+			var xDifference = canvasDragElement.element.startX;
+			var yDifference = canvasDragElement.element.startY;
+
+			canvasDragElement.element.startX = e.clientX - canvasDragElement.offsetX;
+			canvasDragElement.element.startY = e.clientY - canvasDragElement.offsetY;
+
+			xDifference =  canvasDragElement.element.startX - xDifference;
+			yDifference = canvasDragElement.element.startY - yDifference;
+
+			canvasDragElement.element.endX += xDifference;
+			canvasDragElement.element.endY += yDifference;
+
+			for( var i = 0; i < canvasDragElement.element.objectsArray.length; i++ ) {
+
+				canvasDragElement.element.objectsArray[i].startX += xDifference;
+				canvasDragElement.element.objectsArray[i].endX += xDifference;
+				canvasDragElement.element.objectsArray[i].startY += yDifference;
+				canvasDragElement.element.objectsArray[i].endY += yDifference;
+
+			}
+
+			drawToCanvas(globalJSON);
+			localStorage.setItem("globalJSON", JSON.stringify(g));
+			importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
 		}
 
-		mouseOverElement = null;
-		drawToCanvas(g);
+	} catch(err) {
+		console.log("Failed to drag : " + err.message);
+	}
+}
 
+function mouseUpFunction(e) {
+
+	try {
+
+		if( canvasDragElement == null )
+			return;
+
+		if( canvasDragElement.element.startX == originalDragElement.startX && canvasDragElement.element.endX == originalDragElement.endX && canvasDragElement.element.startY == originalDragElement.startY && canvasDragElement.element.endY == originalDragElement.endY ) {
+			canvasDragElement = null;
+			return;
+		}
+
+		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+
+			if( globalJSON.mainObjects[i].id == canvasDragElement.element.id )
+				continue;
+
+			if( isOverlap(canvasDragElement.element.startX, canvasDragElement.element.startY, canvasDragElement.element.endX, canvasDragElement.element.endY, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY) == true) {
+				for( var j = 0; j < globalJSON.mainObjects.length; j++ ) {
+					if( globalJSON.mainObjects[j].id == canvasDragElement.element.id ) {
+						globalJSON.mainObjects[j] = originalDragElement;
+						canvasDragElement = null;
+						localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+						importAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+						drawToCanvas(globalJSON);
+						return;
+					}
+				}
+				
+			}	
+
+		}
+
+		canvasDragElement = null;
 
 	} catch(err) {
-		console.log("Could not highlight on canvas : " + err.message);
+
+		alert("Could not move element : " + err.message);
+
 	}
+
 }

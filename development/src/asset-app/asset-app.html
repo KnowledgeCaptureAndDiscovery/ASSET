@@ -112,7 +112,7 @@
 
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas onmousemove="highlightCanvasElement(event)" width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)" ondblclick="moveElementOnCanvas(event)" onclick="canvasClick(event)"></canvas>
+          <canvas onclick="canvasClick(event)" onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
         </div>
         <div id="populateDetailsSection"></div>
       </div>
