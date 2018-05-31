@@ -1,7 +1,35 @@
 {
+  "entrypoint": "index.html",
+  "sources": [
+   "src/**/*",
+   "js/**/*",
+   "files/**/*",
+   "images/**/*",
+   "content.json",
+   "bower.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/*"
+  ],
   "lint": {
-    "rules": [
-      "polymer-2"
-    ]
-  }
+    "rules": ["polymer-2"]
+  },
+  "builds": [{
+    "name": "assetTest",
+	"bundle": true,
+    "addServiceWorker": true,
+    "swPrecacheConfig": "sw-precache-config.js",
+    "css": { "minify": true },
+    "js": { 
+       "minify": {
+          "exclude": ["js/lib/*"]
+       }
+    },
+    "html": { 
+       "minify": {
+          "exclude": ["src/index.html"]
+       }
+    }
+  }]
 }

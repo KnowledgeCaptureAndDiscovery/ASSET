@@ -7,7 +7,7 @@
 				{
 						
 					"elementName": "Query Database",
-					"imageSource": "/Images/CommonTasks/queryDatabase.png",
+					"imageSource": "/images/commonTasks/queryDatabase.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -18,7 +18,7 @@
 						
 				{
 					"elementName": "Data Preparation",
-					"imageSource": "/Images/CommonTasks/dataPreparation.png",
+					"imageSource": "/images/commonTasks/dataPreparation.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -29,7 +29,7 @@
 						
 				{
 					"elementName": "Download Data",
-					"imageSource": "/Images/CommonTasks/downloadData.png",
+					"imageSource": "/images/commonTasks/downloadData.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -40,7 +40,7 @@
 				
 				{
 					"elementName" : "Run Code",
-					"imageSource": "/Images/CommonTasks/runCode.png",
+					"imageSource": "/images/commonTasks/runCode.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -51,7 +51,7 @@
 				
 				{
 					"elementName" : "Data",
-					"imageSource": "/Images/CommonTasks/data.png",
+					"imageSource": "/images/commonTasks/data.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -62,7 +62,7 @@
 				
 				{
 					"elementName" : "Visualize",
-					"imageSource": "/Images/CommonTasks/visualize.png",
+					"imageSource": "/images/commonTasks/visualize.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -73,7 +73,7 @@
 				
 				{
 					"elementName" : "TBD",
-					"imageSource": "/Images/CommonTasks/tbd.png",
+					"imageSource": "/images/commonTasks/tbd.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -92,7 +92,7 @@
 
 				{		
 					"elementName": "CHORDS",
-					"imageSource": "/Images/EarthCubeTools/CHORDS.png",
+					"imageSource": "/images/earthCubeTools/chords.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -103,7 +103,7 @@
 					
 				{
 					"elementName": "CINERGI",
-					"imageSource": "/Images/EarthCubeTools/CINERGI.png",
+					"imageSource": "/images/earthCubeTools/cinergi.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -114,7 +114,7 @@
 					
 				{
 					"elementName": "DisConBB",
-					"imageSource": "/Images/EarthCubeTools/DisConBB.png",
+					"imageSource": "/images/earthCubeTools/discon.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -125,7 +125,7 @@
 				
 				{
 					"elementName": "EarthSystemBridge",
-					"imageSource": "/Images/EarthCubeTools/EarthSystemBridge.png",
+					"imageSource": "/images/earthCubeTools/earth.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -136,7 +136,7 @@
 				
 				{
 					"elementName" : "GeoDeepDive",
-					"imageSource": "/Images/EarthCubeTools/GeoDeepDive.png",
+					"imageSource": "/images/earthCubeTools/geoDD.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -147,7 +147,7 @@
 				
 				{
 					"elementName" : "GeoDataSpace",
-					"imageSource": "/Images/EarthCubeTools/GeoDataSpace.png",
+					"imageSource": "/images/earthCubeTools/geoDS.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -158,7 +158,7 @@
 				
 				{
 					"elementName" : "GeoSemantics",
-					"imageSource": "/Images/EarthCubeTools/GeoSemantics.png",
+					"imageSource": "/images/earthCubeTools/geoS.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -169,7 +169,7 @@
 				
 				{
 					"elementName" : "OntoSoft",
-					"imageSource": "/Images/EarthCubeTools/OntoSoft.png",
+					"imageSource": "/images/earthCubeTools/ontosoft.png",
 					"properties": [
 						{
 							"propertyName": "Description",
