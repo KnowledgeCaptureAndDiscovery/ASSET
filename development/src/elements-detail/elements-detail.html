@@ -9,7 +9,7 @@
 
 	    <dom-repeat items="{{elementsImage}}" as="elementimage">
 			<template>
-				<img src="{{elementimage}}" height="75px" on-mouseover="highlightElement" on-mouseout="removeHighlight" on-click="displayName" style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
+				<img src="{{elementimage}}" height="75px" on-mouseover="displayAndHighlight" on-mouseout="removeHighlightandDisplay" style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
           	</template>
 		</dom-repeat>
 
@@ -106,7 +106,7 @@
 				}
 
 			}
-
+            
 			displayName(e) {
 
 				try {
@@ -116,13 +116,12 @@
 						closePopup();
 					} else {
 						this.popupFlag = 0;
-						
 						for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
 							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
 								this.popupFlag = 0;
 								displayPopup(this.dataJSON.elements[i].elementName, e.clientX, e.clientY);
 							}
-						}
+						} 
 					}
 
 				} catch(err) {
@@ -133,19 +132,36 @@
 				
 			}
 
-			highlightElement(e) {
-
+			displayAndHighlight(e) {
+                
+                //highlight
 				try {
-
 					e.target.setAttribute("style", "border: 2px solid blue");
-
 				} catch(err) {
 					console.log("Could Not highlight element : " + err.message);
 				}
-
+                //display
+                try {
+					//if( this.popupFlag == 0 ) {
+					//	this.popupFlag = 1;
+					//	closePopup();
+					//} else {
+					//	this.popupFlag = 0;
+                        var name;
+						for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
+							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
+					//			this.popupFlag = 0;
+                                var temp = e.target.getBoundingClientRect();
+								displayPopup(this.dataJSON.elements[i].elementName, (temp.left+temp.right)/2, temp.top) ;
+                                name = this.dataJSON.elements[i].elementName;
+							}
+						}
+                } catch (err) {
+                    console.log("Could Not Load/Hide display : " + err.message);
+                }
 			}
 
-			removeHighlight(e) {
+			removeHighlightandDisplay(e) {
 
 				try {
 
@@ -154,6 +170,7 @@
 				} catch(err) {
 					console.log("Could Not highlight element : " + err.message);
 				}
+                closePopup();
 
 			}
 

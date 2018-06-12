@@ -12,6 +12,10 @@ var selectedElement;
 
 var globalJSON = {"mainObjects": [], "edges": []};
 
+/*
+     Called when body is initialized
+*/
+
 function initialize() {
 	
 
@@ -36,17 +40,22 @@ function initialize() {
 	edgeArray = [];
 }
 
+/*
+    
+*/
 function displayPopup(popupText, clientX, clientY) {
 	try {
 		popupElement.style.visibility = "visible";
 		popupElement.innerHTML = popupText;
 
-		popupContainerElement.style.left = clientX + "px";
-		popupContainerElement.style.top = clientY + "px";
-	} catch(err) {
-
+        if (clientX === null) {
+            
+        } else {
+		    popupContainerElement.style.left = clientX + "px";
+            popupContainerElement.style.top = clientY + "px";
+        }
+    } catch(err) {
 		console.log("Could not Display popup : " + err.message);
-
 	}
 }
 
