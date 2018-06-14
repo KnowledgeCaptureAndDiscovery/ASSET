@@ -9,6 +9,7 @@ var edgeArray;
 var moveElement;
 var mouseOverElement;
 var selectedElement;
+var descriptionElement;
 
 var globalJSON = {"mainObjects": [], "edges": []};
 
@@ -38,8 +39,14 @@ function initialize() {
 	sourceJSON = null;
 
 	edgeArray = [];
+    
+    descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection");
+    
+    var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
+    descriptionElement.innerHTML = canvasholder.offsetWidth + "fawefefa";
+    canvasElement.width = canvasholder.offsetWidth;
+    canvasElement.height = canvasholder.offsetHeight;
 }
-
 /*
     
 */

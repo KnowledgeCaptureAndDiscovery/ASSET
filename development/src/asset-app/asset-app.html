@@ -22,14 +22,14 @@
       #leftSsection {
         border: 1px solid #ccc;
         float: left;
-        width: 15%;
+        width: 15vw;
         text-align: center;
-        padding: 10px;
+        padding: 1vw;
       }
 
       #rightSsection {
         float: right;
-        width: 83%;
+        width: 80vw;
       }
 
       #populateDetailsSection {
@@ -94,11 +94,50 @@
       }
 
       #canvasContainerSection {
-        width: 1565px;
+        width: 80vw;
         height: 700px;
         border: 1px solid #ccc;
-        overflow: scroll;
+        /*overflow: scroll;*/
       }
+        
+        /*slider stuff from w3schools https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
+        
+        #sizeSlider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 15px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.5;
+        -webkit-transition: .15s;
+        transition: opacity .15s;
+        overflow : visible;
+        }
+        
+        #sizeSlider:hover {
+            opacity: 1;
+        }
+        
+        #sizeSlider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+         appearance: none;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+        }
+        
+        hr { 
+        display: block;
+        margin-top: 2em;
+        margin-bottom: 2em;
+        margin-left: auto;
+        margin-right: auto;
+        border-style: inset;
+        border-width: 1px;
+        }
 
     </style>
 
@@ -108,11 +147,30 @@
 
       <div id="leftSsection">
         <workflow-elements id="asd" src="content.json"></workflow-elements>
+          
+        <hr>
+          
+        
+        <div id= "sizeSliderSection">
+            Zoom:
+            <input type="range" min="1" max="20" value="1" class="slider" id="sizeSlider">
+        </div>
+        <div class="description" id="descriptionSection">
+            Discription section: TO BE ADDED SOON
+        </div>
       </div>
+    
+      
 
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas onclick="canvasClick(event)" onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="2500px" height="2500px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
+          <canvas onclick="canvasClick(event)" onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
+            <script>
+                    var ctx = document.getElementById("workflowSketchCanvas");
+                    var canvasContainer = document.getElementById("canvasContainerSection");
+                    ctx.width  = 14;
+                    ctx.height = canvasContainer.innerHeight;
+            </script>
         </div>
         <div id="populateDetailsSection"></div>
       </div>
@@ -124,12 +182,16 @@
     </footer>
 
     <div class="popupContainer" id="popupContainer">
-      <span class="popuptext" id="popup">LOLOLOLOLOL</span>
+      <span class="popuptext" id="popup"></span>
     </div>
 
   </template>
 
   <script>
+      var ctx = document.getElementById("workflowSketchCanvas");
+                    var canvasContainer = document.getElementById("canvasContainerSection");
+                    //ctx.width  = canvasContainer.width;
+                    //ctx.height = canvasContainer.innerHeight;
     /**
      * @customElement
      * @polymer
