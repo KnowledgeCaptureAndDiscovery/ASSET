@@ -1,6 +1,9 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
 <link rel="import" href="../workflow-elements/workflow-elements.html">
 <link rel="import" href="../elements-detail/elements-detail.html">
+<link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
+
 
 <dom-module id="asset-app">
   <template>
@@ -153,7 +156,7 @@
         
         <div id= "sizeSliderSection">
             Zoom:
-            <input type="range" min="1" max="20" value="1" class="slider" id="sizeSlider">
+            <paper-slider ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
         </div>
         <div class="description" id="descriptionSection">
             Discription section: TO BE ADDED SOON
@@ -164,13 +167,7 @@
 
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas onclick="canvasClick(event)" onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
-            <script>
-                    var ctx = document.getElementById("workflowSketchCanvas");
-                    var canvasContainer = document.getElementById("canvasContainerSection");
-                    ctx.width  = 14;
-                    ctx.height = canvasContainer.innerHeight;
-            </script>
+          <canvas onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
         </div>
         <div id="populateDetailsSection"></div>
       </div>
@@ -188,10 +185,6 @@
   </template>
 
   <script>
-      var ctx = document.getElementById("workflowSketchCanvas");
-                    var canvasContainer = document.getElementById("canvasContainerSection");
-                    //ctx.width  = canvasContainer.width;
-                    //ctx.height = canvasContainer.innerHeight;
     /**
      * @customElement
      * @polymer

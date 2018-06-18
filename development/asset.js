@@ -14,6 +14,17 @@ var descriptionElement;
 var globalJSON = {"mainObjects": [], "edges": []};
 
 /*
+	Helpers for the canvas
+*/
+
+var slider;
+var currentScale;
+var minScale;
+var maxScale;
+var sketchCache;
+var step;
+
+/*
      Called when body is initialized
 */
 
@@ -43,10 +54,70 @@ function initialize() {
     descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection");
     
     var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
-    descriptionElement.innerHTML = canvasholder.offsetWidth + "fawefefa";
     canvasElement.width = canvasholder.offsetWidth;
     canvasElement.height = canvasholder.offsetHeight;
+    
+	slider = Polymer.dom(assetAppElement.root).querySelector("#sizeSlider");
+	currentScale = slider.immediateValue;
+	minScale = slider.min;
+	maxScale = slider.max;
+	step = slider.step;
+}	
+
+function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER AS WELL OR REMOVE EDITABLE
+	if (e.deltaY > 0) {
+		if (currentScale > minScale) {
+			zoomIn();
+		}
+		
+		
+	} else {
+		if (currentScale < maxScale) {
+			zoomOut();
+		}
+
+	}
+	
 }
+
+function zoomIn() {
+	slider.increment();
+	currentScale -= step;
+	var newWidth = canvasElement.width * currentScale;
+	var newHeight = canvasElement.height * currentScale;
+	var imageData = canvasElement.getContext("2d").getImageData(0, 0, canvasElement.width, canvasElement.height);
+	var copy = document.createElement('canvas');
+	copy.width = canvasElement.width;
+	copy.height = canvasElement.height;
+	copy.getContext("2d").putImageData(imageData,0, 0);
+    
+    canvasElement.getContext("2d").save();
+    canvasElement.getContext("2d").translate(-((newWidth-canvasElement.width)/2), -((newHeight-canvasElement.height)/2));
+    canvasElement.getContext("2d").scale(currentScale, currentScale);
+    canvasElement.getContext("2d").clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasElement.getContext("2d").drawImage(copy, 0, 0);
+    canvasElement.getContext("2d").restore();
+}
+
+function zoomOut() {
+	slider.decrement();
+	currentScale += step;
+	var newWidth = canvasElement.width * currentScale;
+	var newHeight = canvasElement.height * currentScale;
+	var imageData = canvasElement.getContext("2d").getImageData(0, 0, canvasElement.width, canvasElement.height);
+	var copy = document.createElement('canvas');
+	copy.width = canvasElement.width;
+	copy.height = canvasElement.height;
+	copy.getContext("2d").putImageData(imageData,0, 0);
+    
+    canvasElement.getContext("2d").save();
+    canvasElement.getContext("2d").translate(-((newWidth-canvasElement.width)/2), -((newHeight-canvasElement.height)/2));
+    canvasElement.getContext("2d").scale(currentScale, currentScale);
+    canvasElement.getContext("2d").clearRect(0, 0, canvasElement.width, canvasElement.height);
+    canvasElement.getContext("2d").drawImage(copy, 0, 0);
+    canvasElement.getContext("2d").restore();
+}
+
 /*
     
 */
@@ -75,7 +146,10 @@ function allowDrop(e) {
 }
 
 function canvasClick(e) {
-	
+	var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
+    descriptionElement.innerHTML = canvasholder.offsetWidth + "fawefefa";
+    canvasElement.width = canvasholder.offsetWidth;
+    canvasElement.height = canvasholder.offsetHeight;
 	var rect = canvasElement.getBoundingClientRect();
 	var g = globalJSON;
 
@@ -765,7 +839,7 @@ function mouseMoveFunction(e) {
 	try {
 
 		if( canvasDragElement == null ) {
-
+/*
 			var g = globalJSON;
 			var rect = canvasElement.getBoundingClientRect();
 			var x = e.clientX - rect.left;
@@ -781,10 +855,10 @@ function mouseMoveFunction(e) {
 
 				}
 
-			}
+			}*/
 
 			mouseOverElement = null;
-			drawToCanvas(g);
+			//drawToCanvas(g);
 
 		} else {
 			console.log("here");
