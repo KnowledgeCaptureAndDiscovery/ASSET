@@ -9,7 +9,8 @@
 
 	    <dom-repeat items="{{elementsImage}}" as="elementimage">
 			<template>
-				<img src="{{elementimage}}" height="75px" on-mouseover="displayAndHighlight" on-mouseout="removeHighlightandDisplay" style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
+				<img src="{{elementimage}}" height="75px" on-mouseover="displayAndHighlight" on-mouseout="removeHighlightandDisplay" 
+					style="border: 1px solid black" ondragstart="onElementDrag(event)" draggable="true">
           	</template>
 		</dom-repeat>
 
@@ -146,7 +147,8 @@
 						for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
 							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
                                 var temp = e.target.getBoundingClientRect();
-								displayPopup(this.dataJSON.elements[i].elementName, (temp.left+temp.right)/2 + document.documentElement.scrollLeft, temp.top + document.documentElement.scrollTop) ;
+								displayPopup(this.dataJSON.elements[i].elementName, (temp.left+temp.right)/2 + document.documentElement.scrollLeft, temp.top + 
+									document.documentElement.scrollTop) ;
                                 name = this.dataJSON.elements[i].elementName;
 							}
 						}
