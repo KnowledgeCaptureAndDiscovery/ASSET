@@ -10,8 +10,11 @@ var moveElement;
 var mouseOverElement;
 var selectedElement;
 var descriptionElement;
+var descriptionTable;
+var detailTemplate;
 
-var globalJSON = {"mainObjects": [], "edges": []}; // the workflow elements and edges
+
+var globalJSON = {"mainObjects": [], "edges": [], "details": []}; // the workflow elements and edges and details
 
 /*
 	Helpers for the canvas
@@ -59,7 +62,13 @@ function initialize() {
 
 	edgeArray = [];
 	
-    descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
+	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
+	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
+	detailTemplate = [
+			{name: 'Name', detail: 'WorkflowElement'},
+			{name: 'Description', detail: 'Workflow description'},
+			{name: 'Author', detail: 'Jeffrey'},
+		];
 	
 	//canvas container: adds the canvas so it doesnt expand and stuff
     var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
@@ -185,12 +194,12 @@ function allowDrop(e) { //not comm yet
 
 /*
 	Called When the canvas is clicked
-
-	?????
+	Checks for things (delete edge) set selectedElement, displays description
 	TODO: remove delete button and have backspace/ deleted button be delete instead
 		make double click be the edge drawer instead
 		show the description on the side instead on the top
 */
+var indexData;
 function canvasClick(e) {
 	//get coordinates of the click
 	var rect = canvasElement.getBoundingClientRect();
@@ -216,41 +225,59 @@ function canvasClick(e) {
 				drawEdge(true);
 				return;
 			}
+			
+			//for(var j = 0; j < element.objectsArray.length; j++) { // get the desrption and stuff displays popup
 
-			for(var j = 0; j < element.objectsArray.length; j++) { // get the desrption and stuff i have no idea what this does yet and why need loop? TODO: change this
-
-				if( (x >= element.objectsArray[j].startX && x <= element.objectsArray[j].endX ) && ( y >= element.objectsArray[j].startY && y <= element.objectsArray[j].endY ) ) {
+				//if( (x >= element.objectsArray[j].startX && x <= element.objectsArray[j].endX ) && ( y >= element.objectsArray[j].startY && y <= element.objectsArray[j].endY ) ) {
+					resetTable();
+					descriptionTable.style.visibility = "visible";
+					descriptionTable.editName(element.objectsArray[0].name);
+					descriptionTable.loadDetails(globalJSON.details[i]);
+					//indexData = j;
 					
-					var n = element.objectsArray[j].name;
-					var d = element.objectsArray[j].description;
 
-					var st = "<b>" + n + "</b>";
+
+
+
+
+
+					// var n = element.objectsArray[j].name;
+					// var d = element.objectsArray[j].description;
+
+					// var st = "<b>" + n + "</b>";
 					
-					for(var p = 0; p < element.objectsArray[j].properties.length; p++) {
-						st += "<br><b>" + element.objectsArray[j].properties[p].propertyName + " : </b>" + element.objectsArray[j].properties[p].propertyValue;
-					}
+					// for(var p = 0; p < element.objectsArray[j].properties.length; p++) {
+					// 	st += "<br><b>" + element.objectsArray[j].properties[p].propertyName + " : </b>" + element.objectsArray[j].properties[p].propertyValue;
+					// }
 
-					st += "<br>	<button onclick=editProperties()>Edit</button> <button onclick=closePopup()>Close</button>";
+					// st += "<br>	<button onclick=editProperties()>Edit</button> <button onclick=closePopup()>Close</button>";
 
-					var dispX = element.objectsArray[j].startX + ((element.objectsArray[j].endX - element.objectsArray[j].startX) / 2);
+					// var dispX = element.objectsArray[j].startX + ((element.objectsArray[j].endX - element.objectsArray[j].startX) / 2);
 
-					editArray = [i, j, (dispX + rect.left), (element.objectsArray[j].startY + rect.top)];
+					// editArray = [i, j, (dispX + rect.left), (element.objectsArray[j].startY + rect.top)]; //saves the indexes of the arrays and positions
 
-					displayPopup(st, dispX + rect.left, element.objectsArray[j].startY + rect.top);
+					// displayPopup(st, dispX + rect.left, element.objectsArray[j].startY + rect.top);
 					return;
 
-				}	
+				//}	
 
-			}
-			closePopup();
+			//}
+			//closePopup();
+			resetTable();
 			return;
 		}
 	}
 
-	closePopup();
+	//closePopup();
+	resetTable();
 	selectedElement = null; //deselect element
 	drawToCanvas(g); //draw that
 
+}
+
+function resetTable() {
+	descriptionTable.clear();
+	descriptionTable.style.visibility = "hidden";
 }
 
 /*
@@ -258,6 +285,9 @@ function canvasClick(e) {
 
 	I added a scaling variable maybe will come to play in zooming
 	TODO: minor bug: if something not an object is dragged then the thing bugs out
+	remove borders
+	implement stacking
+	remove dots
 */
 function drop(e) {
 
@@ -291,16 +321,17 @@ function drop(e) {
 
 	var index = checkifOverlapping(startX, startY, endX, endY);//check if overlapping
 
-	var activeWorkflowElement = JSON.parse(localStorage.getItem("activeWorkflowElement")); //isnt this the same thing as currentDragElement?
+	var activeWorkflowElement = JSON.parse(localStorage.getItem("activeWorkflowElement")); //The current set of workflow diagrams that is being used ex: "common tasks" and "earthcube tools"
 
 	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "properties": [], "startX": startX, "startY": startY, "endX": endX, "endY": endY}; //create new element
 
-	//keeps the images and descriptions consistent unsure what active workflowelement is?
+	//finds which element the currently dragged element adds fields to the new Element
 	for( var i = 0; i < activeWorkflowElement.elements.length; i++) {
 		if( activeWorkflowElement.elements[i].imageSource == src ) {
-			newElement.name = activeWorkflowElement.elements[i].elementName;
-			newElement.imageSource = src;
+			newElement.name = activeWorkflowElement.elements[i].elementName; //saves name
+			newElement.imageSource = src; //saves image
 			
+			//saves properties
 			for (var j = 0; j < activeWorkflowElement.elements[i].properties.length; j++) {
 				var value = null;
 
@@ -313,16 +344,26 @@ function drop(e) {
 				}
 
 				newElement.properties.push({"propertyName": activeWorkflowElement.elements[i].properties[j].propertyName, "propertyType": activeWorkflowElement.elements[i].properties[j].propertyType, "propertyValue": value});
-
 			}
 		}
 	}
 
-	if( index == -1) { //not overlapping with other element
+	if( index == -1) { // if not overlapping with other element
+		//pushes the new object into object array and given paddings 5,17,5,5
+		//objectsArray is len 1, if len > 1 means that they are stacked
 		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [newElement]};
-		globalJSON.mainObjects.push(mainObject);
-		ctx.drawImage(imgElement ,startX, startY, w, h);
+		globalJSON.mainObjects.push(mainObject); //pushed into mainobjects
+		globalJSON.details.push([
+			{name: 'Name', detail: 'WorkflowElement'},
+			{name: 'Description', detail: 'Workflow description'},
+			{name: 'Author', detail: 'Jeffrey'},
+		]);
+		detailTemplate["name"] = "aawef";
+		
+		//draws the image to the canvas
+		ctx.drawImage(imgElement, startX, startY, w, h);
 
+		//draws the borders
 		ctx.beginPath();
 		ctx.strokeStyle="black";
 		ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
@@ -337,6 +378,7 @@ function drop(e) {
 		ctx.rect(mainObject.endX - 12, mainObject.startY + 2, 10, 10);
 		ctx.stroke();
 
+		//draw the side dots
 		drawEdgeConnectors(mainObject.startX, mainObject.startY, mainObject.endX, mainObject.endY);
 
 	} else { //overlapping with another element (very gltichy) makes them stack
@@ -379,6 +421,10 @@ function drop(e) {
 
 }
 
+/*
+	Puts the workflow elements onto the bottom toolbar
+	called when and activeWorkflowElement Button is pressed
+*/
 function populateWorkflowElementsDetail(workflowElementsDetail) {
 
 	var populateWorkflowElementsDetailElement = Polymer.dom(assetAppElement.root).querySelector("#populateDetailsSection");
@@ -386,6 +432,11 @@ function populateWorkflowElementsDetail(workflowElementsDetail) {
 
 }
 
+/*
+	returns -1 if false or error
+
+	returns i (index of first element overlapped if true)
+*/
 function checkifOverlapping(sx, sy, ex, ey) {
 
 	try {
@@ -407,18 +458,20 @@ function checkifOverlapping(sx, sy, ex, ey) {
 	}
 }
 
+/*
+	returns true if there is overlap
+*/
 function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
     return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
 }
+
 
 function editProperties() {
 	try {
 
 		var g = globalJSON;
-		var editElement = g.mainObjects[editArray[0]].objectsArray[editArray[1]];
+		var editElement = g.mainObjects[editArray[0]].objectsArray[editArray[1]]; //determines which element is to be edited
 		var editString = "<div style='text-align: left'><center><b>" + editElement.name + "</b></center>";
-
-		closePopup();
 		
 		for (var i = 0; i < editElement.properties.length; i++) {
 			editString += "<br>" + editElement.properties[i].propertyName + " : <input id='" + editElement.properties[i].propertyName + "' type='text'>";
@@ -435,26 +488,26 @@ function editProperties() {
 	}
 }
 
-function submitProperties() {
-	try {
-		var g = globalJSON;
+// function submitProperties() {
+// 	try {
+// 		var g = globalJSON;
 
-		for (var i = 0; i < g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties.length; i++) {
-			var property = g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyName;
-			var value = Polymer.dom(assetAppElement.root).querySelector("#" + property).value;
-			g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyValue = value;
-		}
+// 		for (var i = 0; i < g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties.length; i++) {
+// 			var property = g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyName;
+// 			var value = Polymer.dom(assetAppElement.root).querySelector("#" + property).value;
+// 			g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyValue = value;
+// 		}
 
-		globalJSON = g;
+// 		globalJSON = g;
 
-		localStorage.setItem("globalJSON", JSON.stringify(g));
-		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+// 		localStorage.setItem("globalJSON", JSON.stringify(g));
+// 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
-		closePopup();
-	} catch(err) {
-		alert("Failed to submit : " + err.message);
-	}
-}
+// 		closePopup();
+// 	} catch(err) {
+// 		alert("Failed to submit : " + err.message);
+// 	}
+// }
 
 function drawEdgeConnectors(startX, startY, endX, endY) {
 
@@ -819,6 +872,7 @@ function deleteNode(id) {
 			if( g.mainObjects[i].id == id ) {
 
 				g.mainObjects.splice(i, 1);
+				g.details.splice(i,1);
 				deletionFlag = true;
 				break;
 
@@ -910,7 +964,6 @@ function mouseMoveFunction(e) {
 			//drawToCanvas(g);
 
 		} else {
-			console.log("here");
 			var g = globalJSON;
 			var xDifference = canvasDragElement.element.startX;
 			var yDifference = canvasDragElement.element.startY;

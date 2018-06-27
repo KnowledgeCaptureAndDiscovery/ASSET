@@ -82,7 +82,7 @@
 				    for(i = 0; i < dataJSON.workflowElements.length; i++) {
 				    	if( dataJSON.workflowElements[i].name == this.type ) {
 				    		this.dataJSON = dataJSON.workflowElements[i];
-				    		localStorage.setItem("activeWorkflowElement", JSON.stringify(dataJSON.workflowElements[i]));
+							localStorage.setItem("activeWorkflowElement", JSON.stringify(dataJSON.workflowElements[i]));
 				    		break;
 				    	}
 				    }
