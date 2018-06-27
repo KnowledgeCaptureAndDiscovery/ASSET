@@ -91,13 +91,15 @@ function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER
 	if (e.deltaY > 0) { //scroll down
 		if (currentScale < maxScale) { //if slider isnt at the lowest point
 			zoomOut();
+			drawToCanvas(globalJSON);
 		}
 	} else {//scroll up
 		if (currentScale > minScale) { //if slider isnt at the lowest point
 			zoomIn();
+			drawToCanvas(globalJSON);
 		}
 	}
-	descriptionElement.innerHTML=descriptionElement.innerHTML + currentScale + "<br />"; //testing stuff remove later
+	//descriptionElement.innerHTML=descriptionElement.innerHTML + currentScale + "<br />"; //testing stuff remove later
 }
 
 /*
@@ -199,7 +201,7 @@ function allowDrop(e) { //not comm yet
 		make double click be the edge drawer instead
 		show the description on the side instead on the top
 */
-var indexData;
+var selected = false;
 function canvasClick(e) {
 	//get coordinates of the click
 	var rect = canvasElement.getBoundingClientRect();
@@ -212,7 +214,7 @@ function canvasClick(e) {
 
 		var element = g.mainObjects[i]; //the current element
 
-		if( (x >= element.startX - 4 && x <= element.endX + 4 ) && ( y >= element.startY - 4 && y <= element.endY + 4 ) ) { // checks if click was in bounds of the element
+		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
 			drawToCanvas(g); //redraw everything but highlight element
 
@@ -223,9 +225,14 @@ function canvasClick(e) {
 
 			if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
 				drawEdge(true);
+				drawToCanvas(globalJSON);
 				return;
 			}
 			
+			if (selected == true) {
+				break;
+			}
+			selected = true;
 			//for(var j = 0; j < element.objectsArray.length; j++) { // get the desrption and stuff displays popup
 
 				//if( (x >= element.objectsArray[j].startX && x <= element.objectsArray[j].endX ) && ( y >= element.objectsArray[j].startY && y <= element.objectsArray[j].endY ) ) {
@@ -233,7 +240,26 @@ function canvasClick(e) {
 					descriptionTable.style.visibility = "visible";
 					descriptionTable.editName(element.objectsArray[0].name);
 					descriptionTable.loadDetails(globalJSON.details[i]);
-					//indexData = j;
+					
+					var ctx = canvasElement.getContext("2d");
+
+					//draws the borders
+		ctx.beginPath();
+		ctx.strokeStyle="black";
+		ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.strokeStyle="black";
+		ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
+		ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
+		ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
+		ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
+		ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
+		ctx.stroke();
+
+		//draw the side dots
+		drawEdgeConnectors(element.startX/currentScale, element.startY/currentScale, element.endX/currentScale, element.endY/currentScale);
 					
 
 
@@ -257,6 +283,7 @@ function canvasClick(e) {
 					// editArray = [i, j, (dispX + rect.left), (element.objectsArray[j].startY + rect.top)]; //saves the indexes of the arrays and positions
 
 					// displayPopup(st, dispX + rect.left, element.objectsArray[j].startY + rect.top);
+					//refreshTable();
 					return;
 
 				//}	
@@ -269,10 +296,23 @@ function canvasClick(e) {
 	}
 
 	//closePopup();
+	
 	resetTable();
 	selectedElement = null; //deselect element
 	drawToCanvas(g); //draw that
 
+	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
+	if (selected == true) {
+	 	selected = false;
+	 	setTimeout(() => canvasClick(e), 1);;
+	}
+}
+/*
+	Wtf i thought js had no pointers???
+*/
+function newTemplate() {
+	var newInstance = JSON.parse(JSON.stringify(detailTemplate));
+	return newInstance;
 }
 
 function resetTable() {
@@ -353,33 +393,28 @@ function drop(e) {
 		//objectsArray is len 1, if len > 1 means that they are stacked
 		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [newElement]};
 		globalJSON.mainObjects.push(mainObject); //pushed into mainobjects
-		globalJSON.details.push([
-			{name: 'Name', detail: 'WorkflowElement'},
-			{name: 'Description', detail: 'Workflow description'},
-			{name: 'Author', detail: 'Jeffrey'},
-		]);
-		detailTemplate["name"] = "aawef";
+		globalJSON.details.push(newTemplate());
 		
 		//draws the image to the canvas
-		ctx.drawImage(imgElement, startX, startY, w, h);
+		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
 
-		//draws the borders
-		ctx.beginPath();
-		ctx.strokeStyle="black";
-		ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
-		ctx.stroke();
+		// //draws the borders
+		// ctx.beginPath();
+		// ctx.strokeStyle="black";
+		// ctx.rect(mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+		// ctx.stroke();
 
-		ctx.beginPath();
-		ctx.strokeStyle="black";
-		ctx.moveTo(mainObject.endX - 10, mainObject.startY + 4);
-		ctx.lineTo(mainObject.endX - 4, mainObject.startY + 10);
-		ctx.moveTo(mainObject.endX - 4, mainObject.startY + 4);
-		ctx.lineTo(mainObject.endX - 10, mainObject.startY + 10);
-		ctx.rect(mainObject.endX - 12, mainObject.startY + 2, 10, 10);
-		ctx.stroke();
+		// ctx.beginPath();
+		// ctx.strokeStyle="black";
+		// ctx.moveTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 4)/currentScale);
+		// ctx.lineTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 10)/currentScale);
+		// ctx.moveTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 4)/currentScale);
+		// ctx.lineTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 10)/currentScale);
+		// ctx.rect((mainObject.endX - 12)/currentScale, (mainObject.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
+		// ctx.stroke();
 
-		//draw the side dots
-		drawEdgeConnectors(mainObject.startX, mainObject.startY, mainObject.endX, mainObject.endY);
+		// //draw the side dots
+		// drawEdgeConnectors(mainObject.startX/currentScale, mainObject.startY/currentScale, mainObject.endX/currentScale, mainObject.endY/currentScale);
 
 	} else { //overlapping with another element (very gltichy) makes them stack
 
@@ -688,47 +723,47 @@ function drawToCanvas(js) {
 			if( selectedElement == mainObject.id ) {
 				ctx.strokeStyle = "green";
 				ctx.fillStyle="green";
-				ctx.fillRect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+				ctx.fillRect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 				ctx.fillStyle="black";
 			} else if( mouseOverElement == mainObject.id ) {
 				ctx.strokeStyle="orange";
 				ctx.fillStyle="orange";
-				ctx.fillRect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
+				ctx.fillRect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 				ctx.fillStyle="black";
 			} else {
 				ctx.strokeStyle="black";
 			}
-			ctx.rect(mainObject.startX, mainObject.startY, mainObject.endX - mainObject.startX, mainObject.endY - mainObject.startY);
-			ctx.stroke();
+			//ctx.rect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			//ctx.stroke();
 
-			ctx.beginPath();
-			ctx.strokeStyle="black";
-			ctx.moveTo(mainObject.endX - 10, mainObject.startY + 4);
-			ctx.lineTo(mainObject.endX - 4, mainObject.startY + 10);
-			ctx.moveTo(mainObject.endX - 4, mainObject.startY + 4);
-			ctx.lineTo(mainObject.endX - 10, mainObject.startY + 10);
-			ctx.rect(mainObject.endX - 12, mainObject.startY + 2, 10, 10);
-			ctx.stroke();
+			// ctx.beginPath();
+			// ctx.strokeStyle="black";
+			// ctx.moveTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 4)/currentScale);
+			// ctx.lineTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 10)/currentScale);
+			// ctx.moveTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 4)/currentScale);
+			// ctx.lineTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 10)/currentScale);
+			// ctx.rect((mainObject.endX - 12)/currentScale, (mainObject.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
+			// ctx.stroke();
 
 			for(var j = 0; j < mainObject.objectsArray.length; j++) {
 
-				var element = mainObject.objectsArray[j];
+			 	var element = mainObject.objectsArray[j];
 
-				var imgElement = new Image();
-				imgElement.src = element.imageSource;
+			 	var imgElement = new Image();
+			 	imgElement.src = element.imageSource;
 
-				ctx.drawImage(imgElement, element.startX, element.startY, element.endX - element.startX, element.endY - element.startY);
+			 	ctx.drawImage(imgElement, element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
 
-				if( mainObject.objectsArray.length > 1 && j < mainObject.objectsArray.length - 1 ) {
-					ctx.beginPath();
-					ctx.strokeStyle="black";
-					ctx.moveTo(mainObject.startX, element.endY + 5);
-					ctx.lineTo(mainObject.endX, element.endY + 5);
-					ctx.stroke();
+			// 	if( mainObject.objectsArray.length > 1 && j < mainObject.objectsArray.length - 1 ) {
+			// 		ctx.beginPath();
+			// 		ctx.strokeStyle="black";
+			// 		ctx.moveTo(mainObject.startX/currentScale, (element.endY + 5)/currentScale);
+			// 		ctx.lineTo(mainObject.endX/currentScale, (element.endY + 5)/currentScale);
+			// 		ctx.stroke();
+			// 	}
+				if( edgeArray.length == 1 ) {
+					drawEdgeConnectors(mainObject.startX/currentScale, mainObject.startY/currentScale, mainObject.endX/currentScale, mainObject.endY/currentScale);
 				}
-
-				drawEdgeConnectors(mainObject.startX, mainObject.startY, mainObject.endX, mainObject.endY);
-
 			}
 
 		}
@@ -745,30 +780,30 @@ function drawToCanvas(js) {
 
 			ctx.beginPath();
 			ctx.strokeStyle = "black";
-			ctx.moveTo(fromCoords.x, fromCoords.y);
+			ctx.moveTo(fromCoords.x/currentScale, fromCoords.y/currentScale);
 			
 			var arrowPath = new Path2D();		
 
 			if( toSide == "left" ) {
-				arrowPath.moveTo(toCoords.x, toCoords.y);
-				arrowPath.lineTo(toCoords.x - 10, toCoords.y - 10);
-				arrowPath.lineTo(toCoords.x - 10, toCoords.y + 10);
-				ctx.lineTo(toCoords.x - 10, toCoords.y);
+				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
+				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
+				ctx.lineTo((toCoords.x - 10)/currentScale, (toCoords.y)/currentScale);
 			} else if( toSide == "top" ) {
-				arrowPath.moveTo(toCoords.x, toCoords.y);
-				arrowPath.lineTo(toCoords.x - 10, toCoords.y - 10);
-				arrowPath.lineTo(toCoords.x + 10, toCoords.y - 10);
-				ctx.lineTo(toCoords.x, toCoords.y - 10);
+				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
+				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
+				ctx.lineTo((toCoords.x)/currentScale, (toCoords.y - 10)/currentScale);
 			}  else if( toSide == "right" ) {
-				arrowPath.moveTo(toCoords.x, toCoords.y);
-				arrowPath.lineTo(toCoords.x + 10, toCoords.y - 10);
-				arrowPath.lineTo(toCoords.x + 10, toCoords.y + 10);
-				ctx.lineTo(toCoords.x + 10, toCoords.y);
-			} else {
-				arrowPath.moveTo(toCoords.x, toCoords.y);
-				arrowPath.lineTo(toCoords.x - 10, toCoords.y + 10);
-				arrowPath.lineTo(toCoords.x + 10, toCoords.y + 10);
-				ctx.lineTo(toCoords.x, toCoords.y + 10);
+				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
+				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
+				ctx.lineTo((toCoords.x + 10)/currentScale,(toCoords.y)/currentScale);
+			} else { //bottom
+				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
+				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
+				ctx.lineTo((toCoords.x)/currentScale, (toCoords.y + 10)/currentScale);
 			}
 
 			ctx.stroke();
@@ -921,7 +956,7 @@ function mouseDownFunction(e) {
 		var y = e.clientY - canvasElement.getBoundingClientRect().top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
 		
-			if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
+			if( (x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale ) && ( y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale ) ) {
 
 				canvasDragElement = {"element": g.mainObjects[i], "offsetX": (e.clientX - g.mainObjects[i].startX), "offsetY": (e.clientY - g.mainObjects[i].startY)};
 				originalDragElement = JSON.parse(JSON.stringify(g.mainObjects[i]));
@@ -965,7 +1000,7 @@ function mouseMoveFunction(e) {
 
 		} else {
 			var g = globalJSON;
-			var xDifference = canvasDragElement.element.startX;
+			var xDifference = canvasDragElement.element.startX ;
 			var yDifference = canvasDragElement.element.startY;
 
 			canvasDragElement.element.startX = e.clientX - canvasDragElement.offsetX;
