@@ -1,0 +1,127 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+
+
+<dom-module id="interactive-table">
+  <template>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+
+      #title, button {
+        float: left;
+      }
+    </style>
+    <h2 id="title">[[elementTitle]]</h2>
+    
+    <table>
+        <template is="dom-repeat" items="{{details}}">
+            <tr class = "descriptionRow">
+            <td contenteditable="true" on-blur="restoreDetail" class = "name" id ="name[[index]]" on-keypress="saveIfEnter">[[item.name]]</td>
+            <td contenteditable="true" on-blur="restoreDetail" class = "detail" id ="detail[[index]]" on-keypress="saveIfEnter">[[item.detail]]</td>
+          </tr>
+        </template>
+    </table>
+
+    <br>
+    <button on-click= "addNewProperty">Add property</button>
+    
+  </template>
+
+  <script>
+    
+    /**
+     * `interactive-table`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class InteractiveTable extends Polymer.Element {
+      static get is() { return 'interactive-table'; }
+      static get properties() {
+        return {
+          elementTitle : {
+            type: String,
+            value: "Enter"
+          }
+          ,
+          details: {
+            type: Array,
+            value() {
+              return [
+                {name: 'Name', detail: 'WorkflowElement'},
+                {name: 'Description', detail: 'Workflow description'},
+                {name: 'Author', detail: 'Jeffrey'},
+              ];
+            }
+          }
+          ,
+          next : {
+            type: Array,
+            value: []
+          }
+        };
+      }
+
+      addNewProperty() {
+        this.push("details", {name: "", detail: ""});
+      }
+
+      addProperty(theName, theDetail) {
+        this.push("details", {name: theName, detail: theDetail});
+      }
+      restoreDetail(e) {
+        if (e.target.className == "name") {
+          e.target.innerHTML = this.details[parseInt(e.target.id.substring(4))]["name"];
+        } else {
+          e.target.innerHTML = this.details[parseInt(e.target.id.substring(6))]["detail"];
+        }
+      }
+
+      editName(title) {
+        this.elementTitle = title;
+      }
+
+      saveIfEnter(e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (e.target.className == "name") {
+            this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerHTML;
+          } else {
+            this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerHTML;
+          }
+        }
+      }
+
+      loadDetails(details) {
+        this.details = details;
+      }
+
+      clear() {
+        this.details = null;
+      }
+
+      getData() {
+        return this.details;
+      }
+    }
+
+    window.customElements.define(InteractiveTable.is, InteractiveTable);
+  </script>
+</dom-module>
