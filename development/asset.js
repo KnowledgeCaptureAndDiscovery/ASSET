@@ -3,7 +3,7 @@ var exportAnchorElement;
 var assetAppElement;
 var popupElement;
 var popupContainerElement;
-var canvasElement; // fake canvas before zoom and stuff
+var canvasElement;
 var editArray;
 var edgeArray;
 var moveElement;
@@ -17,7 +17,7 @@ var detailTemplate;
 var globalJSON = {"mainObjects": [], "edges": [], "details": []}; // the workflow elements and edges and details
 
 /*
-	Helpers for the canvas
+	Helpers for the canvas zoom functions
 */
 
 var slider;
@@ -31,7 +31,6 @@ var step;
 	 Called when body is initialized
 	 
 	 TO DO: change the name of the workflow json file and have the user be able to title workflow
-		 MOVE DESCRIPTION SECTION TO APPROPRIATE PLACE and implement it
 		 FIX ZOOM
 		 MAYBE ADD ERROR CATCHING
 		Add refresh, closer warning
@@ -54,7 +53,6 @@ function initialize() {
 
 	canvasElement = Polymer.dom(assetAppElement.root).querySelector("#workflowSketchCanvas"); // the canvas added
 
-	// not sure yet lmao
 	moveElement = null;
 	mouseOverElement = null;
 	selectedElement = null; // element that is currently selected
@@ -99,16 +97,10 @@ function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER
 			drawToCanvas(globalJSON);
 		}
 	}
-	//descriptionElement.innerHTML=descriptionElement.innerHTML + currentScale + "<br />"; //testing stuff remove later
 }
 
 /*
 	zooms in the canvas and moves the slider to appropriate place
-	Have 2 canvas, one that is hidden and one displayed, and the hidden one stores a copy of the workflow that is min scaled (most zoomed in) and 
-		the displayed canvas zooms out accordingly
-	Just zooming in and out is not feasible because quality gets shitty when zoomed out as pixels are lost
-
-	Another way is to save locations of all the elements and edges and draw accordingly everytime we zoom out
 
 	Also im thinking of adding a cache for the result canvas so people dont lag too hard if scrolling is spammed this is of lesser priority
 */
@@ -116,22 +108,6 @@ function zoomIn() {
 	//decreases the value of the slider and saves the value
 	slider.decrement();
 	currentScale = slider.immediateValue;
-
-	//other stuff that was of the old implementation
-	var newWidth = canvasElement.width * currentScale;
-	var newHeight = canvasElement.height * currentScale;
-	// var imageData = canvasElement.getContext("2d").getImageData(0, 0, canvasElement.width, canvasElement.height);
-	// var copy = document.createElement('canvas');
-	// copy.width = canvasElement.width;
-	// copy.height = canvasElement.height;
-	// copy.getContext("2d").putImageData(imageData,0, 0);
-    
-    // canvasElement.getContext("2d").save();
-    // canvasElement.getContext("2d").translate(-((newWidth-canvasElement.width)/2), -((newHeight-canvasElement.height)/2));
-    // canvasElement.getContext("2d").scale(currentScale, currentScale);
-    // canvasElement.getContext("2d").clearRect(0, 0, canvasElement.width, canvasElement.height);
-    // canvasElement.getContext("2d").drawImage(copy, 0, 0);
-    // canvasElement.getContext("2d").restore();
 }
 
 /* 
@@ -142,22 +118,6 @@ function zoomOut() {
 	//increases value of the slider
 	slider.increment();
 	currentScale = slider.immediateValue;
-
-	//other stuff that was of the old implementation
-	var newWidth = canvasElement.width * currentScale;
-	var newHeight = canvasElement.height * currentScale;
-	// var imageData = canvasElement.getContext("2d").getImageData(0, 0, canvasElement.width, canvasElement.height); // saves current image
-	// var copy = document.createElement('canvas'); // makes canvas element (but chill its invisible)
-	// copy.width = canvasElement.width; // copies 
-	// copy.height = canvasElement.height;
-	// copy.getContext("2d").putImageData(imageData,0, 0);
-    
-    // canvasElement.getContext("2d").save();
-    // canvasElement.getContext("2d").translate(-((newWidth-canvasElement.width)/2), -((newHeight-canvasElement.height)/2));
-    // canvasElement.getContext("2d").scale(currentScale, currentScale);
-    // canvasElement.getContext("2d").clearRect(0, 0, canvasElement.width, canvasElement.height);
-    // canvasElement.getContext("2d").drawImage(copy, 0, 0);
-    // canvasElement.getContext("2d").restore();
 }
 
 /*
@@ -189,8 +149,9 @@ function closePopup() {
 }
 
 /*
+	prevents wierd stuff from happening
 */
-function allowDrop(e) { //not comm yet
+function allowDrop(e) {
 	e.preventDefault();
 }
 
@@ -199,7 +160,6 @@ function allowDrop(e) { //not comm yet
 	Checks for things (delete edge) set selectedElement, displays description
 	TODO: remove delete button and have backspace/ deleted button be delete instead
 		make double click be the edge drawer instead
-		show the description on the side instead on the top
 */
 var selected = false;
 function canvasClick(e) {
@@ -233,70 +193,32 @@ function canvasClick(e) {
 				break;
 			}
 			selected = true;
-			//for(var j = 0; j < element.objectsArray.length; j++) { // get the desrption and stuff displays popup
+			descriptionTable.style.visibility = "visible";
+			descriptionTable.editName(element.objectsArray[0].name);
+			descriptionTable.loadDetails(globalJSON.details[i]);
 
-				//if( (x >= element.objectsArray[j].startX && x <= element.objectsArray[j].endX ) && ( y >= element.objectsArray[j].startY && y <= element.objectsArray[j].endY ) ) {
-					resetTable();
-					descriptionTable.style.visibility = "visible";
-					descriptionTable.editName(element.objectsArray[0].name);
-					descriptionTable.loadDetails(globalJSON.details[i]);
-					
-					var ctx = canvasElement.getContext("2d");
+			var ctx = canvasElement.getContext("2d");
 
-					//draws the borders
-		ctx.beginPath();
-		ctx.strokeStyle="black";
-		ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
-		ctx.stroke();
+			//draws the borders
+			ctx.beginPath();
+			ctx.strokeStyle="black";
+			ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
+			ctx.stroke();
 
-		ctx.beginPath();
-		ctx.strokeStyle="black";
-		ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
-		ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
-		ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
-		ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
-		ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
-		ctx.stroke();
+			ctx.beginPath();
+			ctx.strokeStyle="black";
+			ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
+			ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
+			ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
+			ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
+			ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
+			ctx.stroke();
 
-		//draw the side dots
-		drawEdgeConnectors(element.startX/currentScale, element.startY/currentScale, element.endX/currentScale, element.endY/currentScale);
-					
-
-
-
-
-
-
-					// var n = element.objectsArray[j].name;
-					// var d = element.objectsArray[j].description;
-
-					// var st = "<b>" + n + "</b>";
-					
-					// for(var p = 0; p < element.objectsArray[j].properties.length; p++) {
-					// 	st += "<br><b>" + element.objectsArray[j].properties[p].propertyName + " : </b>" + element.objectsArray[j].properties[p].propertyValue;
-					// }
-
-					// st += "<br>	<button onclick=editProperties()>Edit</button> <button onclick=closePopup()>Close</button>";
-
-					// var dispX = element.objectsArray[j].startX + ((element.objectsArray[j].endX - element.objectsArray[j].startX) / 2);
-
-					// editArray = [i, j, (dispX + rect.left), (element.objectsArray[j].startY + rect.top)]; //saves the indexes of the arrays and positions
-
-					// displayPopup(st, dispX + rect.left, element.objectsArray[j].startY + rect.top);
-					//refreshTable();
-					return;
-
-				//}	
-
-			//}
-			//closePopup();
-			resetTable();
+			//draw the side dots
+			drawEdgeConnectors(element.startX/currentScale, element.startY/currentScale, element.endX/currentScale, element.endY/currentScale);
 			return;
 		}
 	}
-
-	//closePopup();
-	
 	resetTable();
 	selectedElement = null; //deselect element
 	drawToCanvas(g); //draw that
@@ -308,7 +230,7 @@ function canvasClick(e) {
 	}
 }
 /*
-	Wtf i thought js had no pointers???
+	Creates copy of template
 */
 function newTemplate() {
 	var newInstance = JSON.parse(JSON.stringify(detailTemplate));
@@ -323,9 +245,7 @@ function resetTable() {
 /*
 	Called when object is dropped into the canvas
 
-	I added a scaling variable maybe will come to play in zooming
 	TODO: minor bug: if something not an object is dragged then the thing bugs out
-	remove borders
 	implement stacking
 	remove dots
 */
@@ -397,24 +317,6 @@ function drop(e) {
 		
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
-
-		// //draws the borders
-		// ctx.beginPath();
-		// ctx.strokeStyle="black";
-		// ctx.rect(mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
-		// ctx.stroke();
-
-		// ctx.beginPath();
-		// ctx.strokeStyle="black";
-		// ctx.moveTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 4)/currentScale);
-		// ctx.lineTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 10)/currentScale);
-		// ctx.moveTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 4)/currentScale);
-		// ctx.lineTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 10)/currentScale);
-		// ctx.rect((mainObject.endX - 12)/currentScale, (mainObject.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
-		// ctx.stroke();
-
-		// //draw the side dots
-		// drawEdgeConnectors(mainObject.startX/currentScale, mainObject.startY/currentScale, mainObject.endX/currentScale, mainObject.endY/currentScale);
 
 	} else { //overlapping with another element (very gltichy) makes them stack
 
@@ -499,50 +401,6 @@ function checkifOverlapping(sx, sy, ex, ey) {
 function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
     return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
 }
-
-
-function editProperties() {
-	try {
-
-		var g = globalJSON;
-		var editElement = g.mainObjects[editArray[0]].objectsArray[editArray[1]]; //determines which element is to be edited
-		var editString = "<div style='text-align: left'><center><b>" + editElement.name + "</b></center>";
-		
-		for (var i = 0; i < editElement.properties.length; i++) {
-			editString += "<br>" + editElement.properties[i].propertyName + " : <input id='" + editElement.properties[i].propertyName + "' type='text'>";
-		}
-		
-		editString += "</div>";
-
-		editString += "<center><button onclick='submitProperties()'>Submit</button>  <button onclick='closePopup()'>Close</button></center>";
-
-		displayPopup(editString, editArray[2], editArray[3]);
-
-	} catch(err) {
-		alert("Unable to edit properties : " + err.message);
-	}
-}
-
-// function submitProperties() {
-// 	try {
-// 		var g = globalJSON;
-
-// 		for (var i = 0; i < g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties.length; i++) {
-// 			var property = g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyName;
-// 			var value = Polymer.dom(assetAppElement.root).querySelector("#" + property).value;
-// 			g.mainObjects[editArray[0]].objectsArray[editArray[1]].properties[i].propertyValue = value;
-// 		}
-
-// 		globalJSON = g;
-
-// 		localStorage.setItem("globalJSON", JSON.stringify(g));
-// 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-
-// 		closePopup();
-// 	} catch(err) {
-// 		alert("Failed to submit : " + err.message);
-// 	}
-// }
 
 function drawEdgeConnectors(startX, startY, endX, endY) {
 
@@ -733,17 +591,6 @@ function drawToCanvas(js) {
 			} else {
 				ctx.strokeStyle="black";
 			}
-			//ctx.rect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
-			//ctx.stroke();
-
-			// ctx.beginPath();
-			// ctx.strokeStyle="black";
-			// ctx.moveTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 4)/currentScale);
-			// ctx.lineTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 10)/currentScale);
-			// ctx.moveTo((mainObject.endX - 4)/currentScale, (mainObject.startY + 4)/currentScale);
-			// ctx.lineTo((mainObject.endX - 10)/currentScale, (mainObject.startY + 10)/currentScale);
-			// ctx.rect((mainObject.endX - 12)/currentScale, (mainObject.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
-			// ctx.stroke();
 
 			for(var j = 0; j < mainObject.objectsArray.length; j++) {
 
@@ -754,13 +601,6 @@ function drawToCanvas(js) {
 
 			 	ctx.drawImage(imgElement, element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
 
-			// 	if( mainObject.objectsArray.length > 1 && j < mainObject.objectsArray.length - 1 ) {
-			// 		ctx.beginPath();
-			// 		ctx.strokeStyle="black";
-			// 		ctx.moveTo(mainObject.startX/currentScale, (element.endY + 5)/currentScale);
-			// 		ctx.lineTo(mainObject.endX/currentScale, (element.endY + 5)/currentScale);
-			// 		ctx.stroke();
-			// 	}
 				if( edgeArray.length == 1 ) {
 					drawEdgeConnectors(mainObject.startX/currentScale, mainObject.startY/currentScale, mainObject.endX/currentScale, mainObject.endY/currentScale);
 				}
@@ -809,9 +649,7 @@ function drawToCanvas(js) {
 			ctx.stroke();
 			ctx.fill(arrowPath);
 
-
 		}
-
 
 	} catch(err) {
 	 	console.log("Could not draw onto canvas : " + err.message);
@@ -910,9 +748,7 @@ function deleteNode(id) {
 				g.details.splice(i,1);
 				deletionFlag = true;
 				break;
-
 			}
-
 		}
 
 		var j = 0;
@@ -930,7 +766,6 @@ function deleteNode(id) {
 			} else {
 				j++;
 			}
-
 		}
 
 		if(deletionFlag == true) {
@@ -940,7 +775,6 @@ function deleteNode(id) {
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 			drawToCanvas(g);
 		}
-
 	} catch(err) {
 		alert("Could not delete node : " + err.message);
 	}
@@ -966,7 +800,7 @@ function mouseDownFunction(e) {
 		}
 
 		canvasDragElement = null;
-
+		
 	} catch(err) {
 		canvasDragElement = null;
 		console.log("Could not start drag : " + err.message);
@@ -977,26 +811,7 @@ function mouseMoveFunction(e) {
 	try {
 
 		if( canvasDragElement == null ) {
-/*
-			var g = globalJSON;
-			var rect = canvasElement.getBoundingClientRect();
-			var x = e.clientX - rect.left;
-			var y = e.clientY - rect.top;
-
-			for( var i = 0; i < g.mainObjects.length; i++ ) {
-
-				if( (x >= g.mainObjects[i].startX - 4 && x <= g.mainObjects[i].endX + 4 ) && ( y >= g.mainObjects[i].startY - 4 && y <= g.mainObjects[i].endY + 4 ) ) {
-
-					mouseOverElement = g.mainObjects[i].id;
-					drawToCanvas(g);
-					return;
-
-				}
-
-			}*/
-
 			mouseOverElement = null;
-			//drawToCanvas(g);
 
 		} else {
 			var g = globalJSON;
@@ -1060,17 +875,12 @@ function mouseUpFunction(e) {
 						return;
 					}
 				}
-				
 			}	
-
 		}
-
 		canvasDragElement = null;
 
 	} catch(err) {
 
 		alert("Could not move element : " + err.message);
-
 	}
-
 }
