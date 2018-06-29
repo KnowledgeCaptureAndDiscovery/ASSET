@@ -34,6 +34,7 @@
       #rightSsection {
         float: right;
         width: 80vw;
+        user-select: none;
       }
 
       #populateDetailsSection {
@@ -143,9 +144,13 @@
         border-width: 1px;
         }
 
+        footer {
+          user-select: none;
+        }
+
     </style>
 
-    <div id="titleSection"><h1>ASSET - Workflow Sketching</h1></div>
+    <div id="titleSection"><h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">New Workflow</h1></div>
 
     <div id="ContentSection">
 
@@ -158,7 +163,7 @@
         </div>
         <hr>
         <div id="descriptionSection">
-          <interactive-table id="table" style= "visibility: visible;"></interactive-table>
+          <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
         </div>
       </div>
       
@@ -172,7 +177,7 @@
     </div>
 
     <footer>
-      <a href="#" id="exportAnchor">Export Sketch</a>  |  <a href="#" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+      <a href="#" id="exportAnchor" onclick=  "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
     </footer>
 
     <div class="popupContainer" id="popupContainer">

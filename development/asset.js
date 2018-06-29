@@ -12,10 +12,11 @@ var selectedElement;
 var descriptionElement;
 var descriptionTable;
 var detailTemplate;
+var title;
 
+var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; // the workflow elements and edges and details and title
 
-var globalJSON = {"mainObjects": [], "edges": [], "details": []}; // the workflow elements and edges and details
-
+var saved; //saves whether to save or not
 /*
 	Helpers for the canvas zoom functions
 */
@@ -42,10 +43,6 @@ function initialize() {
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); //maps tuple of two lists (main Objects and edges)
 
 	assetAppElement = Polymer.dom(this.root).querySelector("asset-app"); //adds asset-app as a field
-
-	exportAnchorElement = Polymer.dom(assetAppElement.root).querySelector("#exportAnchor"); //adds export button as a field
-	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
-	exportAnchorElement.setAttribute("download", "Workflow.json");// change the name (workflow.json) to the title
 
 	//adds popup element as field
 	popupElement = Polymer.dom(assetAppElement.root).querySelector("#popup");
@@ -79,15 +76,31 @@ function initialize() {
 	minScale = slider.min;
 	maxScale = slider.max;
 	step = slider.step;
+
+	title = Polymer.dom(assetAppElement.root).querySelector("#title");
+	globalJSON["title"] = title.innerHTML; //saves the title
+	
+	exportAnchorElement = Polymer.dom(assetAppElement.root).querySelector("#exportAnchor"); //adds export button as a field
+	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
+	exportAnchorElement.download = globalJSON["title"] + ".json"; //sets download name to title
+
+	saved = true;
+	window.onbeforeunload = function() {
+		if (!saved){
+			return "Data will be lost if you leave the page, are you sure?";
+		}
+	};
 }	
 
 
 /* 
 	called when mouse wheel in motion over the canvas
+
+	e is mouse move event
 */
 function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER AS WELL OR REMOVE EDITABLE
 	if (e.deltaY > 0) { //scroll down
-		if (currentScale < maxScale) { //if slider isnt at the lowest point
+		if (currentScale < maxScale) { //if slider isnt at the highest point
 			zoomOut();
 			drawToCanvas(globalJSON);
 		}
@@ -97,6 +110,41 @@ function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER
 			drawToCanvas(globalJSON);
 		}
 	}
+}
+
+/*
+	Called when the title loses focus or pressed enter 
+
+	Saves the title to globalJSON and download file
+*/
+function saveTitle(e) {
+	if (globalJSON["title"] != title.innerHTML) {
+		globalJSON["title"] = title.innerHTML;
+		exportAnchorElement.download = globalJSON["title"] + ".json";
+		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+		saved = false;
+	}
+}
+
+/*
+	Pretty minor function... Just prevents the browser from registering enter strokes when in the title
+*/
+function ignoreEnters(e) {
+	if (e.key === "Enter") {
+		e.preventDefault();
+		title.blur();
+		saveTitle(e);
+	}
+}
+
+/*
+	Prevents alert from showing
+
+	Called when the download button is clicked
+*/
+function downloaded(e) {
+	saved = true;
 }
 
 /*
@@ -157,13 +205,14 @@ function allowDrop(e) {
 
 /*
 	Called When the canvas is clicked
-	Checks for things (delete edge) set selectedElement, displays description
+	Checks for things (delete edge), set selectedElement, displays description
 	TODO: remove delete button and have backspace/ deleted button be delete instead
 		make double click be the edge drawer instead
 */
 var selected = false;
 function canvasClick(e) {
 	//get coordinates of the click
+	title.blur();
 	var rect = canvasElement.getBoundingClientRect();
 	var x = e.clientX - rect.left; 
 	var y = e.clientY - rect.top;
@@ -180,12 +229,14 @@ function canvasClick(e) {
 
 			if( checkForDeleteClick(element, x, y) == true ) { //if delete TODO: change this
 				deleteNode(element.id);
+				saved = false;
 				return;
 			}
 
 			if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
 				drawEdge(true);
 				drawToCanvas(globalJSON);
+				saved = false;
 				return;
 			}
 			
@@ -226,7 +277,7 @@ function canvasClick(e) {
 	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
 	if (selected == true) {
 	 	selected = false;
-	 	setTimeout(() => canvasClick(e), 1);;
+	 	setTimeout(() => canvasClick(e), 1);
 	}
 }
 /*
@@ -356,6 +407,7 @@ function drop(e) {
 
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
+	saved = false;
 }
 
 /*
@@ -719,10 +771,17 @@ function loadWorkflowSketch() {
 		fileReader.onload = function(fileLoadedEvent) {
 			var textFromFileLoaded = fileLoadedEvent.target.result;
 			globalJSON = JSON.parse(textFromFileLoaded);
-			drawToCanvas(globalJSON);
 			closePopup();
+			
+			//setting download link
 			localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+
+			Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+			exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+			canvasClick(fileLoadedEvent); //simulates click in the canvas not on an element to reset all the variables
+			setTimeout(() => canvasClick(fileLoadedEvent), 1000); //reload canvas cuz on slow computers the parsing is slow and it only loads partly the first time
+			canvasClick(fileLoadedEvent);
 		};
 	  
 		fileReader.readAsText(uploadFileElement, "UTF-8");
@@ -732,6 +791,7 @@ function loadWorkflowSketch() {
 	}
 
 }
+
 
 function deleteNode(id) {
 
