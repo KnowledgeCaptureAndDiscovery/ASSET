@@ -2,7 +2,7 @@
 	"workflowElements": [
 
 		{
-			"name": "Common Tasks",
+			"name": "Tasks Catagories",
 			"elements": [
 				{
 						
@@ -178,6 +178,12 @@
 					]
 				}
 				
+			]
+		},
+		{
+			"name" : "Other stuff",
+			"elements": [
+
 			]
 		}
 		

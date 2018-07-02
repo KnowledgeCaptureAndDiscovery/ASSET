@@ -39,7 +39,6 @@ var step;
 */
 function initialize() {
 	
-
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); //maps tuple of two lists (main Objects and edges)
 
 	assetAppElement = Polymer.dom(this.root).querySelector("asset-app"); //adds asset-app as a field
@@ -84,14 +83,76 @@ function initialize() {
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
 	exportAnchorElement.download = globalJSON["title"] + ".json"; //sets download name to title
 
+	//for saving and warnings
 	saved = true;
 	window.onbeforeunload = function() {
 		if (!saved){
 			return "Data will be lost if you leave the page, are you sure?";
 		}
 	};
-}	
 
+	//to load the images
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Tasks Catagories']")), 'click'); 
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCubeTools']")), 'click');
+	
+	Polymer.dom(assetAppElement.root).querySelector("#populateDetailsSection").innerHTML = "";
+
+	//helpers for delete press
+	canvasElement.tabIndex = 1000;
+	canvasElement.style.outline = "none";
+	window.addEventListener("keydown", buttonPressed);
+}
+
+/*
+	From stack overflow simulates an event
+*/
+function eventFire(el, etype){
+	if (el.fireEvent) {
+	  el.fireEvent('on' + etype);
+	} else {
+	  var evObj = document.createEvent('Events');
+	  evObj.initEvent(etype, true, false);
+	  el.dispatchEvent(evObj);
+	}
+}
+
+//called when button is pressed on canvas
+function buttonPressed(e){
+	deletePress(e);
+}
+
+//one of the functions when a key is pressed
+function deletePress(e) {
+	if (e.key === "Backspace" || e.key === "Delete") {
+		if (selectedElement != null) {
+			deleteNode(selectedElement);
+			saved = false;
+		}
+	}
+}
+
+var doubleClickTime = 0;
+var threshold = 150;
+
+function onClick(e) {
+    // var t0 = new Date();
+    // if (t0 - doubleClickTime > threshold) {
+    //     setTimeout(function () {
+    //         if (t0 - doubleClickTime > threshold) {
+                canvasClick(e);
+    //        }
+    //     },threshold);
+    // }
+}
+
+function doOnClick(e) {
+    canvasClick(e);
+}
+
+function onDoubleClick(e) {
+    //doubleClickTime = new Date();
+    console.log("execute onDoubleClick function");
+}
 
 /* 
 	called when mouse wheel in motion over the canvas
@@ -102,14 +163,13 @@ function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER
 	if (e.deltaY > 0) { //scroll down
 		if (currentScale < maxScale) { //if slider isnt at the highest point
 			zoomOut();
-			drawToCanvas(globalJSON);
 		}
 	} else {//scroll up
 		if (currentScale > minScale) { //if slider isnt at the lowest point
 			zoomIn();
-			drawToCanvas(globalJSON);
 		}
 	}
+	drawToCanvas(globalJSON);
 }
 
 /*
@@ -140,7 +200,6 @@ function ignoreEnters(e) {
 
 /*
 	Prevents alert from showing
-
 	Called when the download button is clicked
 */
 function downloaded(e) {
@@ -210,6 +269,7 @@ function allowDrop(e) {
 		make double click be the edge drawer instead
 */
 var selected = false;
+var isGlitchy = false; //ignore this this is to prevent fails
 function canvasClick(e) {
 	//get coordinates of the click
 	title.blur();
@@ -226,12 +286,6 @@ function canvasClick(e) {
 		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
 			drawToCanvas(g); //redraw everything but highlight element
-
-			if( checkForDeleteClick(element, x, y) == true ) { //if delete TODO: change this
-				deleteNode(element.id);
-				saved = false;
-				return;
-			}
 
 			if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
 				drawEdge(true);
@@ -251,19 +305,19 @@ function canvasClick(e) {
 			var ctx = canvasElement.getContext("2d");
 
 			//draws the borders
-			ctx.beginPath();
-			ctx.strokeStyle="black";
-			ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
-			ctx.stroke();
+			// ctx.beginPath();
+			// ctx.strokeStyle="black";
+			// ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
+			// ctx.stroke();
 
-			ctx.beginPath();
-			ctx.strokeStyle="black";
-			ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
-			ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
-			ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
-			ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
-			ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
-			ctx.stroke();
+			// ctx.beginPath();
+			// ctx.strokeStyle="black";
+			// ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
+			// ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
+			// ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
+			// ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
+			//ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
+			//ctx.stroke();
 
 			//draw the side dots
 			drawEdgeConnectors(element.startX/currentScale, element.startY/currentScale, element.endX/currentScale, element.endY/currentScale);
@@ -272,22 +326,31 @@ function canvasClick(e) {
 	}
 	resetTable();
 	selectedElement = null; //deselect element
+	edgeArray.length = 0;
 	drawToCanvas(g); //draw that
 
 	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
 	if (selected == true) {
-	 	selected = false;
-	 	setTimeout(() => canvasClick(e), 1);
+		selected = false;
+		if (isGlitchy) {
+			setTimeout(() => canvasClick(e), 100);
+		} else {
+			setTimeout(() => canvasClick(e), 10);
+		}
+	 	
 	}
 }
 /*
-	Creates copy of template
+	Creates copy of template description
 */
 function newTemplate() {
 	var newInstance = JSON.parse(JSON.stringify(detailTemplate));
 	return newInstance;
 }
 
+/*
+	Clear table and reset it
+*/
 function resetTable() {
 	descriptionTable.clear();
 	descriptionTable.style.visibility = "hidden";
@@ -362,7 +425,7 @@ function drop(e) {
 	if( index == -1) { // if not overlapping with other element
 		//pushes the new object into object array and given paddings 5,17,5,5
 		//objectsArray is len 1, if len > 1 means that they are stacked
-		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 17), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [newElement]};
+		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 5), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [newElement]};
 		globalJSON.mainObjects.push(mainObject); //pushed into mainobjects
 		globalJSON.details.push(newTemplate());
 		
@@ -516,23 +579,23 @@ function checkForEdgeDrawClick(obj, i, x, y) {
 
 }
 
-function checkForDeleteClick(obj, x, y) {
+// function checkForDeleteClick(obj, x, y) {
 
-	try {
+// 	try {
 
-		if( (x >= obj.endX - 12 && x <= obj.endX - 2 ) && ( y >= obj.startY + 2 && y <= obj.startY + 12 ) ) {
+// 		if( (x >= obj.endX - 12 && x <= obj.endX - 2 ) && ( y >= obj.startY + 2 && y <= obj.startY + 12 ) ) {
 
-			return true;
-		}
+// 			return true;
+// 		}
 
-		return false;
+// 		return false;
 
-	} catch(err) {
-		alert("Cannot delete edge : " + err.message);
-		return false;
-	}
+// 	} catch(err) {
+// 		alert("Cannot delete edge : " + err.message);
+// 		return false;
+// 	}
 
-}
+// }
 
 function drawEdge(flag) {
 
@@ -780,8 +843,8 @@ function loadWorkflowSketch() {
 			Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
 			exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
 			canvasClick(fileLoadedEvent); //simulates click in the canvas not on an element to reset all the variables
-			setTimeout(() => canvasClick(fileLoadedEvent), 1000); //reload canvas cuz on slow computers the parsing is slow and it only loads partly the first time
-			canvasClick(fileLoadedEvent);
+			selected = false;
+			//setTimeout(() => canvasClick(fileLoadedEvent), 1000); //reload canvas cuz on slow computers the parsing is slow and it only loads partly the first time
 		};
 	  
 		fileReader.readAsText(uploadFileElement, "UTF-8");

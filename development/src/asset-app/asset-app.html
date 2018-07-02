@@ -9,7 +9,7 @@
 
 <dom-module id="asset-app">
   <template>
-    <style>
+    <style is="custom-style">
       :host {
         display: block;
       }
@@ -148,7 +148,14 @@
           user-select: none;
         }
 
-    </style>
+        paper-slider {
+          --paper-slider-knob-start-color: #388e3c;
+          --paper-slider-active-color: #388e3c;
+          --paper-slider-knob-color: #388e3c;
+        }
+
+
+    </style> 
 
     <div id="titleSection"><h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">New Workflow</h1></div>
 
@@ -169,7 +176,7 @@
       
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)"></canvas>
+          <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="onClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
         </div>
         <div id="populateDetailsSection"></div>
       </div>
