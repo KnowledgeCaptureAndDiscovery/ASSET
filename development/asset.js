@@ -9,6 +9,7 @@ var edgeArray;
 var moveElement;
 var mouseOverElement;
 var selectedElement;
+var currentElement;
 var descriptionElement;
 var descriptionTable;
 var detailTemplate;
@@ -31,10 +32,8 @@ var step;
 /*
 	 Called when body is initialized
 	 
-	 TO DO: change the name of the workflow json file and have the user be able to title workflow
-		 FIX ZOOM
+	 TO DO: FIX ZOOM
 		 MAYBE ADD ERROR CATCHING
-		Add refresh, closer warning
 		make anchor into buttons and not refresh all the time
 */
 function initialize() {
@@ -53,6 +52,7 @@ function initialize() {
 	mouseOverElement = null;
 	selectedElement = null; // element that is currently selected
 	sourceJSON = null;
+	currentElement = null;
 
 	edgeArray = [];
 	
@@ -124,34 +124,16 @@ function buttonPressed(e){
 //one of the functions when a key is pressed
 function deletePress(e) {
 	if (e.key === "Backspace" || e.key === "Delete") {
-		if (selectedElement != null) {
+		if (selectedElement != null && !descriptionTable.focus) {
 			deleteNode(selectedElement);
 			saved = false;
+			resetTable();
 		}
 	}
 }
 
-var doubleClickTime = 0;
-var threshold = 150;
-
-function onClick(e) {
-    // var t0 = new Date();
-    // if (t0 - doubleClickTime > threshold) {
-    //     setTimeout(function () {
-    //         if (t0 - doubleClickTime > threshold) {
-                canvasClick(e);
-    //        }
-    //     },threshold);
-    // }
-}
-
-function doOnClick(e) {
-    canvasClick(e);
-}
-
 function onDoubleClick(e) {
-    //doubleClickTime = new Date();
-    console.log("execute onDoubleClick function");
+	setTimeout(() => edgeArray.push(currentElement), 100);
 }
 
 /* 
@@ -276,6 +258,7 @@ function canvasClick(e) {
 	var rect = canvasElement.getBoundingClientRect();
 	var x = e.clientX - rect.left; 
 	var y = e.clientY - rect.top;
+	//console.log(findDirection(globalJSON.mainObjects[0],globalJSON.mainObjects[1]));
 
 	//loop through the workflow elements
 	var g = globalJSON;
@@ -285,13 +268,18 @@ function canvasClick(e) {
 
 		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
+			currentElement = element;
 			drawToCanvas(g); //redraw everything but highlight element
 
-			if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
-				drawEdge(true);
-				drawToCanvas(globalJSON);
-				saved = false;
-				return;
+			// if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
+			// 	drawEdge(true);
+			// 	drawToCanvas(globalJSON);
+			// 	saved = false;
+			// 	return;
+			// }
+			if (edgeArray.length == 1 && edgeArray[0] != currentElement) { //check if the edge exists already
+				globalJSON.edges.push([edgeArray[0], currentElement]);
+				edgeArray.length = 0;
 			}
 			
 			if (selected == true) {
@@ -326,6 +314,7 @@ function canvasClick(e) {
 	}
 	resetTable();
 	selectedElement = null; //deselect element
+	currentElement = null;
 	edgeArray.length = 0;
 	drawToCanvas(g); //draw that
 
@@ -579,24 +568,6 @@ function checkForEdgeDrawClick(obj, i, x, y) {
 
 }
 
-// function checkForDeleteClick(obj, x, y) {
-
-// 	try {
-
-// 		if( (x >= obj.endX - 12 && x <= obj.endX - 2 ) && ( y >= obj.startY + 2 && y <= obj.startY + 12 ) ) {
-
-// 			return true;
-// 		}
-
-// 		return false;
-
-// 	} catch(err) {
-// 		alert("Cannot delete edge : " + err.message);
-// 		return false;
-// 	}
-
-// }
-
 function drawEdge(flag) {
 
 	try {
@@ -725,44 +696,45 @@ function drawToCanvas(js) {
 		
 		for(var i = 0; i < js.edges.length; i++) {
 
-			var fromID = js.edges[i].from;
-			var fromSide = js.edges[i].fromSide;
-			var fromCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[fromID]], fromSide);
+			drawEdge(js.edges[i][0],js.edges[i][1]);
+			// var fromID = js.edges[i].from;
+			// var fromSide = js.edges[i].fromSide;
+			// var fromCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[fromID]], fromSide);
 
-			var toID = js.edges[i].to;
-			var toSide = js.edges[i].toSide;
-			var toCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[toID]], toSide);
+			// var toID = js.edges[i].to;
+			// var toSide = js.edges[i].toSide;
+			// var toCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[toID]], toSide);
 
-			ctx.beginPath();
-			ctx.strokeStyle = "black";
-			ctx.moveTo(fromCoords.x/currentScale, fromCoords.y/currentScale);
+			// ctx.beginPath();
+			// ctx.strokeStyle = "black";
+			// ctx.moveTo(fromCoords.x/currentScale, fromCoords.y/currentScale);
 			
-			var arrowPath = new Path2D();		
+			// var arrowPath = new Path2D();		
 
-			if( toSide == "left" ) {
-				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
-				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
-				ctx.lineTo((toCoords.x - 10)/currentScale, (toCoords.y)/currentScale);
-			} else if( toSide == "top" ) {
-				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
-				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
-				ctx.lineTo((toCoords.x)/currentScale, (toCoords.y - 10)/currentScale);
-			}  else if( toSide == "right" ) {
-				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
-				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
-				ctx.lineTo((toCoords.x + 10)/currentScale,(toCoords.y)/currentScale);
-			} else { //bottom
-				arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-				arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
-				arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
-				ctx.lineTo((toCoords.x)/currentScale, (toCoords.y + 10)/currentScale);
-			}
+			// if( toSide == "left" ) {
+			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
+			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
+			// 	ctx.lineTo((toCoords.x - 10)/currentScale, (toCoords.y)/currentScale);
+			// } else if( toSide == "top" ) {
+			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
+			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
+			// 	ctx.lineTo((toCoords.x)/currentScale, (toCoords.y - 10)/currentScale);
+			// }  else if( toSide == "right" ) {
+			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
+			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
+			// 	ctx.lineTo((toCoords.x + 10)/currentScale,(toCoords.y)/currentScale);
+			// } else { //bottom
+			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
+			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
+			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
+			// 	ctx.lineTo((toCoords.x)/currentScale, (toCoords.y + 10)/currentScale);
+			// }
 
-			ctx.stroke();
-			ctx.fill(arrowPath);
+			// ctx.stroke();
+			// ctx.fill(arrowPath);
 
 		}
 
