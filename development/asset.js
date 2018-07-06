@@ -223,11 +223,13 @@ function canvasClick(e) {
 			return;
 		}
 	}
+	selectedEdge = null; // sets to null
+
 	resetTable();
 	selectedElement = null; //deselect element
 	currentElement = null;
 	edge = null;
-	drawToCanvas(g); //draw that
+	drawToCanvas(g, e); //draw and if edge click it will be selected
 
 	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
 	//if (selected == true) {
@@ -386,7 +388,13 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
     return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
 }
 
-function drawToCanvas(js) {
+/*
+	Draws the mainObjects  and edges (js) into the  canvas
+
+	the argument e is to tell where the cursor was clicked to tell which edge was selected (i know this is not very elegant but its very efficient)
+	most of the time it will be null so just ignore it; only when an edge is clicked it will have effect
+*/
+function drawToCanvas(js, e) {
 
 	try {
 		
@@ -395,6 +403,7 @@ function drawToCanvas(js) {
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
+		//draws elements including the special ones
 		for(var i = 0; i < js.mainObjects.length; i++) {
 
 			var mainObject = js.mainObjects[i];
@@ -426,9 +435,10 @@ function drawToCanvas(js) {
 
 		}
 		
+		//draws edges including the selected one
 		for(var i = 0; i < js.edges.length; i++) {
 
-			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]));
+			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
 		} 
 
 	} catch(err) {
