@@ -5,11 +5,9 @@ var popupElement;
 var popupContainerElement;
 var canvasElement;
 var editArray;
-var edgeArray;
-var moveElement;
+var edge;
 var mouseOverElement;
 var selectedElement;
-var currentElement;
 var descriptionElement;
 var descriptionTable;
 var detailTemplate;
@@ -17,11 +15,10 @@ var title;
 
 var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; // the workflow elements and edges and details and title
 
-var saved; //saves whether to save or not
-/*
-	Helpers for the canvas zoom functions
-*/
+var saved; //stores the boolean in which the workflow was exported or not
 
+
+//Helpers for the canvas zoom functions
 var slider;
 var currentScale;
 var minScale;
@@ -48,13 +45,12 @@ function initialize() {
 
 	canvasElement = Polymer.dom(assetAppElement.root).querySelector("#workflowSketchCanvas"); // the canvas added
 
-	moveElement = null;
 	mouseOverElement = null;
 	selectedElement = null; // element that is currently selected
 	sourceJSON = null;
 	currentElement = null;
 
-	edgeArray = [];
+	edge = null;
 	
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
@@ -104,57 +100,6 @@ function initialize() {
 }
 
 /*
-	From stack overflow simulates an event
-*/
-function eventFire(el, etype){
-	if (el.fireEvent) {
-	  el.fireEvent('on' + etype);
-	} else {
-	  var evObj = document.createEvent('Events');
-	  evObj.initEvent(etype, true, false);
-	  el.dispatchEvent(evObj);
-	}
-}
-
-//called when button is pressed on canvas
-function buttonPressed(e){
-	deletePress(e);
-}
-
-//one of the functions when a key is pressed
-function deletePress(e) {
-	if (e.key === "Backspace" || e.key === "Delete") {
-		if (selectedElement != null && !descriptionTable.focus) {
-			deleteNode(selectedElement);
-			saved = false;
-			resetTable();
-		}
-	}
-}
-
-function onDoubleClick(e) {
-	setTimeout(() => edgeArray.push(currentElement), 100);
-}
-
-/* 
-	called when mouse wheel in motion over the canvas
-
-	e is mouse move event
-*/
-function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER AS WELL OR REMOVE EDITABLE
-	if (e.deltaY > 0) { //scroll down
-		if (currentScale < maxScale) { //if slider isnt at the highest point
-			zoomOut();
-		}
-	} else {//scroll up
-		if (currentScale > minScale) { //if slider isnt at the lowest point
-			zoomIn();
-		}
-	}
-	drawToCanvas(globalJSON);
-}
-
-/*
 	Called when the title loses focus or pressed enter 
 
 	Saves the title to globalJSON and download file
@@ -166,17 +111,6 @@ function saveTitle(e) {
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 		saved = false;
-	}
-}
-
-/*
-	Pretty minor function... Just prevents the browser from registering enter strokes when in the title
-*/
-function ignoreEnters(e) {
-	if (e.key === "Enter") {
-		e.preventDefault();
-		title.blur();
-		saveTitle(e);
 	}
 }
 
@@ -246,19 +180,15 @@ function allowDrop(e) {
 
 /*
 	Called When the canvas is clicked
-	Checks for things (delete edge), set selectedElement, displays description
-	TODO: remove delete button and have backspace/ deleted button be delete instead
-		make double click be the edge drawer instead
+	Checks for things (delete edge), set selectedElement, displays description table
 */
 var selected = false;
-var isGlitchy = false; //ignore this this is to prevent fails
 function canvasClick(e) {
 	//get coordinates of the click
 	title.blur();
 	var rect = canvasElement.getBoundingClientRect();
 	var x = e.clientX - rect.left; 
 	var y = e.clientY - rect.top;
-	//console.log(findDirection(globalJSON.mainObjects[0],globalJSON.mainObjects[1]));
 
 	//loop through the workflow elements
 	var g = globalJSON;
@@ -268,66 +198,42 @@ function canvasClick(e) {
 
 		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
-			currentElement = element;
-			drawToCanvas(g); //redraw everything but highlight element
 
-			// if( checkForEdgeDrawClick(element, element.id, x, y) == true ) {//if edge is touched TODO:change this
-			// 	drawEdge(true);
-			// 	drawToCanvas(globalJSON);
-			// 	saved = false;
-			// 	return;
-			// }
-			if (edgeArray.length == 1 && edgeArray[0] != currentElement) { //check if the edge exists already
-				globalJSON.edges.push([edgeArray[0], currentElement]);
-				edgeArray.length = 0;
+			if (edge != null && edge != selectedElement) { //check if the edge exists already
+				if (checkIfExists()) {
+					return;
+				}
+				globalJSON.edges.push([edge, selectedElement]);
+				if (checkIfCycleExists()) {
+					alert("You created a cycle!");
+					globalJSON.edges.pop();
+				}
+				edge= null;
 			}
 			
-			if (selected == true) {
-				break;
-			}
+			//if (selected == true) {
+			//	break;
+			//}
 			selected = true;
 			descriptionTable.style.visibility = "visible";
-			descriptionTable.editName(element.objectsArray[0].name);
+			descriptionTable.editName(element.name);
 			descriptionTable.loadDetails(globalJSON.details[i]);
 
-			var ctx = canvasElement.getContext("2d");
-
-			//draws the borders
-			// ctx.beginPath();
-			// ctx.strokeStyle="black";
-			// ctx.rect(element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
-			// ctx.stroke();
-
-			// ctx.beginPath();
-			// ctx.strokeStyle="black";
-			// ctx.moveTo((element.endX - 10)/currentScale, (element.startY + 4)/currentScale);
-			// ctx.lineTo((element.endX - 4)/currentScale, (element.startY + 10)/currentScale);
-			// ctx.moveTo((element.endX - 4)/currentScale, (element.startY + 4)/currentScale);
-			// ctx.lineTo((element.endX - 10)/currentScale, (element.startY + 10)/currentScale);
-			//ctx.rect((element.endX - 12)/currentScale, (element.startY + 2)/currentScale, 10/currentScale, 10/currentScale);
-			//ctx.stroke();
-
-			//draw the side dots
-			drawEdgeConnectors(element.startX/currentScale, element.startY/currentScale, element.endX/currentScale, element.endY/currentScale);
+			drawToCanvas(g); //redraw everything but highlight element
 			return;
 		}
 	}
 	resetTable();
 	selectedElement = null; //deselect element
 	currentElement = null;
-	edgeArray.length = 0;
+	edge = null;
 	drawToCanvas(g); //draw that
 
 	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
-	if (selected == true) {
-		selected = false;
-		if (isGlitchy) {
-			setTimeout(() => canvasClick(e), 100);
-		} else {
-			setTimeout(() => canvasClick(e), 10);
-		}
-	 	
-	}
+	//if (selected == true) {
+	//	selected = false;
+	//	setTimeout(() => canvasClick(e), 10);
+	//}
 }
 /*
 	Creates copy of template description
@@ -350,7 +256,6 @@ function resetTable() {
 
 	TODO: minor bug: if something not an object is dragged then the thing bugs out
 	implement stacking
-	remove dots
 */
 function drop(e) {
 
@@ -412,46 +317,13 @@ function drop(e) {
 	}
 
 	if( index == -1) { // if not overlapping with other element
-		//pushes the new object into object array and given paddings 5,17,5,5
-		//objectsArray is len 1, if len > 1 means that they are stacked
-		var mainObject = {"id": "m"+(new Date()).getTime(), "startX": (startX - 5), "startY": (startY - 5), "endX": (endX + 5), "endY": (endY + 5), objectsArray: [newElement]};
-		globalJSON.mainObjects.push(mainObject); //pushed into mainobjects
+		globalJSON.mainObjects.push(newElement); //pushed into mainobjects
 		globalJSON.details.push(newTemplate());
 		
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
 
-	} else { //overlapping with another element (very gltichy) makes them stack
-
-	// 	newElement.startX = g.mainObjects[index].objectsArray[0].startX;
-	// 	newElement.startY = g.mainObjects[index].endY + 5;
-	// 	newElement.endX = g.mainObjects[index].objectsArray[0].startX + w;
-	// 	newElement.endY = g.mainObjects[index].endY + 5 + h;
-
-	// 	if( w > (g.mainObjects[index].endX - g.mainObjects[index].startX - 10) ) {
-	// 		g.mainObjects[index].endX = g.mainObjects[index].objectsArray[0].startX + w + 5;
-
-	// 	}
-
-	// 	g.mainObjects[index].endY = g.mainObjects[index].endY + h + 10;
-		
-	// 	g.mainObjects[index].objectsArray.push(newElement);
-
-
-	// 	for( var k = 0; k < g.mainObjects[index].objectsArray.length; k++ ) {
-
-	// 		var difference = g.mainObjects[index].objectsArray[k].endX - g.mainObjects[index].objectsArray[k].startX;
-	// 		difference = (g.mainObjects[index].endX - g.mainObjects[index].startX - difference) / 2;
-			
-	// 		var originalWidth = g.mainObjects[index].objectsArray[k].endX - g.mainObjects[index].objectsArray[k].startX;
-	// 		g.mainObjects[index].objectsArray[k].startX	 = g.mainObjects[index].startX + difference;
-	// 		g.mainObjects[index].objectsArray[k].endX = g.mainObjects[index].objectsArray[k].startX + originalWidth;
-
-	// 	}
-
-	// 	drawToCanvas(g);
-
-	// 	drawEdgeConnectors(g.mainObjects[index].startX, g.mainObjects[index].startY, g.mainObjects[index].endX, g.mainObjects[index].endY);
+	} else {
 	}
 
 	//replace old globalJSON and download link
@@ -460,6 +332,14 @@ function drop(e) {
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
 	saved = false;
+}
+
+function getWorkflowElementById(id) {
+	for(var i = 0; i < globalJSON.mainObjects.length; i++) {
+		if (globalJSON.mainObjects[i].id === id) {
+			return globalJSON.mainObjects[i];
+		}
+	}
 }
 
 /*
@@ -506,148 +386,6 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
     return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
 }
 
-function drawEdgeConnectors(startX, startY, endX, endY) {
-
-	try {
-
-		var midX = startX + ((endX - startX) / 2);
-		var midY = startY + ((endY - startY) / 2);
-
-		var ctx = canvasElement.getContext('2d');
-
-		ctx.fillStyle = "black";
-
-		ctx.fillRect(midX - 4, startY - 4, 8, 8);
-
-		ctx.fillRect(midX - 4, endY - 4, 8, 8);
-
-		ctx.fillRect(startX - 4, midY - 4, 8, 8);
-
-		ctx.fillRect(endX - 4, midY - 4, 8, 8);
-
-	} catch(err) {
-
-	}
-
-}
-
-function checkForEdgeDrawClick(obj, i, x, y) {
-
-	try {
-		
-		var midX = obj.startX + ((obj.endX - obj.startX) / 2);
-		var midY = obj.startY + ((obj.endY - obj.startY) / 2);
-
-		if( (x >= obj.startX - 4 && x <= obj.startX + 4 ) && ( y >= midY - 4 && y <= midY + 4 ) ) {
-			edgeArray.push({"id": i, "x": obj.startX - 4, "y": midY, "side": "left"});
-			return true;
-		}
-
-		if( (x >= midX - 4 && x <= midX + 4 ) && ( y >= obj.startY - 4 && y <= obj.startY + 4 ) ) {
-			edgeArray.push({"id": i, "x": midX, "y": obj.startY - 4, "side": "top"});
-			return true;
-		}
-
-		if( (x >= obj.endX - 4 && x <= obj.endX + 4 ) && ( y >= midY - 4 && y <= midY + 4 ) ) {
-			edgeArray.push({"id": i, "x": obj.endX + 4, "y": midY, "side": "right"});
-			return true;
-		}
-
-		if( (x >= midX - 4 && x <= midX + 4 ) && ( y >= obj.endY - 4 && y <= obj.endY + 4 ) ) {
-			edgeArray.push({"id": i, "x": midX, "y": obj.endY + 4, "side": "bottom"});
-			return true;
-		}
-
-		return false;
-
-	} catch(err) {
-		alert("Cannot draw edge : " + err.message);
-		edgeArray = [];
-		return false;
-	}
-
-}
-
-function drawEdge(flag) {
-
-	try {
-
-		if( edgeArray.length < 2 )
-			return;
-		
-		if( edgeArray.length > 2 ) {
-			var lastElement = edgeArray.pop(0);
-			edgeArray = [];
-			edgeArray.push(lastElement);
-			console.log("ASDASDSD : " + edgeArray.length);
-			return;
-		}
-			
-
-		if( edgeArray[0].id == edgeArray[1].id ) {
-
-			edgeArray = [];
-			return;
-
-		}
-
-
-		var ctx = canvasElement.getContext('2d');
-
-		ctx.beginPath();
-		ctx.strokeStyle = "black";
-		ctx.moveTo(edgeArray[0].x, edgeArray[0].y);
-		
-
-		var arrowPath = new Path2D();		
-
-		if( edgeArray[1].side == "left" ) {
-			arrowPath.moveTo(edgeArray[1].x, edgeArray[1].y);
-			arrowPath.lineTo(edgeArray[1].x - 10, edgeArray[1].y - 10);
-			arrowPath.lineTo(edgeArray[1].x - 10, edgeArray[1].y + 10);
-			ctx.lineTo(edgeArray[1].x - 10, edgeArray[1].y);
-		} else if( edgeArray[1].side == "top" ) {
-			arrowPath.moveTo(edgeArray[1].x, edgeArray[1].y);
-			arrowPath.lineTo(edgeArray[1].x - 10, edgeArray[1].y - 10);
-			arrowPath.lineTo(edgeArray[1].x + 10, edgeArray[1].y - 10);
-			ctx.lineTo(edgeArray[1].x, edgeArray[1].y - 10);
-		}  else if( edgeArray[1].side == "right" ) {
-			arrowPath.moveTo(edgeArray[1].x, edgeArray[1].y);
-			arrowPath.lineTo(edgeArray[1].x + 10, edgeArray[1].y - 10);
-			arrowPath.lineTo(edgeArray[1].x + 10, edgeArray[1].y + 10);
-			ctx.lineTo(edgeArray[1].x + 10, edgeArray[1].y);
-		} else {
-			arrowPath.moveTo(edgeArray[1].x, edgeArray[1].y);
-			arrowPath.lineTo(edgeArray[1].x - 10, edgeArray[1].y + 10);
-			arrowPath.lineTo(edgeArray[1].x + 10, edgeArray[1].y + 10);
-			ctx.lineTo(edgeArray[1].x, edgeArray[1].y + 10);
-		}
-
-		ctx.stroke();
-		ctx.fill(arrowPath);
-		
-		if(flag == false) {
-
-		} else {
-			
-			var g = globalJSON;
-
-			g.edges.push({"from": edgeArray[0].id, "to": edgeArray[1].id, "fromSide": edgeArray[0].side, "toSide": edgeArray[1].side});
-
-			globalJSON = g;
-			localStorage.setItem("globalJSON", JSON.stringify(g));
-			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-		}
-
-		edgeArray = [];
-
-	} catch(err) {
-		alert("Cannot draw edge : " + err.message);
-		edgeArray = [];
-	}
-
-}
-
 function drawToCanvas(js) {
 
 	try {
@@ -665,120 +403,36 @@ function drawToCanvas(js) {
 
 			ctx.beginPath();
 			if( selectedElement == mainObject.id ) {
-				ctx.strokeStyle = "green";
-				ctx.fillStyle="green";
-				ctx.fillRect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
-				ctx.fillStyle="black";
-			} else if( mouseOverElement == mainObject.id ) {
-				ctx.strokeStyle="orange";
-				ctx.fillStyle="orange";
-				ctx.fillRect(mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
-				ctx.fillStyle="black";
+				if (edge == selectedElement) {
+					ctx.strokeStyle="orange";
+					ctx.fillStyle="orange";
+					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+					ctx.fillStyle="black";
+				} else {
+					ctx.strokeStyle = "green";
+					ctx.fillStyle="green";
+					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+					ctx.fillStyle="black";
+				}
 			} else {
 				ctx.strokeStyle="black";
 			}
 
-			for(var j = 0; j < mainObject.objectsArray.length; j++) {
-
-			 	var element = mainObject.objectsArray[j];
-
 			 	var imgElement = new Image();
-			 	imgElement.src = element.imageSource;
+			 	imgElement.src = mainObject.imageSource;
 
-			 	ctx.drawImage(imgElement, element.startX/currentScale, element.startY/currentScale, (element.endX - element.startX)/currentScale, (element.endY - element.startY)/currentScale);
-
-				if( edgeArray.length == 1 ) {
-					drawEdgeConnectors(mainObject.startX/currentScale, mainObject.startY/currentScale, mainObject.endX/currentScale, mainObject.endY/currentScale);
-				}
-			}
+			 	ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			
 
 		}
 		
 		for(var i = 0; i < js.edges.length; i++) {
 
-			drawEdge(js.edges[i][0],js.edges[i][1]);
-			// var fromID = js.edges[i].from;
-			// var fromSide = js.edges[i].fromSide;
-			// var fromCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[fromID]], fromSide);
-
-			// var toID = js.edges[i].to;
-			// var toSide = js.edges[i].toSide;
-			// var toCoords = redrawEdgeHelper(js.mainObjects[indexDictionary[toID]], toSide);
-
-			// ctx.beginPath();
-			// ctx.strokeStyle = "black";
-			// ctx.moveTo(fromCoords.x/currentScale, fromCoords.y/currentScale);
-			
-			// var arrowPath = new Path2D();		
-
-			// if( toSide == "left" ) {
-			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
-			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
-			// 	ctx.lineTo((toCoords.x - 10)/currentScale, (toCoords.y)/currentScale);
-			// } else if( toSide == "top" ) {
-			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y - 10)/currentScale);
-			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
-			// 	ctx.lineTo((toCoords.x)/currentScale, (toCoords.y - 10)/currentScale);
-			// }  else if( toSide == "right" ) {
-			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y - 10)/currentScale);
-			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
-			// 	ctx.lineTo((toCoords.x + 10)/currentScale,(toCoords.y)/currentScale);
-			// } else { //bottom
-			// 	arrowPath.moveTo(toCoords.x/currentScale, toCoords.y/currentScale);
-			// 	arrowPath.lineTo((toCoords.x - 10)/currentScale, (toCoords.y + 10)/currentScale);
-			// 	arrowPath.lineTo((toCoords.x + 10)/currentScale, (toCoords.y + 10)/currentScale);
-			// 	ctx.lineTo((toCoords.x)/currentScale, (toCoords.y + 10)/currentScale);
-			// }
-
-			// ctx.stroke();
-			// ctx.fill(arrowPath);
-
-		}
+			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]));
+		} 
 
 	} catch(err) {
 	 	console.log("Could not draw onto canvas : " + err.message);
-	}
-
-}
-
-function redrawEdgeHelper(obj, side) {
-
-	try {
-		var coords = {"x": 0, "y": 0};
-
-		var midX = obj.startX + ((obj.endX - obj.startX) / 2);
-		var midY = obj.startY + ((obj.endY - obj.startY) / 2);
-
-		if( side == "left" ) {
-
-			coords.x = obj.startX - 4;
-			coords.y = midY;
-
-		} else if( side == "top" ) {
-
-			coords.x = midX;
-			coords.y = obj.startY - 4;
-
-		} else if( side == "right" ) {
-
-			coords.x = obj.endX + 4;
-			coords.y = midY;
-
-		} else {
-
-			coords.x = midX;
-			coords.y = obj.endY + 4;
-
-		}
-
-		return coords;
-
-	} catch(err) {
-		console.log("Edge redraw helper failed : " + err.message);
-		return null;
 	}
 
 }
@@ -816,7 +470,6 @@ function loadWorkflowSketch() {
 			exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
 			canvasClick(fileLoadedEvent); //simulates click in the canvas not on an element to reset all the variables
 			selected = false;
-			//setTimeout(() => canvasClick(fileLoadedEvent), 1000); //reload canvas cuz on slow computers the parsing is slow and it only loads partly the first time
 		};
 	  
 		fileReader.readAsText(uploadFileElement, "UTF-8");
@@ -825,54 +478,6 @@ function loadWorkflowSketch() {
 		alert("Cannot load Workflow from invalid JSON : " + err.message);
 	}
 
-}
-
-
-function deleteNode(id) {
-
-	try {
-
-		var g = globalJSON;
-		var deletionFlag = false;
-
-		for( var i = 0; i < g.mainObjects.length; i++ ) {
-
-			if( g.mainObjects[i].id == id ) {
-
-				g.mainObjects.splice(i, 1);
-				g.details.splice(i,1);
-				deletionFlag = true;
-				break;
-			}
-		}
-
-		var j = 0;
-
-		while( true ) {
-
-			if(j >= g.edges.length)
-				break;
-
-			if( g.edges[j].from == id || g.edges[j].to == id ) {
-
-				g.edges.splice(j, 1);
-				deletionFlag = true;
-				
-			} else {
-				j++;
-			}
-		}
-
-		if(deletionFlag == true) {
-
-			globalJSON = g;
-			localStorage.setItem("globalJSON", JSON.stringify(g));
-			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-			drawToCanvas(g);
-		}
-	} catch(err) {
-		alert("Could not delete node : " + err.message);
-	}
 }
 
 var canvasDragElement = null;
@@ -922,15 +527,13 @@ function mouseMoveFunction(e) {
 			canvasDragElement.element.endX += xDifference;
 			canvasDragElement.element.endY += yDifference;
 
-			for( var i = 0; i < canvasDragElement.element.objectsArray.length; i++ ) {
-
-				canvasDragElement.element.objectsArray[i].startX += xDifference;
-				canvasDragElement.element.objectsArray[i].endX += xDifference;
-				canvasDragElement.element.objectsArray[i].startY += yDifference;
-				canvasDragElement.element.objectsArray[i].endY += yDifference;
-
-			}
-
+			setTimeout(() => function() {
+				canvasDragElement.element.startX += xDifference;
+				canvasDragElement.element.endX += xDifference;
+				canvasDragElement.element.startY += yDifference;
+				canvasDragElement.element.endY += yDifference;
+			}, 30);
+			
 			drawToCanvas(globalJSON);
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
