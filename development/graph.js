@@ -138,3 +138,4 @@ function moveElement(element, source, destination) {
     source.delete(element);
     destination.add(element);
 }
+
