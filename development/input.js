@@ -23,6 +23,16 @@ function deletePress(e) {
 			deleteNode(selectedElement);
 			saved = false;
 			resetTable();
+		} else if (selectedEdge != null) {
+			for (var j = 0; j < globalJSON.edges.length; j++) {
+				if( globalJSON.edges[j][0] == selectedEdge[0] && globalJSON.edges[j][1] == selectedEdge[1] ) {
+					globalJSON.edges.splice(j, 1);
+					localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+					exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+					drawToCanvas(globalJSON);
+					return;
+				}
+			}
 		}
 	}
 }
