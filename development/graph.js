@@ -19,6 +19,7 @@ function deleteNode(id) {
 
 		for (var j = 0; j < g.edges.length; j++) {
 			if( g.edges[j][0] == id || g.edges[j][1] == id ) {
+				console.log(g.edges[j]);
 				g.edges.splice(j, 1);
 				j--;
 				deletionFlag = true;
@@ -37,13 +38,12 @@ function deleteNode(id) {
 	}
 }
 
-/*
-    Checks if an edge already exists that is the same as the new one
-*/
+
 function checkIfExists() {
     var edges = globalJSON.edges;
     for (var j = 0; j < edges.length; j++) {
         if( edges[j][0] == edge && edges[j][1] == selectedElement ) {
+            alert();
             return true;
         }
     }
@@ -94,9 +94,6 @@ function checkIfCycleExists() {
     return false;
 }
 
-/*
-    Depth first search
-*/
 function dfs (current, whiteSet, graySet, blackSet) {
     moveElement(current, whiteSet, graySet);
     var neighbors = getNeighbors(current);
@@ -118,9 +115,6 @@ function dfs (current, whiteSet, graySet, blackSet) {
     return false;
 }
 
-/*
-    Get the elemnts current is pointing to
-*/
 function getNeighbors(current) {
     var neighbors = [];
     for (var i = 0; i < globalJSON.edges.length; i++) {
@@ -131,11 +125,7 @@ function getNeighbors(current) {
     return neighbors;
 }
 
-/*
-    Move element from one set to another set
-*/
 function moveElement(element, source, destination) {
     source.delete(element);
     destination.add(element);
 }
-
