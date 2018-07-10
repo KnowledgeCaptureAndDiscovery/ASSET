@@ -4,6 +4,7 @@ var assetAppElement;
 var popupElement;
 var popupContainerElement;
 var canvasElement;
+var ctx;
 var editArray;
 var edge;
 var mouseOverElement;
@@ -12,6 +13,7 @@ var descriptionElement;
 var descriptionTable;
 var detailTemplate;
 var title;
+var rect;
 
 var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; // the workflow elements and edges and details and title
 
@@ -97,6 +99,12 @@ function initialize() {
 	canvasElement.tabIndex = 1000;
 	canvasElement.style.outline = "none";
 	window.addEventListener("keydown", buttonPressed);
+
+	//sets the canvas font and alignment
+	ctx = canvasElement.getContext('2d');
+	ctx.font = "20px Comic Sans MS";
+	ctx.textAlign = "center";
+	rect = canvasElement.getBoundingClientRect();
 }
 
 /*
@@ -220,14 +228,17 @@ function canvasClick(e) {
 			descriptionTable.loadDetails(globalJSON.details[i]);
 
 			drawToCanvas(g); //redraw everything but highlight element
+			selectedEdge = null;
 			return;
 		}
 	}
+	selectedEdge = null; // sets to null
+
 	resetTable();
 	selectedElement = null; //deselect element
 	currentElement = null;
 	edge = null;
-	drawToCanvas(g); //draw that
+	drawToCanvas(g, e); //draw and if edge click it will be selected
 
 	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
 	//if (selected == true) {
@@ -386,7 +397,13 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
     return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
 }
 
-function drawToCanvas(js) {
+/*
+	Draws the mainObjects  and edges (js) into the  canvas
+
+	the argument e is to tell where the cursor was clicked to tell which edge was selected (i know this is not very elegant but its very efficient)
+	most of the time it will be null so just ignore it; only when an edge is clicked it will have effect
+*/
+function drawToCanvas(js, e) {
 
 	try {
 		
@@ -395,6 +412,7 @@ function drawToCanvas(js) {
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
+		//draws elements including the special ones
 		for(var i = 0; i < js.mainObjects.length; i++) {
 
 			var mainObject = js.mainObjects[i];
@@ -404,15 +422,35 @@ function drawToCanvas(js) {
 			ctx.beginPath();
 			if( selectedElement == mainObject.id ) {
 				if (edge == selectedElement) {
-					ctx.strokeStyle="orange";
-					ctx.fillStyle="orange";
+					ctx.strokeStyle="red";
+					ctx.fillStyle="red";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
 					ctx.fillStyle="black";
+					for (var j = 0; j < js.details[i].length; j++) {
+						if (globalJSON.details[i][j]["name"] == "Name") {
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+						}
+					}
 				} else {
 					ctx.strokeStyle = "green";
 					ctx.fillStyle="green";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
 					ctx.fillStyle="black";
+					for (var j = 0; j < js.details[i].length; j++) {
+						if (globalJSON.details[i][j]["name"] == "Name") {
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+						}
+					}
+				}
+			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) {
+				ctx.strokeStyle = "orange";
+				ctx.fillStyle="orange";
+				ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+				ctx.fillStyle="black";
+				for (var j = 0; j < globalJSON.details[i].length; j++) {
+					if (globalJSON.details[i][j]["name"] == "Name") {
+						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+					}
 				}
 			} else {
 				ctx.strokeStyle="black";
@@ -426,9 +464,10 @@ function drawToCanvas(js) {
 
 		}
 		
+		//draws edges including the selected one
 		for(var i = 0; i < js.edges.length; i++) {
 
-			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]));
+			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
 		} 
 
 	} catch(err) {
@@ -486,8 +525,8 @@ var originalDragElement = null;
 function mouseDownFunction(e) {
 	try {
 		var g = globalJSON;
-		var x = e.clientX - canvasElement.getBoundingClientRect().left;
-		var y = e.clientY - canvasElement.getBoundingClientRect().top;
+		var x = e.clientX - rect.left;
+		var y = e.clientY - rect.top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
 		
 			if( (x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale ) && ( y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale ) ) {
@@ -511,8 +550,25 @@ function mouseMoveFunction(e) {
 	try {
 
 		if( canvasDragElement == null ) {
-			mouseOverElement = null;
+			var x = e.clientX - rect.left; 
+			var y = e.clientY - rect.top;
+			var length = globalJSON.mainObjects.length;
+			for (var i = 0; i < length; i++) {
 
+				var element = globalJSON.mainObjects[i]; //the current element
+		
+				if( x >= element.startX / currentScale && x <= element.endX / currentScale  && y >= element.startY / currentScale && y <= element.endY / currentScale ) { // checks if click was in bounds of the element
+					//if (mouseOverElement != element.id) {
+						mouseOverElement = element.id; //sets the currently selected element to be this element
+						drawToCanvas(globalJSON);
+					//}
+					return;
+				}
+			}
+			//if (mouseOverElement != null) {
+				mouseOverElement = null;
+				drawToCanvas(globalJSON);
+			//}
 		} else {
 			var g = globalJSON;
 			var xDifference = canvasDragElement.element.startX ;
