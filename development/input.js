@@ -49,11 +49,11 @@ function onDoubleClick(e) {
 */
 function mouseScrollingCanvas(e) { //REMMEBER TO IMPLEMEMNT CHANGINIG THE SLIDER AS WELL OR REMOVE EDITABLE
 	if (e.deltaY > 0) { //scroll down
-		if (currentScale < maxScale) { //if slider isnt at the highest point
+		if (slider.immediateValue < maxScale) { //if slider isnt at the highest point
 			zoomOut();
 		}
 	} else {//scroll up
-		if (currentScale > minScale) { //if slider isnt at the lowest point
+		if (slider.immediateValue > minScale) { //if slider isnt at the lowest point
 			zoomIn();
 		}
 	}

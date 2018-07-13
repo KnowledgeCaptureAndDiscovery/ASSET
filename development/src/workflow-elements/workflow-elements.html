@@ -16,15 +16,21 @@
 	        background-color: #D14B19 ;
 	        color: white;
 	        width: 90%;
+			height: 4vh;
 	        text-align: center;
+			font-size : 1vmax;
 	      }
+
+		  paper-button {
+			  margin-bottom : 1.5vh;
+		  }
 
 		</style>
 
 	    <dom-repeat items="{{workflowElements}}" as="workflowElement">
 			<template>
 				<paper-button toggles raised class="indigo" id={{workflowElement}} on-click=populateElements>{{workflowElement}}</paper-button>
-				<br><br>
+				<br>
           	</template>
 		</dom-repeat>
 		

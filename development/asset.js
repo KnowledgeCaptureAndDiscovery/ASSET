@@ -13,7 +13,6 @@ var descriptionElement;
 var descriptionTable;
 var detailTemplate;
 var title;
-var rect;
 
 var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; // the workflow elements and edges and details and title
 
@@ -27,6 +26,7 @@ var minScale;
 var maxScale;
 var sketchCache;
 var step;
+var windowZoom;
 
 /*
 	 Called when body is initialized
@@ -69,7 +69,6 @@ function initialize() {
 	
 	//this is zoom stuff just saving all the properties of the slider so we dont have to keep accessing it
 	slider = Polymer.dom(assetAppElement.root).querySelector("#sizeSlider");
-	currentScale = slider.immediateValue;
 	minScale = slider.min;
 	maxScale = slider.max;
 	step = slider.step;
@@ -104,8 +103,28 @@ function initialize() {
 	ctx = canvasElement.getContext('2d');
 	ctx.font = "20px Comic Sans MS";
 	ctx.textAlign = "center";
-	rect = canvasElement.getBoundingClientRect();
+	if (window.innerWidth < 1920) {
+		windowZoom = window.innerWidth/1920;
+	} else {
+		windowZoom = 1;
+	}
+
+	currentScale = slider.immediateValue / windowZoom;
+
+	window.onresize = function() {
+		canvasElement.width = canvasholder.offsetWidth;
+		canvasElement.height = canvasholder.offsetHeight;
+		if (window.innerWidth < 1920) {
+			windowZoom = window.innerWidth/1920;
+		} else {
+			windowZoom = 1;
+		}
+		ctx.textAlign = "center";
+		ctx.font = "20px Comic Sans MS";
+		currentScale = slider.immediateValue / windowZoom;
+	};
 }
+
 
 /*
 	Called when the title loses focus or pressed enter 
@@ -138,7 +157,7 @@ function downloaded(e) {
 function zoomIn() {
 	//decreases the value of the slider and saves the value
 	slider.decrement();
-	currentScale = slider.immediateValue;
+	currentScale = slider.immediateValue/ windowZoom;
 }
 
 /* 
@@ -148,7 +167,7 @@ function zoomIn() {
 function zoomOut() {
 	//increases value of the slider
 	slider.increment();
-	currentScale = slider.immediateValue;
+	currentScale = slider.immediateValue / windowZoom;
 }
 
 /*
@@ -428,7 +447,7 @@ function drawToCanvas(js, e) {
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
 					}
 				} else {
@@ -438,7 +457,7 @@ function drawToCanvas(js, e) {
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
 					}
 				}
@@ -449,7 +468,7 @@ function drawToCanvas(js, e) {
 				ctx.fillStyle="black";
 				for (var j = 0; j < globalJSON.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2, mainObject.startY-10);
+						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 					}
 				}
 			} else {
@@ -525,6 +544,8 @@ var originalDragElement = null;
 function mouseDownFunction(e) {
 	try {
 		var g = globalJSON;
+		
+		var rect = canvasElement.getBoundingClientRect();
 		var x = e.clientX - rect.left;
 		var y = e.clientY - rect.top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
@@ -550,6 +571,8 @@ function mouseMoveFunction(e) {
 	try {
 
 		if( canvasDragElement == null ) {
+			
+			var rect = canvasElement.getBoundingClientRect();
 			var x = e.clientX - rect.left; 
 			var y = e.clientY - rect.top;
 			var length = globalJSON.mainObjects.length;
@@ -593,7 +616,6 @@ function mouseMoveFunction(e) {
 			drawToCanvas(globalJSON);
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-
 		}
 
 	} catch(err) {

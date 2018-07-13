@@ -13,9 +13,20 @@
       }
 
       td, th {
-        border: 1px solid #dddddd;
+        border: 1px solid black;
         text-align: left;
+        min-height: auto;
+        
+        overflow: auto;
         padding: 8px;
+      }
+
+      td:nth-child(even) {
+        max-width: 9.5vw;
+      }
+
+      td:nth-child(odd) {
+        max-width: 4.5vw;
       }
 
       tr:nth-child(even) {

@@ -17,11 +17,18 @@
       #titleSection {
         border: 1px solid #ccc;
         text-align: center;
+        font-size: .8vw;
+        height: 4vw;
       }
 
       #ContentSection {
-        margin: 20px; 
-        margin-left: 0;
+        column-count: 2 auto;
+        margin: 1vw;
+        margin-top: 0vw; 
+        column-gap: 15vw;
+        margin-right: -15vw;
+        width: 96vw;
+        height: 75vh;
       }
 
       #leftSsection{
@@ -32,37 +39,38 @@
       }
 
       #rightSsection {
-        float: right;
-        width: 80vw;
+        padding: 1vw;
+        width: 77vw;
+        height: 75vh; 
         user-select: none;
+        float: right; 
       }
 
       #populateDetailsSection {
         margin-top: 10px;
-        padding: 5px;
+        padding: .35%;
         border: 1px solid #ccc;
-        /*width: 1555px;
-        height: 100px;
-		overflow: scroll;*/
+        width: auto;
+        height: auto;
+		    overflow: auto;
       }
 
       .clr {
         clear: both;
       }
 
-      footer {
-        text-align: center;
-      }
-
       /* Popup container - can be anything you want */
       .popupContainer {
         position: absolute;
         display: inline-block;
+        visibility: hidden;
         cursor: pointer;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        left: 1px;
+        top: 1px;
       }
 
       /* The actual popup */
@@ -99,8 +107,8 @@
       }
 
       #canvasContainerSection {
-        width: 80vw;
-        height: 700px;
+        width: 100%;
+        height: 87%;
         border: 1px solid #ccc;
         /*overflow: scroll;*/
       }
@@ -146,6 +154,8 @@
 
         footer {
           user-select: none;
+          margin: auto;
+          text-align: center;
         }
 
         paper-slider {
@@ -176,16 +186,20 @@
       
       <div id="rightSsection">
         <div id="canvasContainerSection">
-          <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" width="5000px" height="5000px" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
+          <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
         </div>
         <div id="populateDetailsSection"></div>
+        <br>
+        <footer>
+            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+          </footer> 
       </div>
+      
       <div class="clr"></div>
+      
     </div>
 
-    <footer>
-      <a href="#" id="exportAnchor" onclick=  "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
-    </footer>
+    
 
     <div class="popupContainer" id="popupContainer">
       <span class="popuptext" id="popup"></span>
