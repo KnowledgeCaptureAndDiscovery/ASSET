@@ -92,7 +92,7 @@
 
 				{		
 					"elementName": "CHORDS",
-					"imageSource": "/images/earthCubeTools/chords.png",
+					"imageSource": "/images/earthCubeTools/chord.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -103,7 +103,7 @@
 					
 				{
 					"elementName": "CINERGI",
-					"imageSource": "/images/earthCubeTools/cinergi.png",
+					"imageSource": "/images/earthCubeTools/ciner.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -114,7 +114,7 @@
 					
 				{
 					"elementName": "DisConBB",
-					"imageSource": "/images/earthCubeTools/discon.png",
+					"imageSource": "/images/earthCubeTools/disc.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -125,7 +125,7 @@
 				
 				{
 					"elementName": "EarthSystemBridge",
-					"imageSource": "/images/earthCubeTools/earth.png",
+					"imageSource": "/images/earthCubeTools/eart.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -136,7 +136,7 @@
 				
 				{
 					"elementName" : "GeoDeepDive",
-					"imageSource": "/images/earthCubeTools/geoDD.png",
+					"imageSource": "/images/earthCubeTools/geoD.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -169,7 +169,7 @@
 				
 				{
 					"elementName" : "OntoSoft",
-					"imageSource": "/images/earthCubeTools/ontosoft.png",
+					"imageSource": "/images/earthCubeTools/ontoS.png",
 					"properties": [
 						{
 							"propertyName": "Description",
