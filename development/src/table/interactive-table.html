@@ -12,11 +12,16 @@
         width: 100%;
       }
 
+      h2 {
+        margin: 0em;
+        margin-bottom: 1vh;
+      }
+
       td, th {
         border: 1px solid black;
         text-align: left;
         min-height: auto;
-        
+        font-size: .8vw;
         overflow: auto;
         padding: 8px;
       }
@@ -113,12 +118,14 @@
       }
       save(e) {
         if (e.target.className == "name") {
+          //undoArray.push([6, [selectedElement, parseInt(e.target.id.substring(4)), this.details[parseInt(e.target.id.substring(4))]["name"]]])
           this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerHTML;
           this.detail = 0;
         } else if(e.target.className == "detail") {
           this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerHTML;
           this.detail = 1;
         } else {
+          console.log("this happened");
           if (this.detail === 1) {
             this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerHTML;
           } else if (this.detail === 0) {

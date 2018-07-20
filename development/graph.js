@@ -3,31 +3,30 @@ function deleteNode(id) {
 	try {
 
 		var g = globalJSON;
-		var deletionFlag = false;
-
+        var deletionFlag = false;
+        var undoElement = [];
+        selectedElement = null;
 		for( var i = 0; i < g.mainObjects.length; i++ ) {
 
 			if( g.mainObjects[i].id == id ) {
 
-				g.mainObjects.splice(i, 1);
-                g.details.splice(i,1);
+				undoElement.push(g.mainObjects.splice(i, 1)[0]);
+                undoElement.push(g.details.splice(i,1)[0]);
                 i--;
-				deletionFlag = true;
+                deletionFlag = true;
 				break;
 			}
 		}
 
 		for (var j = 0; j < g.edges.length; j++) {
 			if( g.edges[j][0] == id || g.edges[j][1] == id ) {
-				console.log(g.edges[j]);
-				g.edges.splice(j, 1);
+				undoElement.push(g.edges.splice(j, 1)[0]);
 				j--;
 				deletionFlag = true;
 			}
-		}
-
+        }
+        undoArray.push([1, undoElement]);
 		if(deletionFlag == true) {
-
 			globalJSON = g;
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));

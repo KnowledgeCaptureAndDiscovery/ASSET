@@ -122,7 +122,7 @@
         border-radius: 5px;
         background: #d3d3d3;
         outline: none;
-        opacity: 0.5;
+        opacity:1;
         -webkit-transition: .15s;
         transition: opacity .15s;
         overflow : visible;
@@ -144,8 +144,8 @@
         
         hr { 
         display: block;
-        margin-top: 2em;
-        margin-bottom: 2em;
+        margin-top: 1em;
+        margin-bottom: 1em;
         margin-left: auto;
         margin-right: auto;
         border-style: inset;
@@ -162,8 +162,26 @@
           --paper-slider-knob-start-color: #388e3c;
           --paper-slider-active-color: #388e3c;
           --paper-slider-knob-color: #388e3c;
+          --paper-slider-disabled-knob-color: #228B22;
+          --paper-slider-disabled-active-color: #228B22;
+          opacity: 1;
+        }
+        
+        .buttonImage {
+          height : 8vh;
+          position: absolute;
+          top: 0;
         }
 
+        .buttonText {
+          position: absolute;
+          bottom: 0;
+          font-size : 1.3vh;
+        }
+        .buttonContainer {
+          height : 8vh;
+          width: 8vh;
+        }
 
     </style> 
 
@@ -171,13 +189,16 @@
 
     <div id="ContentSection">
 
-      <div id="leftSsection">
-        <workflow-elements id="elementsSelect" src="content.json"></workflow-elements>
+      <div draggable="false" id="leftSsection">
+        <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
         <hr>
-        <div id= "sizeSliderSection">
+        <div draggable="false" id= "sizeSliderSection">
             Zoom:
-            <paper-slider ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
+            <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
         </div>
+        <br />
+        <paper-button draggable="false" class = "buttonContainer" onclick="undo()"><img draggable="false" class = "buttonImage" src = "../../Images/backButton.png"></paper-button>
+        <paper-button draggable="false" class = "buttonContainer" onclick="alert(e)"><img draggable="false" class = "buttonImage" src = "../../Images/redoButton.png"></paper-button>
         <hr>
         <div id="descriptionSection">
           <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
@@ -191,8 +212,8 @@
         <div id="populateDetailsSection"></div>
         <br>
         <footer>
-            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
-          </footer> 
+            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+        </footer> 
       </div>
       
       <div class="clr"></div>

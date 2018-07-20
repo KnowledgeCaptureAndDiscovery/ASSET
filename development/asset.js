@@ -1,4 +1,4 @@
-var sourceJSON;
+//var sourceJSON;
 var exportAnchorElement;
 var assetAppElement;
 var popupElement;
@@ -18,6 +18,8 @@ var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; 
 
 var saved; //stores the boolean in which the workflow was exported or not
 
+var undoArray = [];
+var redo;
 
 //Helpers for the canvas zoom functions
 var slider;
@@ -49,7 +51,7 @@ function initialize() {
 
 	mouseOverElement = null;
 	selectedElement = null; // element that is currently selected
-	sourceJSON = null;
+	//sourceJSON = null;
 	currentElement = null;
 
 	edge = null;
@@ -57,9 +59,11 @@ function initialize() {
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
 	detailTemplate = [
-			{name: 'Name', detail: 'WorkflowElement'},
-			{name: 'Description', detail: 'Workflow description'},
-			{name: 'Author', detail: 'Jeffrey'},
+			{name: 'Name', detail: ''},
+			{name: 'Description', detail: ''},
+			{name: 'Author', detail: ''},
+			{name: 'Duration', detail: ''},
+			{name: 'Tools used', detail: ''}
 		];
 	
 	//canvas container: adds the canvas so it doesnt expand and stuff
@@ -97,17 +101,18 @@ function initialize() {
 	//helpers for delete press
 	canvasElement.tabIndex = 1000;
 	canvasElement.style.outline = "none";
-	window.addEventListener("keydown", buttonPressed);
+	//window.addEventListener("keydown", buttonPressed);
 
 	//sets the canvas font and alignment
 	ctx = canvasElement.getContext('2d');
-	ctx.font = "20px Comic Sans MS";
+	ctx.font = "20px Arial";
 	ctx.textAlign = "center";
 	if (window.innerWidth < 1920) {
 		windowZoom = window.innerWidth/1920;
 	} else {
 		windowZoom = 1;
 	}
+	windowZoom = 1;
 
 	currentScale = slider.immediateValue / windowZoom;
 
@@ -119,12 +124,82 @@ function initialize() {
 		} else {
 			windowZoom = 1;
 		}
+		windowZoom = 1;
 		ctx.textAlign = "center";
-		ctx.font = "20px Comic Sans MS";
+		ctx.font = "20px Arial";
 		currentScale = slider.immediateValue / windowZoom;
 	};
 }
 
+/*
+	Changes the workflow based off the event in the undo array
+
+	eventNumber: it is an integer and is interpreted as an event that has happened
+	param: an array that has the necessary values to undo
+
+	The following is formated as: 
+		eventNumberValue : descriptionOfEvent (theArrayOfParams)
+
+		0 : object created (id) //only id is needed to undo
+		1 : object deleted (element object)
+		2 : object moved (id, previous position)
+		3 : edge created (edgeArray)
+		4 : edge deleted (edgeArray)
+		5 : Workflow title changed (previous title)
+		*removed* 6 : description table: title changed (id, index, previous value)
+		*removed* 7 : description table: details changed (id, index, previous value)
+		*removed* 8 : property added (id)
+
+	"id" is element's id btw
+*/
+function undo() {
+	selectedElement = null;
+	selectedEdge = null;
+	resetTable();
+	var eventNumber = undoArray[undoArray.length -1][0];
+	var param = undoArray[undoArray.length -1][1];
+	if (eventNumber == "0") { //delete element
+		globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1);
+		globalJSON.details.splice(globalJSON.details.length-1, 1);
+		// for (var j = 0; j < globalJSON.edges.length; j++) {
+		// 	if( globalJSON.edges[j][0] == param[1] || globalJSON.edges[j][1] == param[1] ) {
+		// 		globalJSON.edges.splice(j, 1);
+		// 		j--;
+		// 	}
+        // }
+	} else if (eventNumber == "1") { //add element
+		globalJSON.mainObjects.push(param[0]);
+		for (var i = 2; i < param.length; i++) {
+			globalJSON.edges.push(param[i]);
+		}
+		globalJSON.details.push(param[1]);
+	} else if (eventNumber == "2") {
+		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
+			if (param.id == globalJSON.mainObjects[i].id) {
+				globalJSON.mainObjects[i] = param;
+			}
+		}
+	} else if (eventNumber == "3") { // delete the edge
+		globalJSON.edges.pop();
+	} else if (eventNumber == "4") { // create the edge
+		globalJSON.edges.push(param);
+	} else if (eventNumber == "5") {
+		globalJSON.title = param;	
+		title.innerHTML = param;
+	} else if (eventNumber == "6") {
+		// for (var i = 0; i < globalJSON.mainObjects.length; i++) {
+		// 	if (param[0] == globalJSON.mainObjects[i].id) {
+		// 		globalJSON.details[i][param[1]]["name"] = param[2];
+		// 	}
+		// }
+	} else if (eventNumber == "7") {
+		
+	} else if (eventNumber == "8") {
+		
+	}
+	undoArray.pop();
+	drawToCanvas(globalJSON);
+}
 
 /*
 	Called when the title loses focus or pressed enter 
@@ -133,6 +208,7 @@ function initialize() {
 */
 function saveTitle(e) {
 	if (globalJSON["title"] != title.innerHTML) {
+		undoArray.push([5, globalJSON["title"]]);
 		globalJSON["title"] = title.innerHTML;
 		exportAnchorElement.download = globalJSON["title"] + ".json";
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
@@ -231,9 +307,11 @@ function canvasClick(e) {
 					return;
 				}
 				globalJSON.edges.push([edge, selectedElement]);
+				undoArray.push([3]);
 				if (checkIfCycleExists()) {
 					alert("You created a cycle!");
 					globalJSON.edges.pop();
+					undoArray.pop();
 				}
 				edge= null;
 			}
@@ -353,6 +431,7 @@ function drop(e) {
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
 
+		undoArray.push([0, newElement.id]);
 	} else {
 	}
 
@@ -634,6 +713,8 @@ function mouseUpFunction(e) {
 			canvasDragElement = null;
 			return;
 		}
+
+		undoArray.push([2, originalDragElement]);
 
 		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
 
