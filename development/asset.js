@@ -1,4 +1,3 @@
-//var sourceJSON;
 var exportAnchorElement;
 var assetAppElement;
 var popupElement;
@@ -37,8 +36,6 @@ var zoomOutButton;
 	 Called when body is initialized
 	 
 	 TO DO: FIX ZOOM
-		 MAYBE ADD ERROR CATCHING
-		make anchor into buttons and not refresh all the time
 */
 function initialize() {
 	
@@ -54,7 +51,6 @@ function initialize() {
 
 	mouseOverElement = null;
 	selectedElement = null; // element that is currently selected
-	//sourceJSON = null;
 	currentElement = null;
 
 	edge = null;
@@ -126,30 +122,17 @@ function initialize() {
 	//helpers for delete press
 	canvasElement.tabIndex = 1000;
 	canvasElement.style.outline = "none";
-	//window.addEventListener("keydown", buttonPressed);
 
 	//sets the canvas font and alignment
 	ctx = canvasElement.getContext('2d');
 	ctx.font = "20px Arial";
 	ctx.textAlign = "center";
-	// if (window.innerWidth < 1920) {
-	// 	windowZoom = window.innerWidth/1920;
-	// } else {
-	// 	windowZoom = 1;
-	// }
-	// windowZoom = 1;
 
 	currentScale = slider.immediateValue;
 
 	window.onresize = function() {
 		canvasElement.width = canvasholder.offsetWidth-3;
 		canvasElement.height = canvasholder.offsetHeight-2;
-		// if (window.innerWidth < 1920) {
-		// 	windowZoom = window.innerWidth/1920;
-		// } else {
-		// 	windowZoom = 1;
-		// }
-		// windowZoom = 1;
 		ctx.textAlign = "center";
 		ctx.font = "20px Arial";
 		currentScale = slider.immediateValue;
@@ -194,12 +177,6 @@ function undo() {
 	var eventNumber = undoArray[undoArray.length -1][0];
 	var param = undoArray[undoArray.length -1][1];
 	if (eventNumber == "0") { //delete element
-		// for (var j = 0; j < globalJSON.edges.length; j++) {
-		// 	if( globalJSON.edges[j][0] == param[1] || globalJSON.edges[j][1] == param[1] ) {
-		// 		globalJSON.edges.splice(j, 1);
-		// 		j--;
-		// 	}
-		// }
 		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1)[0], globalJSON.details.splice(globalJSON.details.length-1, 1)[0]]]);
 	} else if (eventNumber == "1") { //add element
 		globalJSON.mainObjects.push(param[0]);
@@ -411,6 +388,10 @@ function canvasClick(e) {
 
 			if (edge != null && edge != selectedElement) { //check if the edge exists already
 				if (checkIfExists()) {
+					selectedElement = null; //deselect element
+					currentElement = null;
+					edge = null;
+					drawToCanvas(g);
 					return;
 				}
 				globalJSON.edges.push([edge, selectedElement]);
@@ -425,10 +406,6 @@ function canvasClick(e) {
                 redoArray = [];
 				edge= null;
 			}
-			
-			//if (selected == true) {
-			//	break;
-			//}
 			selected = true;
 			descriptionTable.style.visibility = "visible";
 			descriptionTable.editName(element.name);
@@ -446,12 +423,6 @@ function canvasClick(e) {
 	currentElement = null;
 	edge = null;
 	drawToCanvas(g, e); //draw and if edge click it will be selected
-
-	//JS SO DUMB WTF I CANT BELIEVE I HAVE TO DO THIS
-	//if (selected == true) {
-	//	selected = false;
-	//	setTimeout(() => canvasClick(e), 10);
-	//}
 }
 /*
 	Creates copy of template description
@@ -472,7 +443,7 @@ function resetTable() {
 /*
 	Called when object is dropped into the canvas
 
-	TODO: minor bug: if something not an object is dragged then the thing bugs out
+	TODO:
 	implement stacking
 */
 function drop(e) {
@@ -516,21 +487,6 @@ function drop(e) {
 		if( activeWorkflowElement.elements[i].imageSource == src ) {
 			newElement.name = activeWorkflowElement.elements[i].elementName; //saves name
 			newElement.imageSource = src; //saves image
-			
-			//saves properties
-			// for (var j = 0; j < activeWorkflowElement.elements[i].properties.length; j++) {
-			// 	var value = null;
-
-			// 	if(activeWorkflowElement.elements[i].properties[j].propertyType == "Number") {
-			// 		value = 0;
-			// 	} else if(activeWorkflowElement.elements[i].properties[j].propertyType == "Boolean") {
-			// 		value = "false";
-			// 	} else {
-			// 		value = "";
-			// 	}
-
-			// 	newElement.properties.push({"propertyName": activeWorkflowElement.elements[i].properties[j].propertyName, "propertyType": activeWorkflowElement.elements[i].properties[j].propertyType, "propertyValue": value});
-			// }
 		}
 	}
 
