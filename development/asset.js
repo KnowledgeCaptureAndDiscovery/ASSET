@@ -20,6 +20,8 @@ var saved; //stores the boolean in which the workflow was exported or not
 
 var undoArray = [];
 var redoArray = [];
+var undoButton;
+var redoButton;
 
 //Helpers for the canvas zoom functions
 var slider;
@@ -81,6 +83,15 @@ function initialize() {
 	zoomOutButton.style.top = "calc(" + (rect.bottom - zoomOutButton.offsetHeight) + "px - .3em)";
 	zoomOutButton.style.left = rect.left + "px";
 	zoomOutButton.style.visibility = "visible";
+
+	undoButton = Polymer.dom(assetAppElement.root).querySelector("#undoButton");
+	undoButton.style.top = rect.top + "px";
+	undoButton.style.left = rect.left + "px";
+	undoButton.style.visibility = "visible";
+	redoButton = Polymer.dom(assetAppElement.root).querySelector("#redoButton");
+	redoButton.style.top = rect.top + "px";
+	redoButton.style.left = "calc(" + (rect.left + redoButton.offsetWidth) + "px + .3em)";
+	redoButton.style.visibility = "visible";
 	
 	//this is zoom stuff just saving all the properties of the slider so we dont have to keep accessing it
 	slider = Polymer.dom(assetAppElement.root).querySelector("#sizeSlider");
@@ -148,6 +159,10 @@ function initialize() {
 		zoomInButton.style.left = rect.left + "px";
 		zoomOutButton.style.top = "calc(" + (rect.bottom - zoomOutButton.offsetHeight) + "px - .3em)";
 		zoomOutButton.style.left = rect.left + "px";
+		undoButton.style.top = rect.top + "px";
+		undoButton.style.left = rect.left + "px";
+		redoButton.style.top = rect.top + "px";
+		redoButton.style.left = "calc(" + (rect.left + redoButton.offsetWidth) + "px + .3em)";
 	};
 }
 

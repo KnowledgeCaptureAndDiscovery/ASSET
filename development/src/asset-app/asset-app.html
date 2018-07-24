@@ -192,19 +192,26 @@
         }
         
         .buttonImage {
-          height : 8vh;
-          position: absolute;
+          height : 70%;
           top: 0;
         }
-
-        .buttonText {
+        
+        #undoButton, #redoButton {
+          visibility: hidden;
           position: absolute;
-          bottom: 0;
-          font-size : 1.3vh;
-        }
-        .buttonContainer {
-          height : 8vh;
-          width: 8vh;
+          padding: 0;
+          margin: 0;
+          font-size: 2vw;
+          margin-top: .3em;
+          margin-left: .3em;
+          min-width: 0px;
+          width: 1em;
+          height: 1em;
+          border-style: solid;
+          border-width: 1px;
+          border-radius: .4em;
+          border-color: #555;
+          background-color: white;
         }
         
         #logo {
@@ -225,6 +232,15 @@
           display: inline-block;
           margin-right: 1vw;
           margin-top: 3vh;
+        }
+
+        #undoButton:hover, #redoButton:hover, #zoomIn:hover, #zoomOut:hover{
+          background-color: #ccc;
+          opacity: .7;
+        }
+
+        #undoButton:active, #redoButton:active, #zoomIn:active, #zoomOut:active{
+          opacity: 1;
         }
 
         #zoomIn, #zoomOut {
@@ -249,7 +265,7 @@
           <img src = "../../images/asset.png" draggable="false" id = "logo"></img>
           <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
           <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
-          <paper-button draggable="false" class = "buttonContainer" onclick="undo()"><img src = "../../images/backButton.png" draggable="false" class = "buttonImage"></paper-button><paper-button draggable="false" class = "buttonContainer" onclick="redo()"><img src = "../../images/redoButton.png" draggable="false" class = "buttonImage"></paper-button>
+          
           <hr>
           <div id="descriptionSection">
             <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
@@ -279,6 +295,8 @@
       </div>
       <paper-button onclick = "zoomIn()" id = "zoomIn">+</paper-button>
       <paper-button onclick = "zoomOut()" id = "zoomOut">–</paper-button>
+      <paper-button draggable="false" id = "undoButton" onclick="undo()"><img src = "../../images/backButton.png" draggable="false" class = "buttonImage"></paper-button>
+      <paper-button draggable="false" id = "redoButton" onclick="redo()"><img src = "../../images/redoButton.png" draggable="false" class = "buttonImage"></paper-button>
 
 
   </template>
