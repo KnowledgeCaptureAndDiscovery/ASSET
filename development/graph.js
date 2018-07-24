@@ -43,7 +43,7 @@ function checkIfExists() {
     var edges = globalJSON.edges;
     for (var j = 0; j < edges.length; j++) {
         if( edges[j][0] == edge && edges[j][1] == selectedElement ) {
-            alert();
+            //alert();
             return true;
         }
     }

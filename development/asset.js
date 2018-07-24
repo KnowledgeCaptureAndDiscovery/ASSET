@@ -415,13 +415,14 @@ function canvasClick(e) {
 				}
 				globalJSON.edges.push([edge, selectedElement]);
 				undoArray.push([3]);
-				if (checkIfCycleExists()) {
+				/*if (checkIfCycleExists()) {
 					alert("You created a cycle!");
 					globalJSON.edges.pop();
 					undoArray.pop();
 				} else {
 					redoArray = [];
-				}
+				}*/
+                redoArray = [];
 				edge= null;
 			}
 			
