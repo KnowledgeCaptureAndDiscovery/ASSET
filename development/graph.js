@@ -26,6 +26,7 @@ function deleteNode(id) {
 			}
         }
         undoArray.push([1, undoElement]);
+        redoArray = [];
 		if(deletionFlag == true) {
 			globalJSON = g;
 			localStorage.setItem("globalJSON", JSON.stringify(g));

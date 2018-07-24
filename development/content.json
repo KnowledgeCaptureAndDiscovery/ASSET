@@ -2,7 +2,7 @@
 	"workflowElements": [
 
 		{
-			"name": "Tasks Catagories",
+			"name": "Common Tasks",
 			"elements": [
 				{
 						
@@ -87,7 +87,7 @@
 		},
 			
 		{
-			"name": "EarthCubeTools",
+			"name": "EarthCube Tools",
 			"elements": [
 
 				{		
@@ -181,7 +181,7 @@
 			]
 		},
 		{
-			"name" : "Other stuff",
+			"name" : "Common Tools",
 			"elements": [
 
 			]

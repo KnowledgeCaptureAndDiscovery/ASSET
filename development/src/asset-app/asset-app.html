@@ -15,12 +15,33 @@
       }
 
       #titleSection {
-        border: 1px solid #ccc;
         text-align: center;
         font-size: .8vw;
         height: 4vw;
+        margin-bottom: 3.5vh;
+        display: inline-block;
+        width: inherit;
       }
 
+      #title {
+        white-space: nowrap;
+        width: -webkit-min-content;
+        width: -moz-min-content;
+        width: min-content;
+        display: inline-block;
+      }
+
+      #title:hover {
+        background-color:#e8e3e3;
+        border: 1px solid #ccc;
+        font-style: oblique;
+      }
+
+      #title:focus {
+        font-style: normal;
+        background-color: white;
+        border: 1px solid #ccc;
+      }
       #ContentSection {
         column-count: 2 auto;
         margin: 1vw;
@@ -165,6 +186,9 @@
           --paper-slider-disabled-knob-color: #228B22;
           --paper-slider-disabled-active-color: #228B22;
           opacity: 1;
+          visibility: hidden;
+          left: 1px;
+          top: 1px;
         }
         
         .buttonImage {
@@ -182,49 +206,80 @@
           height : 8vh;
           width: 8vh;
         }
+        
+        #logo {
+          width: 15vw;
+          margin-bottom: 1vh;
+        }
+        .unselectable {
+          -webkit-touch-callout: none;
+          -webkit-user-select: none;
+          -khtml-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
 
+        .links {
+          float: right;
+          display: inline-block;
+          margin-right: 1vw;
+          margin-top: 3vh;
+        }
+
+        #zoomIn, #zoomOut {
+          visibility: hidden;
+          position: absolute;
+          padding: 0;
+          margin: 0;
+          font-size: 2vw;
+          margin-left: .3em;
+          min-width: 0px;
+          width: 1em;
+          height: 1em;
+          border-style: solid;
+          border-width: 1px;
+          border-radius: .4em;
+          border-color: #555;
+          background-color: white;
+        }
     </style> 
-
-    <div id="titleSection"><h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">New Workflow</h1></div>
-
-    <div id="ContentSection">
-
-      <div draggable="false" id="leftSsection">
-        <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
-        <hr>
-        <div draggable="false" id= "sizeSliderSection">
-            Zoom:
-            <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
+      <div id="ContentSection">
+        <div class="unselectable" draggable="false" id="leftSsection">
+          <img src = "../../images/asset.png" draggable="false" id = "logo"></img>
+          <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
+          <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
+          <paper-button draggable="false" class = "buttonContainer" onclick="undo()"><img src = "../../images/backButton.png" draggable="false" class = "buttonImage"></paper-button><paper-button draggable="false" class = "buttonContainer" onclick="redo()"><img src = "../../images/redoButton.png" draggable="false" class = "buttonImage"></paper-button>
+          <hr>
+          <div id="descriptionSection">
+            <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
+          </div>
         </div>
-        <br />
-        <paper-button draggable="false" class = "buttonContainer" onclick="undo()"><img draggable="false" class = "buttonImage" src = "../../images/backButton.png"></paper-button>
-        <paper-button draggable="false" class = "buttonContainer" onclick="alert(e)"><img draggable="false" class = "buttonImage" src = "../../images/redoButton.png"></paper-button>
-        <hr>
-        <div id="descriptionSection">
-          <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
+      
+        <div id="rightSsection">
+          <div id="titleSection">
+            <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">Untitled Workflow</h1>
+            <a href= "about.html" target="_blank" class="links">About</a>
+            <a href= "tutorial.html" target="_blank" class="links">Help</a>
+          </div>
+          
+          <div id="canvasContainerSection">
+            <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
+          </div>
+          <div id="populateDetailsSection"></div>
+          <br>
+          <footer>
+              <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+          </footer> 
         </div>
+        <div class="clr"></div>
       </div>
-      
-      <div id="rightSsection">
-        <div id="canvasContainerSection">
-          <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
-        </div>
-        <div id="populateDetailsSection"></div>
-        <br>
-        <footer>
-            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
-        </footer> 
+      <div class="popupContainer" id="popupContainer">
+        <span class="popuptext" id="popup"></span>
       </div>
-      
-      <div class="clr"></div>
-      
-    </div>
+      <paper-button onclick = "zoomIn()" id = "zoomIn">+</paper-button>
+      <paper-button onclick = "zoomOut()" id = "zoomOut">–</paper-button>
 
-    
-
-    <div class="popupContainer" id="popupContainer">
-      <span class="popuptext" id="popup"></span>
-    </div>
 
   </template>
 

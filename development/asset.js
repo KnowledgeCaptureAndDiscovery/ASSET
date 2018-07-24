@@ -19,7 +19,7 @@ var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; 
 var saved; //stores the boolean in which the workflow was exported or not
 
 var undoArray = [];
-var redo;
+var redoArray = [];
 
 //Helpers for the canvas zoom functions
 var slider;
@@ -28,7 +28,8 @@ var minScale;
 var maxScale;
 var sketchCache;
 var step;
-var windowZoom;
+var zoomInButton;
+var zoomOutButton;
 
 /*
 	 Called when body is initialized
@@ -68,8 +69,18 @@ function initialize() {
 	
 	//canvas container: adds the canvas so it doesnt expand and stuff
     var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
-    canvasElement.width = canvasholder.offsetWidth;
-    canvasElement.height = canvasholder.offsetHeight;
+    canvasElement.width = canvasholder.offsetWidth-3;
+	canvasElement.height = canvasholder.offsetHeight-2;
+	var rect= canvasElement.getBoundingClientRect();
+
+	zoomInButton = Polymer.dom(assetAppElement.root).querySelector("#zoomIn");
+	zoomInButton.style.top = "calc(" + (rect.bottom - zoomInButton.offsetHeight * 2) + "px - .6em)";
+	zoomInButton.style.left = rect.left + "px";
+	zoomInButton.style.visibility = "visible";
+	zoomOutButton = Polymer.dom(assetAppElement.root).querySelector("#zoomOut");
+	zoomOutButton.style.top = "calc(" + (rect.bottom - zoomOutButton.offsetHeight) + "px - .3em)";
+	zoomOutButton.style.left = rect.left + "px";
+	zoomOutButton.style.visibility = "visible";
 	
 	//this is zoom stuff just saving all the properties of the slider so we dont have to keep accessing it
 	slider = Polymer.dom(assetAppElement.root).querySelector("#sizeSlider");
@@ -93,10 +104,13 @@ function initialize() {
 	};
 
 	//to load the images
-	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Tasks Catagories']")), 'click'); 
-	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCubeTools']")), 'click');
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click'); 
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCube Tools']")), 'click');
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tools']")), 'click');
 	
 	Polymer.dom(assetAppElement.root).querySelector("#populateDetailsSection").innerHTML = "";
+
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click'); 
 
 	//helpers for delete press
 	canvasElement.tabIndex = 1000;
@@ -107,27 +121,33 @@ function initialize() {
 	ctx = canvasElement.getContext('2d');
 	ctx.font = "20px Arial";
 	ctx.textAlign = "center";
-	if (window.innerWidth < 1920) {
-		windowZoom = window.innerWidth/1920;
-	} else {
-		windowZoom = 1;
-	}
-	windowZoom = 1;
+	// if (window.innerWidth < 1920) {
+	// 	windowZoom = window.innerWidth/1920;
+	// } else {
+	// 	windowZoom = 1;
+	// }
+	// windowZoom = 1;
 
-	currentScale = slider.immediateValue / windowZoom;
+	currentScale = slider.immediateValue;
 
 	window.onresize = function() {
-		canvasElement.width = canvasholder.offsetWidth;
-		canvasElement.height = canvasholder.offsetHeight;
-		if (window.innerWidth < 1920) {
-			windowZoom = window.innerWidth/1920;
-		} else {
-			windowZoom = 1;
-		}
-		windowZoom = 1;
+		canvasElement.width = canvasholder.offsetWidth-3;
+		canvasElement.height = canvasholder.offsetHeight-2;
+		// if (window.innerWidth < 1920) {
+		// 	windowZoom = window.innerWidth/1920;
+		// } else {
+		// 	windowZoom = 1;
+		// }
+		// windowZoom = 1;
 		ctx.textAlign = "center";
 		ctx.font = "20px Arial";
-		currentScale = slider.immediateValue / windowZoom;
+		currentScale = slider.immediateValue;
+
+		var rect= canvasElement.getBoundingClientRect();
+		zoomInButton.style.top = "calc(" + (rect.bottom - zoomInButton.offsetHeight * 2) + "px - .6em)";
+		zoomInButton.style.left = rect.left + "px";
+		zoomOutButton.style.top = "calc(" + (rect.bottom - zoomOutButton.offsetHeight) + "px - .3em)";
+		zoomOutButton.style.left = rect.left + "px";
 	};
 }
 
@@ -140,10 +160,10 @@ function initialize() {
 	The following is formated as: 
 		eventNumberValue : descriptionOfEvent (theArrayOfParams)
 
-		0 : object created (id) //only id is needed to undo
-		1 : object deleted (element object)
+		0 : object created ()
+		1 : object deleted (element object, element details, element edges)
 		2 : object moved (id, previous position)
-		3 : edge created (edgeArray)
+		3 : edge created ()
 		4 : edge deleted (edgeArray)
 		5 : Workflow title changed (previous title)
 		*removed* 6 : description table: title changed (id, index, previous value)
@@ -159,33 +179,36 @@ function undo() {
 	var eventNumber = undoArray[undoArray.length -1][0];
 	var param = undoArray[undoArray.length -1][1];
 	if (eventNumber == "0") { //delete element
-		globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1);
-		globalJSON.details.splice(globalJSON.details.length-1, 1);
 		// for (var j = 0; j < globalJSON.edges.length; j++) {
 		// 	if( globalJSON.edges[j][0] == param[1] || globalJSON.edges[j][1] == param[1] ) {
 		// 		globalJSON.edges.splice(j, 1);
 		// 		j--;
 		// 	}
-        // }
+		// }
+		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1)[0], globalJSON.details.splice(globalJSON.details.length-1, 1)[0]]]);
 	} else if (eventNumber == "1") { //add element
 		globalJSON.mainObjects.push(param[0]);
 		for (var i = 2; i < param.length; i++) {
 			globalJSON.edges.push(param[i]);
 		}
 		globalJSON.details.push(param[1]);
+		redoArray.push([1,param[0]]);
 	} else if (eventNumber == "2") {
 		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 			if (param.id == globalJSON.mainObjects[i].id) {
+				redoArray.push([2, JSON.parse(JSON.stringify(globalJSON.mainObjects[i]))]);
 				globalJSON.mainObjects[i] = param;
 			}
 		}
 	} else if (eventNumber == "3") { // delete the edge
-		globalJSON.edges.pop();
+		redoArray.push([3,globalJSON.edges.pop()]);
 	} else if (eventNumber == "4") { // create the edge
 		globalJSON.edges.push(param);
+		redoArray.push([4,null]);
 	} else if (eventNumber == "5") {
-		globalJSON.title = param;	
-		title.innerHTML = param;
+		//redoArray = "param"
+		//globalJSON.title = param;	
+		//title.innerHTML = param;
 	} else if (eventNumber == "6") {
 		// for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 		// 	if (param[0] == globalJSON.mainObjects[i].id) {
@@ -200,6 +223,71 @@ function undo() {
 	undoArray.pop();
 	drawToCanvas(globalJSON);
 }
+/*
+	See undo function
+
+	The following is formated as: 
+		eventNumberValue : descriptionOfEvent (theArrayOfParams)
+
+		0 : object created (element object, element details)
+		1 : object deleted (element)
+		2 : object moved (id, previous position)
+		3 : edge created (edgeArray)
+		4 : edge deleted (edgeArray)
+		5 : Workflow title changed (previous title)
+		*removed* 6 : description table: title changed (id, index, previous value)
+		*removed* 7 : description table: details changed (id, index, previous value)
+		*removed* 8 : property added (id)
+*/
+function redo() {
+	selectedElement = null;
+	selectedEdge = null;
+	resetTable();
+	var eventNumber = redoArray[redoArray.length -1][0];
+	var param = redoArray[redoArray.length -1][1];
+	if (eventNumber == "0") { //recreate an element
+		globalJSON.mainObjects.push(param[0]);
+		globalJSON.details.push(param[1]);
+		undoArray.push([0, null]);
+	} else if (eventNumber == "1") {
+		var undoElement= [];
+		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+
+			if( globalJSON.mainObjects[i].id == param.id ) {
+
+				undoElement.push(globalJSON.mainObjects.splice(i, 1)[0]);
+                undoElement.push(globalJSON.details.splice(i,1)[0]);
+				break;
+			}
+		}
+
+		for (var j = 0; j < globalJSON.edges.length; j++) {
+			if( globalJSON.edges[j][0] == param.id || globalJSON.edges[j][1] == param.id ) {
+				undoElement.push(globalJSON.edges.splice(j, 1)[0]);
+				j--;
+			}
+        }
+		undoArray.push([1, undoElement]);
+	} else if (eventNumber == "2") {
+		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
+			if (param.id == globalJSON.mainObjects[i].id) {
+				undoArray.push([2, JSON.parse(JSON.stringify(globalJSON.mainObjects[i]))]);
+				globalJSON.mainObjects[i] = param;
+			}
+		}
+	} else if (eventNumber == "3") {
+		globalJSON.edges.push(param);
+		undoArray.push([3,null]);
+	} else if (eventNumber == "4") {
+		undoArray.push([4,globalJSON.edges.pop()]);
+	} else if (eventNumber == "5") {
+	} else if (eventNumber == "6") {
+	} else if (eventNumber == "7") {
+	} else if (eventNumber == "8") {
+	}
+	redoArray.pop();
+	drawToCanvas(globalJSON);
+}
 
 /*
 	Called when the title loses focus or pressed enter 
@@ -208,7 +296,7 @@ function undo() {
 */
 function saveTitle(e) {
 	if (globalJSON["title"] != title.innerHTML) {
-		undoArray.push([5, globalJSON["title"]]);
+		//undoArray.push([5, globalJSON["title"]]);
 		globalJSON["title"] = title.innerHTML;
 		exportAnchorElement.download = globalJSON["title"] + ".json";
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
@@ -227,13 +315,14 @@ function downloaded(e) {
 
 /*
 	zooms in the canvas and moves the slider to appropriate place
-
-	Also im thinking of adding a cache for the result canvas so people dont lag too hard if scrolling is spammed this is of lesser priority
 */
 function zoomIn() {
 	//decreases the value of the slider and saves the value
-	slider.decrement();
-	currentScale = slider.immediateValue/ windowZoom;
+	if (slider.immediateValue > minScale) { //if slider isnt at the lowest point
+		slider.decrement();
+		currentScale = slider.immediateValue;
+	}
+	drawToCanvas(globalJSON);
 }
 
 /* 
@@ -242,8 +331,11 @@ function zoomIn() {
 */
 function zoomOut() {
 	//increases value of the slider
-	slider.increment();
-	currentScale = slider.immediateValue / windowZoom;
+	if (slider.immediateValue < maxScale) { //if slider isnt at the highest point
+		slider.increment();
+		currentScale = slider.immediateValue;
+	}
+	drawToCanvas(globalJSON);
 }
 
 /*
@@ -312,6 +404,8 @@ function canvasClick(e) {
 					alert("You created a cycle!");
 					globalJSON.edges.pop();
 					undoArray.pop();
+				} else {
+					redoArray = [];
 				}
 				edge= null;
 			}
@@ -390,16 +484,16 @@ function drop(e) {
 	imgElement.width = w + "px";
 
 	//getting the bounds of the image
-	var startX = e.clientX - rect.left - parseInt(w/2);
-	var startY = e.clientY - rect.top - parseInt(h/2);
+	var startX = (e.clientX - rect.left - parseInt(w/2))* currentScale;
+	var startY =( e.clientY - rect.top - parseInt(h/2)) * currentScale;
 	var endX = startX + w;
 	var endY = startY + h;
 
-	var index = checkifOverlapping(startX, startY, endX, endY);//check if overlapping
+	var index = checkifOverlapping(startX, startY, endX , endY);//check if overlapping
 
 	var activeWorkflowElement = JSON.parse(localStorage.getItem("activeWorkflowElement")); //The current set of workflow diagrams that is being used ex: "common tasks" and "earthcube tools"
 
-	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "properties": [], "startX": startX, "startY": startY, "endX": endX, "endY": endY}; //create new element
+	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "startX": startX, "startY": startY, "endX": endX, "endY": endY, "toolsUsed": null}; //create new element
 
 	//finds which element the currently dragged element adds fields to the new Element
 	for( var i = 0; i < activeWorkflowElement.elements.length; i++) {
@@ -408,19 +502,19 @@ function drop(e) {
 			newElement.imageSource = src; //saves image
 			
 			//saves properties
-			for (var j = 0; j < activeWorkflowElement.elements[i].properties.length; j++) {
-				var value = null;
+			// for (var j = 0; j < activeWorkflowElement.elements[i].properties.length; j++) {
+			// 	var value = null;
 
-				if(activeWorkflowElement.elements[i].properties[j].propertyType == "Number") {
-					value = 0;
-				} else if(activeWorkflowElement.elements[i].properties[j].propertyType == "Boolean") {
-					value = "false";
-				} else {
-					value = "";
-				}
+			// 	if(activeWorkflowElement.elements[i].properties[j].propertyType == "Number") {
+			// 		value = 0;
+			// 	} else if(activeWorkflowElement.elements[i].properties[j].propertyType == "Boolean") {
+			// 		value = "false";
+			// 	} else {
+			// 		value = "";
+			// 	}
 
-				newElement.properties.push({"propertyName": activeWorkflowElement.elements[i].properties[j].propertyName, "propertyType": activeWorkflowElement.elements[i].properties[j].propertyType, "propertyValue": value});
-			}
+			// 	newElement.properties.push({"propertyName": activeWorkflowElement.elements[i].properties[j].propertyName, "propertyType": activeWorkflowElement.elements[i].properties[j].propertyType, "propertyValue": value});
+			// }
 		}
 	}
 
@@ -431,8 +525,12 @@ function drop(e) {
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
 
-		undoArray.push([0, newElement.id]);
+		undoArray.push([0, null]);
+		redoArray = [];
 	} else {
+		var addToElement = globalJSON.mainObjects[index];
+		addToElement.toolsUsed = [newElement.name, newElement.imageSource];
+		//addToElement.endY += scalingNum / 2;
 	}
 
 	//replace old globalJSON and download link
@@ -554,12 +652,14 @@ function drawToCanvas(js, e) {
 				ctx.strokeStyle="black";
 			}
 
-			 	var imgElement = new Image();
-			 	imgElement.src = mainObject.imageSource;
+			var imgElement = new Image();
+			imgElement.src = mainObject.imageSource;
 
-			 	ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
-			
+			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 
+			//if (mianObject) {
+				
+			//}
 		}
 		
 		//draws edges including the selected one
@@ -639,6 +739,8 @@ function mouseDownFunction(e) {
 		}
 
 		canvasDragElement = null;
+
+
 		
 	} catch(err) {
 		canvasDragElement = null;
@@ -715,6 +817,7 @@ function mouseUpFunction(e) {
 		}
 
 		undoArray.push([2, originalDragElement]);
+		redoArray = [];
 
 		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
 
