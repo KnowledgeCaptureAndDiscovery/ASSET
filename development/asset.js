@@ -167,6 +167,7 @@ function initialize() {
 		*removed* 6 : description table: title changed (id, index, previous value)
 		*removed* 7 : description table: details changed (id, index, previous value)
 		*removed* 8 : property added (id)
+		9: tool added (id, previousObject)
 
 	"id" is element's id btw
 */
@@ -211,6 +212,9 @@ function undo() {
 		
 	} else if (eventNumber == "8") {
 		
+	} else if (eventNumber == "9") {
+		redoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
+		globalJSON.mainObjects[param[0]] = param[1];
 	}
 	undoArray.pop();
 	drawToCanvas(globalJSON);
@@ -276,6 +280,9 @@ function redo() {
 	} else if (eventNumber == "6") {
 	} else if (eventNumber == "7") {
 	} else if (eventNumber == "8") {
+	} else if (eventNumber == "9") {
+		undoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
+		globalJSON.mainObjects[param[0]] = param[1];
 	}
 	redoArray.pop();
 	drawToCanvas(globalJSON);
@@ -371,6 +378,16 @@ function allowDrop(e) {
 */
 var selected = false;
 function canvasClick(e) {
+	if (e == null) {
+		title.blur();
+		selectedEdge = null;
+
+		resetTable();
+		selectedElement = null; //deselect element
+		currentElement = null;
+		edge = null;
+		return;
+	}
 	//get coordinates of the click
 	title.blur();
 	var rect = canvasElement.getBoundingClientRect();
@@ -500,9 +517,20 @@ function drop(e) {
 		undoArray.push([0, null]);
 		redoArray = [];
 	} else {
+		canvasClick();
+		var detail = globalJSON.details[index][4]["detail"];
+		var addedDetail = detail + ", " + newElement.name;
 		var addToElement = globalJSON.mainObjects[index];
+		undoArray.push([9, [index,JSON.parse(JSON.stringify(globalJSON.mainObjects[index]))]]);
+		redoArray = [];
 		addToElement.toolsUsed.push([newElement.name, newElement.imageSource, w, h]);
 		//addToElement.endY += scalingNum / 2;
+		if (detail == "") {
+			globalJSON.details[index][4]["detail"] = newElement.name;
+		} else {
+			//detail +=", ";
+			globalJSON.details[index][4]["detail"] = addedDetail;
+		}
 	}
 
 	//replace old globalJSON and download link
@@ -591,66 +619,84 @@ function drawToCanvas(js, e) {
 			if( selectedElement == mainObject.id ) {
 				if (edge == selectedElement) {
 					ctx.strokeStyle="red";
-					ctx.fillStyle="red";
+					ctx.fillStyle="#FF000040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+					
+					var lengthY = (mainObject.endY+9)/currentScale;
+					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+						var toolImage = new Image();
+						toolImage.src = mainObject.toolsUsed[j][1];
+						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
+						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
+					}
+
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
 							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
-					}
-					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-						var toolImage = new Image();
-						toolImage.src = mainObject.toolsUsed[j][1];
-						ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
 					}
 				} else {
 					ctx.strokeStyle = "green";
-					ctx.fillStyle="green";
+					ctx.fillStyle="#00800040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+					
+					var lengthY = (mainObject.endY+9)/currentScale;
+					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+						var toolImage = new Image();
+						toolImage.src = mainObject.toolsUsed[j][1];
+						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
+						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
+					}
+
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
 							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
-					}
-					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-						var toolImage = new Image();
-						toolImage.src = mainObject.toolsUsed[j][1];
-						ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
 					}
 				}
 			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) {
 				ctx.strokeStyle = "orange";
-				ctx.fillStyle="orange";
+				ctx.fillStyle="#FFA50040";
 				ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+				
+				var lengthY = (mainObject.endY+9)/currentScale;
+				var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+				for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+					var toolImage = new Image();
+					toolImage.src = mainObject.toolsUsed[j][1];
+					//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+					ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
+					lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
+				}
+
 				ctx.fillStyle="black";
 				for (var j = 0; j < globalJSON.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
 						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 					}
 				}
-
-				for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-					var toolImage = new Image();
-					toolImage.src = mainObject.toolsUsed[j][1];
-					ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
-				}
 			} else {
 				ctx.strokeStyle="black";
 				var length = mainObject.toolsUsed.length;
 
-			var lengthX = (mainObject.endX - mainObject.startX)/currentScale/2;
-			var lengthY = (mainObject.endY - mainObject.startY)/currentScale/2;
-			for (var j = 0; j < length; j++) {
-				var toolImage = new Image();
-				toolImage.src = mainObject.toolsUsed[j][1];
-				if (j % 2 == 0) { //if index of tools used of selected item in canvas is even
-					ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
-				} else {
-					ctx.drawImage(toolImage, mainObject.startX/currentScale + lengthX, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
+				var lengthX = mainObject.startX/currentScale;
+				//var lengthY = (mainObject.endY - mainObject.startY)/currentScale;
+				for (var j = 0; j < length; j++) {
+					var toolImage = new Image();
+					toolImage.src = mainObject.toolsUsed[j][1];
+					//if (j % 2 == 0) { //if index of tools used of selected item in canvas is even
+						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+					//} else {
+					//	ctx.drawImage(toolImage, mainObject.startX/currentScale + lengthX, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
+					//}
 				}
-			}
 			}
 
 			var imgElement = new Image();
