@@ -3,9 +3,12 @@
   "sources": [
    "src/**/*",
    "js/**/*",
+   "css/**/*",
    "files/**/*",
    "images/**/*",
    "content.json",
+   "about.html",
+   "tutorial.html",
    "bower.json"
   ],
   "extraDependencies": [
