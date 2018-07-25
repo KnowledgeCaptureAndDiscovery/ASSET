@@ -70,10 +70,89 @@
 						}
 					]
 				},
-				
+                {
+					"elementName" : "Calibrate Model",
+					"imageSource": "/images/commonTasks/calibrateModel.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Create Model",
+					"imageSource": "/images/commonTasks/createModel.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
+					"elementName" : "Evaluation",
+					"imageSource": "/images/commonTasks/eval.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Model Integration",
+					"imageSource": "/images/commonTasks/integration.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Quality Control",
+					"imageSource": "/images/commonTasks/qualityControl.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Run Model",
+					"imageSource": "/images/commonTasks/runModel.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Statistical Analysis",
+					"imageSource": "/images/commonTasks/statAnalysis.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
 				{
 					"elementName" : "TBD",
 					"imageSource": "/images/commonTasks/tbd.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName" : "Other",
+					"imageSource": "/images/other.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -89,10 +168,20 @@
 		{
 			"name": "EarthCube Tools",
 			"elements": [
-
+                
+                {		
+					"elementName": "ASSET",
+					"imageSource": "/images/earthCubeTools/asset.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
 				{		
 					"elementName": "CHORDS",
-					"imageSource": "/images/earthCubeTools/chord.png",
+					"imageSource": "/images/earthCubeTools/chords.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -103,7 +192,17 @@
 					
 				{
 					"elementName": "CINERGI",
-					"imageSource": "/images/earthCubeTools/ciner.png",
+					"imageSource": "/images/earthCubeTools/cinergi.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                {
+					"elementName": "Digital Crust",
+					"imageSource": "/images/earthCubeTools/dc.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -114,7 +213,7 @@
 					
 				{
 					"elementName": "DisConBB",
-					"imageSource": "/images/earthCubeTools/disc.png",
+					"imageSource": "/images/earthCubeTools/discon.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -123,9 +222,74 @@
 					]
 				},
 				
+                {
+					"elementName": "Drilsdown",
+					"imageSource": "/images/earthCubeTools/drilsdown.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
 				{
 					"elementName": "EarthSystemBridge",
-					"imageSource": "/images/earthCubeTools/eart.png",
+					"imageSource": "/images/earthCubeTools/earth.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName": "EarthCollab",
+					"imageSource": "/images/earthCubeTools/earthcollab.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName": "ECITE",
+					"imageSource": "/images/earthCubeTools/ectools_ecite.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName": "ECOGEO",
+					"imageSource": "/images/earthCubeTools/ectools_ecogeo.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName": "FlyOverCountry",
+					"imageSource": "/images/earthCubeTools/ectools_flyovercountry.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName": "GeoDataSpace",
+					"imageSource": "/images/earthCubeTools/ectools_geodataspace.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -136,18 +300,7 @@
 				
 				{
 					"elementName" : "GeoDeepDive",
-					"imageSource": "/images/earthCubeTools/geoD.png",
-					"properties": [
-						{
-							"propertyName": "Description",
-							"propertyType": "String"
-						}
-					]
-				},
-				
-				{
-					"elementName" : "GeoDataSpace",
-					"imageSource": "/images/earthCubeTools/geoDS.png",
+					"imageSource": "/images/earthCubeTools/ectools_geodeepdive.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -158,7 +311,7 @@
 				
 				{
 					"elementName" : "GeoSemantics",
-					"imageSource": "/images/earthCubeTools/geoS.png",
+					"imageSource": "/images/earthCubeTools/ectools_geosemantics.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -168,8 +321,118 @@
 				},
 				
 				{
+					"elementName" : "I-Samples",
+					"imageSource": "/images/earthCubeTools/ectools_isamples.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Seaview",
+					"imageSource": "/images/earthCubeTools/ectools_seaview.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                 {
+					"elementName" : "Suave",
+					"imageSource": "/images/earthCubeTools/ectools_suave.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "XDomes",
+					"imageSource": "/images/earthCubeTools/ectools_xdomes.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "I-Microbe",
+					"imageSource": "/images/earthCubeTools/imicrobe.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Linked Earth",
+					"imageSource": "/images/earthCubeTools/le.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Microstructures",
+					"imageSource": "/images/earthCubeTools/micro.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "NetCDF-CF",
+					"imageSource": "/images/earthCubeTools/netcdfCF.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				
+                {
+					"elementName" : "Ocean Protein",
+					"imageSource": "/images/earthCubeTools/ocean-protein-portal.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+				{
 					"elementName" : "OntoSoft",
-					"imageSource": "/images/earthCubeTools/ontoS.png",
+					"imageSource": "/images/earthCubeTools/ontosoft.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Other",
+					"imageSource": "/images/other-black.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -183,6 +446,94 @@
 		{
 			"name" : "Common Tools",
 			"elements": [
+            
+                {
+					"elementName" : "CSV",
+					"imageSource": "/images/commonTools/csv.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Excel",
+					"imageSource": "/images/commonTools/excel.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "GitHub",
+					"imageSource": "/images/commonTools/github.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Matlab",
+					"imageSource": "/images/commonTools/matlab.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "R",
+					"imageSource": "/images/commonTools/r.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Search engine",
+					"imageSource": "/images/commonTools/search.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Shell script",
+					"imageSource": "/images/commonTools/shell.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
+                {
+					"elementName" : "Other",
+					"imageSource": "/images/other-black.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				}
 
 			]
 		}
