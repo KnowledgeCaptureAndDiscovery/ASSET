@@ -480,7 +480,7 @@ function drop(e) {
 
 	var activeWorkflowElement = JSON.parse(localStorage.getItem("activeWorkflowElement")); //The current set of workflow diagrams that is being used ex: "common tasks" and "earthcube tools"
 
-	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "startX": startX, "startY": startY, "endX": endX, "endY": endY, "toolsUsed": null}; //create new element
+	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "startX": startX, "startY": startY, "endX": endX, "endY": endY, "toolsUsed": []}; //create new element
 
 	//finds which element the currently dragged element adds fields to the new Element
 	for( var i = 0; i < activeWorkflowElement.elements.length; i++) {
@@ -501,7 +501,7 @@ function drop(e) {
 		redoArray = [];
 	} else {
 		var addToElement = globalJSON.mainObjects[index];
-		addToElement.toolsUsed = [newElement.name, newElement.imageSource];
+		addToElement.toolsUsed.push([newElement.name, newElement.imageSource, w, h]);
 		//addToElement.endY += scalingNum / 2;
 	}
 
@@ -599,6 +599,11 @@ function drawToCanvas(js, e) {
 							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
 					}
+					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+						var toolImage = new Image();
+						toolImage.src = mainObject.toolsUsed[j][1];
+						ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
+					}
 				} else {
 					ctx.strokeStyle = "green";
 					ctx.fillStyle="green";
@@ -608,6 +613,11 @@ function drawToCanvas(js, e) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
 							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 						}
+					}
+					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+						var toolImage = new Image();
+						toolImage.src = mainObject.toolsUsed[j][1];
+						ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
 					}
 				}
 			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) {
@@ -620,8 +630,27 @@ function drawToCanvas(js, e) {
 						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 					}
 				}
+
+				for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+					var toolImage = new Image();
+					toolImage.src = mainObject.toolsUsed[j][1];
+					ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + (mainObject.endX - mainObject.startX)/currentScale/2*(j)/currentScale + 5, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale-2);
+				}
 			} else {
 				ctx.strokeStyle="black";
+				var length = mainObject.toolsUsed.length;
+
+			var lengthX = (mainObject.endX - mainObject.startX)/currentScale/2;
+			var lengthY = (mainObject.endY - mainObject.startY)/currentScale/2;
+			for (var j = 0; j < length; j++) {
+				var toolImage = new Image();
+				toolImage.src = mainObject.toolsUsed[j][1];
+				if (j % 2 == 0) { //if index of tools used of selected item in canvas is even
+					ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
+				} else {
+					ctx.drawImage(toolImage, mainObject.startX/currentScale + lengthX, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
+				}
+			}
 			}
 
 			var imgElement = new Image();
@@ -629,9 +658,12 @@ function drawToCanvas(js, e) {
 
 			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 
-			//if (mianObject) {
-				
-			//}
+			
+			// if (length %2 ==1) {
+			// 	var toolImage = new Image();
+			// 	toolImage.src = mainObject.toolsUsed[mainObject.toolsUsed.length -1][1];
+			// 	ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale, (mainObject.endX - mainObject.startX)/currentScale/2, (mainObject.endY - mainObject.startY)/currentScale/2 );
+			// }
 		}
 		
 		//draws edges including the selected one
