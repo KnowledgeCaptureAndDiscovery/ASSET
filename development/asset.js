@@ -34,11 +34,11 @@ var zoomOutButton;
 
 /*
 	 Called when body is initialized
-	 
+
 	 TO DO: FIX ZOOM
 */
 function initialize() {
-	
+
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); //maps tuple of two lists (main Objects and edges)
 
 	assetAppElement = Polymer.dom(this.root).querySelector("asset-app"); //adds asset-app as a field
@@ -54,7 +54,7 @@ function initialize() {
 	currentElement = null;
 
 	edge = null;
-	
+
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
 	detailTemplate = [
@@ -64,7 +64,7 @@ function initialize() {
 			{name: 'Duration', detail: ''},
 			{name: 'Tools used', detail: ''}
 		];
-	
+
 	//canvas container: adds the canvas so it doesnt expand and stuff
     var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
     canvasElement.width = canvasholder.offsetWidth-3;
@@ -88,7 +88,7 @@ function initialize() {
 	redoButton.style.top = rect.top + "px";
 	redoButton.style.left = "calc(" + (rect.left + redoButton.offsetWidth) + "px + .3em)";
 	redoButton.style.visibility = "visible";
-	
+
 	//this is zoom stuff just saving all the properties of the slider so we dont have to keep accessing it
 	slider = Polymer.dom(assetAppElement.root).querySelector("#sizeSlider");
 	minScale = slider.min;
@@ -97,7 +97,7 @@ function initialize() {
 
 	title = Polymer.dom(assetAppElement.root).querySelector("#title");
 	globalJSON["title"] = title.innerHTML; //saves the title
-	
+
 	exportAnchorElement = Polymer.dom(assetAppElement.root).querySelector("#exportAnchor"); //adds export button as a field
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
 	exportAnchorElement.download = globalJSON["title"] + ".json"; //sets download name to title
@@ -111,13 +111,13 @@ function initialize() {
 	};
 
 	//to load the images
-	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click'); 
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
 	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCube Tools']")), 'click');
 	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tools']")), 'click');
-	
+
 	Polymer.dom(assetAppElement.root).querySelector("#populateDetailsSection").innerHTML = "";
 
-	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click'); 
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
 
 	//helpers for delete press
 	canvasElement.tabIndex = 1000;
@@ -155,7 +155,7 @@ function initialize() {
 	eventNumber: it is an integer and is interpreted as an event that has happened
 	param: an array that has the necessary values to undo
 
-	The following is formated as: 
+	The following is formated as:
 		eventNumberValue : descriptionOfEvent (theArrayOfParams)
 
 		0 : object created ()
@@ -200,7 +200,7 @@ function undo() {
 		redoArray.push([4,null]);
 	} else if (eventNumber == "5") {
 		//redoArray = "param"
-		//globalJSON.title = param;	
+		//globalJSON.title = param;
 		//title.innerHTML = param;
 	} else if (eventNumber == "6") {
 		// for (var i = 0; i < globalJSON.mainObjects.length; i++) {
@@ -209,9 +209,9 @@ function undo() {
 		// 	}
 		// }
 	} else if (eventNumber == "7") {
-		
+
 	} else if (eventNumber == "8") {
-		
+
 	} else if (eventNumber == "9") {
 		redoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
 		globalJSON.mainObjects[param[0]] = param[1];
@@ -222,7 +222,7 @@ function undo() {
 /*
 	See undo function
 
-	The following is formated as: 
+	The following is formated as:
 		eventNumberValue : descriptionOfEvent (theArrayOfParams)
 
 		0 : object created (element object, element details)
@@ -289,7 +289,7 @@ function redo() {
 }
 
 /*
-	Called when the title loses focus or pressed enter 
+	Called when the title loses focus or pressed enter
 
 	Saves the title to globalJSON and download file
 */
@@ -324,7 +324,7 @@ function zoomIn() {
 	drawToCanvas(globalJSON);
 }
 
-/* 
+/*
 	zooms out the canvas
 	see zoomIn()
 */
@@ -339,7 +339,7 @@ function zoomOut() {
 
 /*
 	displays the popup that says popupText at X, Y
-	
+
 	TODO: maybe center better and make popup less fat
 */
 function displayPopup(popupText, clientX, clientY) {
@@ -391,7 +391,7 @@ function canvasClick(e) {
 	//get coordinates of the click
 	title.blur();
 	var rect = canvasElement.getBoundingClientRect();
-	var x = e.clientX - rect.left; 
+	var x = e.clientX - rect.left;
 	var y = e.clientY - rect.top;
 
 	//loop through the workflow elements
@@ -469,16 +469,16 @@ function drop(e) {
 	var rect = canvasElement.getBoundingClientRect();
 
 	var ctx = canvasElement.getContext("2d");
-	
+
 	var src = localStorage.getItem("currentDragElement"); //currently dragged element
-	
+
 	//create new image object and set it as src
 	var imgElement = new Image();
 	imgElement.src = src;
 
 	//width and height of original src
 	var w = imgElement.width;
-	var h = imgElement.height;        
+	var h = imgElement.height;
 
 	//width and height of new image (keeping same aspect ratio of the old), scale it to height of scalingNum
 	var scalingNum = 75;
@@ -510,7 +510,7 @@ function drop(e) {
 	if( index == -1) { // if not overlapping with other element
 		globalJSON.mainObjects.push(newElement); //pushed into mainobjects
 		globalJSON.details.push(newTemplate());
-		
+
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
 
@@ -539,6 +539,7 @@ function drop(e) {
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
 	saved = false;
+	e.preventDefault();
 }
 
 function getWorkflowElementById(id) {
@@ -572,7 +573,7 @@ function checkifOverlapping(sx, sy, ex, ey) {
 		for(var i = 0; i < globalJSON.mainObjects.length; i++) {
 
 			var overlapValue = isOverlap(sx, sy, ex, ey, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY);
-			
+
 			if( overlapValue == true )
 				return i;
 
@@ -581,7 +582,7 @@ function checkifOverlapping(sx, sy, ex, ey) {
 		return -1;
 
 	} catch(err) {
-		
+
 		return -1;
 	}
 }
@@ -602,7 +603,7 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
 function drawToCanvas(js, e) {
 
 	try {
-		
+
 		var ctx = canvasElement.getContext('2d');
 		var indexDictionary = {};
 
@@ -621,13 +622,13 @@ function drawToCanvas(js, e) {
 					ctx.strokeStyle="red";
 					ctx.fillStyle="#FF000040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-					
+
 					var lengthY = (mainObject.endY+9)/currentScale;
 					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
 					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 						var toolImage = new Image();
 						toolImage.src = mainObject.toolsUsed[j][1];
-						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
 						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
 						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
 					}
@@ -642,13 +643,13 @@ function drawToCanvas(js, e) {
 					ctx.strokeStyle = "green";
 					ctx.fillStyle="#00800040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-					
+
 					var lengthY = (mainObject.endY+9)/currentScale;
 					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
 					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 						var toolImage = new Image();
 						toolImage.src = mainObject.toolsUsed[j][1];
-						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
 						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
 						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
 					}
@@ -664,13 +665,13 @@ function drawToCanvas(js, e) {
 				ctx.strokeStyle = "orange";
 				ctx.fillStyle="#FFA50040";
 				ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-				
+
 				var lengthY = (mainObject.endY+9)/currentScale;
 				var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
 				for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 					var toolImage = new Image();
 					toolImage.src = mainObject.toolsUsed[j][1];
-					//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);	
+					//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
 					ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
 					lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
 				}
@@ -704,19 +705,19 @@ function drawToCanvas(js, e) {
 
 			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 
-			
+
 			// if (length %2 ==1) {
 			// 	var toolImage = new Image();
 			// 	toolImage.src = mainObject.toolsUsed[mainObject.toolsUsed.length -1][1];
 			// 	ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale, (mainObject.endX - mainObject.startX)/currentScale/2, (mainObject.endY - mainObject.startY)/currentScale/2 );
 			// }
 		}
-		
+
 		//draws edges including the selected one
 		for(var i = 0; i < js.edges.length; i++) {
 
 			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
-		} 
+		}
 
 	} catch(err) {
 	 	console.log("Could not draw onto canvas : " + err.message);
@@ -748,7 +749,7 @@ function loadWorkflowSketch() {
 			var textFromFileLoaded = fileLoadedEvent.target.result;
 			globalJSON = JSON.parse(textFromFileLoaded);
 			closePopup();
-			
+
 			//setting download link
 			localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -758,7 +759,7 @@ function loadWorkflowSketch() {
 			canvasClick(fileLoadedEvent); //simulates click in the canvas not on an element to reset all the variables
 			selected = false;
 		};
-	  
+
 		fileReader.readAsText(uploadFileElement, "UTF-8");
 
 	} catch(err) {
@@ -773,12 +774,12 @@ var originalDragElement = null;
 function mouseDownFunction(e) {
 	try {
 		var g = globalJSON;
-		
+
 		var rect = canvasElement.getBoundingClientRect();
 		var x = e.clientX - rect.left;
 		var y = e.clientY - rect.top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
-		
+
 			if( (x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale ) && ( y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale ) ) {
 
 				canvasDragElement = {"element": g.mainObjects[i], "offsetX": (e.clientX - g.mainObjects[i].startX), "offsetY": (e.clientY - g.mainObjects[i].startY)};
@@ -791,7 +792,7 @@ function mouseDownFunction(e) {
 		canvasDragElement = null;
 
 
-		
+
 	} catch(err) {
 		canvasDragElement = null;
 		console.log("Could not start drag : " + err.message);
@@ -802,15 +803,15 @@ function mouseMoveFunction(e) {
 	try {
 
 		if( canvasDragElement == null ) {
-			
+
 			var rect = canvasElement.getBoundingClientRect();
-			var x = e.clientX - rect.left; 
+			var x = e.clientX - rect.left;
 			var y = e.clientY - rect.top;
 			var length = globalJSON.mainObjects.length;
 			for (var i = 0; i < length; i++) {
 
 				var element = globalJSON.mainObjects[i]; //the current element
-		
+
 				if( x >= element.startX / currentScale && x <= element.endX / currentScale  && y >= element.startY / currentScale && y <= element.endY / currentScale ) { // checks if click was in bounds of the element
 					//if (mouseOverElement != element.id) {
 						mouseOverElement = element.id; //sets the currently selected element to be this element
@@ -843,7 +844,7 @@ function mouseMoveFunction(e) {
 				canvasDragElement.element.startY += yDifference;
 				canvasDragElement.element.endY += yDifference;
 			}, 30);
-			
+
 			drawToCanvas(globalJSON);
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -885,7 +886,7 @@ function mouseUpFunction(e) {
 						return;
 					}
 				}
-			}	
+			}
 		}
 		canvasDragElement = null;
 

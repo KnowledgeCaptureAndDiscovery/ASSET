@@ -5,7 +5,11 @@
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="../table/interactive-table.html">
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="../../asset.js"></script>
+<script src="../../edges.js"></script>
+<script src="../../input.js"></script>
+<script src="../../graph.js"></script>
 
 <dom-module id="asset-app">
   <template>
@@ -45,7 +49,7 @@
       #ContentSection {
         column-count: 2 auto;
         margin: 1vw;
-        margin-top: 0vw; 
+        margin-top: 0vw;
         column-gap: 15vw;
         margin-right: -15vw;
         width: 96vw;
@@ -62,9 +66,9 @@
       #rightSsection {
         padding: 1vw;
         width: 77vw;
-        height: 75vh; 
+        height: 75vh;
         user-select: none;
-        float: right; 
+        float: right;
       }
 
       #populateDetailsSection {
@@ -133,9 +137,9 @@
         border: 1px solid #ccc;
         /*overflow: scroll;*/
       }
-        
+
         /*slider stuff from w3schools https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
-        
+
         #sizeSlider {
         -webkit-appearance: none;
         width: 100%;
@@ -148,11 +152,11 @@
         transition: opacity .15s;
         overflow : visible;
         }
-        
+
         #sizeSlider:hover {
             opacity: 1;
         }
-        
+
         #sizeSlider::-webkit-slider-thumb {
         -webkit-appearance: none;
          appearance: none;
@@ -162,8 +166,8 @@
         background: #4CAF50;
         cursor: pointer;
         }
-        
-        hr { 
+
+        hr {
         display: block;
         margin-top: 1em;
         margin-bottom: 1em;
@@ -190,12 +194,12 @@
           left: 1px;
           top: 1px;
         }
-        
+
         .buttonImage {
           height : 70%;
           top: 0;
         }
-        
+
         #undoButton, #redoButton {
           visibility: hidden;
           position: absolute;
@@ -213,7 +217,7 @@
           border-color: #555;
           background-color: white;
         }
-        
+
         #logo {
           width: 15vw;
           margin-bottom: 1vh;
@@ -259,27 +263,27 @@
           border-color: #555;
           background-color: white;
         }
-    </style> 
+    </style>
       <div id="ContentSection">
         <div class="unselectable" draggable="false" id="leftSsection">
           <img src = "../../images/asset.png" draggable="false" id = "logo"></img>
           <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
           <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
-          
+
           <hr>
           <div id="descriptionSection">
             <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
           </div>
         </div>
-      
+
         <div id="rightSsection">
           <div id="titleSection">
             <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">Untitled Workflow</h1>
             <a href= "tutorial.html" target="_blank" class="links">Tutorial</a>
             <a href= "about.html" target="_blank" class="links">About</a>
-            
+
           </div>
-          
+
           <div id="canvasContainerSection">
             <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
           </div>
@@ -287,7 +291,7 @@
           <br>
           <footer>
               <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
-          </footer> 
+          </footer>
         </div>
         <div class="clr"></div>
       </div>
@@ -316,6 +320,13 @@
             value: 'asset-app'
           }
         };
+      }
+      ready() {
+        super.ready();
+        var me = this;
+        Polymer.RenderStatus.afterNextRender(this, function() {
+          initialize();
+        });
       }
     }
 
