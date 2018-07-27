@@ -502,6 +502,17 @@
 					]
 				},
                 
+                 {
+					"elementName" : "Python",
+					"imageSource": "/images/commonTools/python.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+                
                 {
 					"elementName" : "Search engine",
 					"imageSource": "/images/commonTools/search.png",
