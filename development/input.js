@@ -40,7 +40,8 @@ function deletePress(e) {
 }
 
 function onDoubleClick(e) {
-    setTimeout(() => edge = selectedElement, 100);
+	setTimeout(() => edge = selectedElement, 100);
+	setTimeout(() => selected =false, 100);
     setTimeout(() => canvasClick(e), 100);
 }
 

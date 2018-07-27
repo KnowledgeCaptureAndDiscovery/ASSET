@@ -59,7 +59,6 @@
   </template>
 
   <script>
-    
     /**
      * `interactive-table`
      * 
@@ -121,9 +120,11 @@
           //undoArray.push([6, [selectedElement, parseInt(e.target.id.substring(4)), this.details[parseInt(e.target.id.substring(4))]["name"]]])
           this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerHTML;
           this.detail = 0;
+          drawToCanvas(globalJSON);
         } else if(e.target.className == "detail") {
           this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerHTML;
           this.detail = 1;
+          drawToCanvas(globalJSON);
         } else {
           console.log("this happened");
           if (this.detail === 1) {
@@ -143,7 +144,6 @@
         this.details = null;
       }
     }
-
     window.customElements.define(InteractiveTable.is, InteractiveTable);
   </script>
 </dom-module>

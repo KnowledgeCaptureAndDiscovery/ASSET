@@ -218,6 +218,8 @@ function undo() {
 	}
 	undoArray.pop();
 	drawToCanvas(globalJSON);
+	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 }
 /*
 	See undo function
@@ -284,6 +286,8 @@ function redo() {
 		undoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
 		globalJSON.mainObjects[param[0]] = param[1];
 	}
+	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 	redoArray.pop();
 	drawToCanvas(globalJSON);
 }
@@ -420,9 +424,14 @@ function canvasClick(e) {
 				} else {
 					redoArray = [];
 				}*/
-                redoArray = [];
 				edge= null;
 			}
+			
+			redoArray = [];
+			if (selected == true) {
+				break;
+			}
+			
 			selected = true;
 			descriptionTable.style.visibility = "visible";
 			descriptionTable.editName(element.name);
@@ -440,6 +449,11 @@ function canvasClick(e) {
 	currentElement = null;
 	edge = null;
 	drawToCanvas(g, e); //draw and if edge click it will be selected
+	if (selected == true) {
+		selected = false;
+		setTimeout(() => canvasClick(e), 10);
+	}
+	
 }
 /*
 	Creates copy of template description
@@ -517,7 +531,6 @@ function drop(e) {
 		undoArray.push([0, null]);
 		redoArray = [];
 	} else {
-		canvasClick();
 		var detail = globalJSON.details[index][4]["detail"];
 		var addedDetail = detail + ", " + newElement.name;
 		var addToElement = globalJSON.mainObjects[index];
@@ -684,8 +697,17 @@ function drawToCanvas(js, e) {
 				}
 			} else {
 				ctx.strokeStyle="black";
+				ctx.font = "15px Arial";
 				var length = mainObject.toolsUsed.length;
 
+				ctx.fillStyle="black";
+				for (var j = 0; j < js.details[i].length; j++) {
+					if (globalJSON.details[i][j]["name"] == "Name") {
+						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+					}
+				}
+				ctx.font = "20px Arial";
+				
 				var lengthX = mainObject.startX/currentScale;
 				//var lengthY = (mainObject.endY - mainObject.startY)/currentScale;
 				for (var j = 0; j < length; j++) {
