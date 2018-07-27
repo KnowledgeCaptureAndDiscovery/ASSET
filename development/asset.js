@@ -147,6 +147,9 @@ function initialize() {
 		redoButton.style.top = rect.top + "px";
 		redoButton.style.left = "calc(" + (rect.left + redoButton.offsetWidth) + "px + .3em)";
 	};
+
+	zoomInButton.style.cursor = "zoom-in";
+	zoomOutButton.style.cursor = "zoom-out";
 }
 
 /*
@@ -453,7 +456,6 @@ function canvasClick(e) {
 		selected = false;
 		setTimeout(() => canvasClick(e), 10);
 	}
-	
 }
 /*
 	Creates copy of template description
@@ -473,9 +475,6 @@ function resetTable() {
 
 /*
 	Called when object is dropped into the canvas
-
-	TODO:
-	implement stacking
 */
 function drop(e) {
 
@@ -530,6 +529,11 @@ function drop(e) {
 
 		undoArray.push([0, null]);
 		redoArray = [];
+		selectedElement = newElement.id;
+		descriptionTable.style.visibility = "visible";
+		descriptionTable.editName(newElement.name);
+		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1]);
+		drawToCanvas(globalJSON);
 	} else {
 		var detail = globalJSON.details[index][4]["detail"];
 		var addedDetail = detail + ", " + newElement.name;
@@ -544,6 +548,14 @@ function drop(e) {
 			//detail +=", ";
 			globalJSON.details[index][4]["detail"] = addedDetail;
 		}
+		selectedElement = addToElement.id;
+		drawToCanvas(globalJSON);
+		descriptionTable.style.visibility = "visible";
+		descriptionTable.editName(addToElement.name);
+		resetTable();
+		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index]), 10);
+		descriptionTable.style.visibility = "visible";
+
 	}
 
 	//replace old globalJSON and download link
@@ -792,6 +804,7 @@ function loadWorkflowSketch() {
 
 var canvasDragElement = null;
 var originalDragElement = null;
+var dragWorkflowArray = [];
 
 function mouseDownFunction(e) {
 	try {
@@ -810,10 +823,9 @@ function mouseDownFunction(e) {
 
 			}
 		}
-
 		canvasDragElement = null;
 
-
+		dragWorkflowArray = [x * currentScale,y * currentScale];
 
 	} catch(err) {
 		canvasDragElement = null;
@@ -823,6 +835,21 @@ function mouseDownFunction(e) {
 
 function mouseMoveFunction(e) {
 	try {
+		if (dragWorkflowArray.length != 0) {
+			var rect = canvasElement.getBoundingClientRect();
+			var x = (e.clientX - rect.left) * currentScale - dragWorkflowArray[0]; //displacemnt x since mouse down
+			var y =(e.clientY - rect.top) * currentScale - dragWorkflowArray[1]; //displacemnt y since mouse down
+			var length = globalJSON.mainObjects.length;
+			for (var i = 0; i < length; i++) {
+				globalJSON.mainObjects[i].startX += x;
+				globalJSON.mainObjects[i].endX += x;
+				globalJSON.mainObjects[i].startY += y;
+				globalJSON.mainObjects[i].endY += y;
+			}
+			dragWorkflowArray = [(e.clientX - rect.left)*currentScale, (e.clientY - rect.top) * currentScale];
+			drawToCanvas(globalJSON);
+			return;
+		}
 
 		if( canvasDragElement == null ) {
 
@@ -835,17 +862,13 @@ function mouseMoveFunction(e) {
 				var element = globalJSON.mainObjects[i]; //the current element
 
 				if( x >= element.startX / currentScale && x <= element.endX / currentScale  && y >= element.startY / currentScale && y <= element.endY / currentScale ) { // checks if click was in bounds of the element
-					//if (mouseOverElement != element.id) {
-						mouseOverElement = element.id; //sets the currently selected element to be this element
-						drawToCanvas(globalJSON);
-					//}
+					mouseOverElement = element.id; //sets the currently selected element to be this element
+					drawToCanvas(globalJSON);
 					return;
 				}
 			}
-			//if (mouseOverElement != null) {
-				mouseOverElement = null;
-				drawToCanvas(globalJSON);
-			//}
+			mouseOverElement = null;
+			drawToCanvas(globalJSON);
 		} else {
 			var g = globalJSON;
 			var xDifference = canvasDragElement.element.startX ;
@@ -880,6 +903,7 @@ function mouseMoveFunction(e) {
 function mouseUpFunction(e) {
 
 	try {
+		dragWorkflowArray = [];
 
 		if( canvasDragElement == null )
 			return;
@@ -911,6 +935,7 @@ function mouseUpFunction(e) {
 			}
 		}
 		canvasDragElement = null;
+		
 
 	} catch(err) {
 
