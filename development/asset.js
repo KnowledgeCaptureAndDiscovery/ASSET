@@ -152,6 +152,46 @@ function initialize() {
 	zoomOutButton.style.cursor = "zoom-out";
 }
 
+function dropdown() {
+    Polymer.dom(assetAppElement.root).querySelector("#myDropdown").classList.toggle("show");
+}
+
+function loadExampleWorkflow(fileNum) {
+	Polymer.dom(assetAppElement.root).querySelector("#myDropdown").classList.toggle("show");
+	if (saved == false && !confirm("Your work may be deleted. Continue?")) {
+		return;
+	}
+	
+	if (fileNum == 0) {
+		globalJSON = JSON.parse(algal);
+		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+
+		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+		drawToCanvas(globalJSON);
+		selected = false;
+	} else if (fileNum == 1) {
+		globalJSON = JSON.parse(lgm);
+		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+
+		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+		drawToCanvas(globalJSON);
+		selected = false;
+	} else if (fileNum == 2) {
+		globalJSON = JSON.parse(qgis);
+		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+
+		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+		drawToCanvas(globalJSON);
+		selected = false;
+	}
+}
+
 /*
 	Changes the workflow based off the event in the undo array
 
@@ -648,14 +688,12 @@ function drawToCanvas(js, e) {
 					ctx.fillStyle="#FF000040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
 
-					var lengthY = (mainObject.endY+9)/currentScale;
-					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+					var lengthX = mainObject.startX/currentScale;
 					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 						var toolImage = new Image();
 						toolImage.src = mainObject.toolsUsed[j][1];
-						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
-						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
-						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
+						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 					}
 
 					ctx.fillStyle="black";
@@ -669,14 +707,12 @@ function drawToCanvas(js, e) {
 					ctx.fillStyle="#00800040";
 					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
 
-					var lengthY = (mainObject.endY+9)/currentScale;
-					var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+					var lengthX = mainObject.startX/currentScale;
 					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 						var toolImage = new Image();
 						toolImage.src = mainObject.toolsUsed[j][1];
-						//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
-						ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
-						lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
+						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 					}
 
 					ctx.fillStyle="black";

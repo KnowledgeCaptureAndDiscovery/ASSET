@@ -236,7 +236,7 @@
           user-select: none;
         }
 
-        .links {
+        .links, .dropdown {
           float: right;
           display: inline-block;
           margin-right: 1vw;
@@ -268,6 +268,32 @@
           border-color: #555;
           background-color: white;
         }
+
+        .dropdown {
+          position: relative;
+          display: inline-block;
+        }
+
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f1f1f1;
+          min-width: 150px;
+          overflow: auto;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+        }
+
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+        }
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
     </style>
       <div id="ContentSection">
         <div class="unselectable" draggable="false" id="leftSsection">
@@ -286,6 +312,14 @@
             <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">Untitled Workflow</h1>
             <a href= "tutorial.html" target="_blank" class="links">Tutorial</a>
             <a href= "about.html" target="_blank" class="links">About</a>
+            <div class="dropdown">
+                <button onclick="dropdown()" class="dropbtn">Examples</button>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a onclick="loadExampleWorkflow(0)">Algal Blooms</a>
+                    <a onclick="loadExampleWorkflow(1)">glacial</a>
+                    <a onclick="loadExampleWorkflow(2)">Qgis</a>
+                  </div>
+              </div>
 
           </div>
 
