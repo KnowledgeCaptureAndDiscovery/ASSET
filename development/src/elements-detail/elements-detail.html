@@ -15,7 +15,7 @@
 
 	    <dom-repeat items="{{elementsImage}}" as="elementimage">
 			<template>
-				<img src="{{elementimage}}" height="75px" on-mouseover="displayAndHighlight" on-mouseout="removeHighlightandDisplay" 
+				<img src="{{elementimage}}" height="75px" on-click="importUnfocused" on-mouseover="displayAndHighlight" on-mouseout="removeHighlightandDisplay" 
 				style="padding: 1vh; box-sizing: border-box;" ondragstart="onElementDrag(event)" draggable="true">
           	</template>
 		</dom-repeat>
@@ -151,7 +151,7 @@
                 try {
                         var name;
 						for( var i = 0; i < this.dataJSON.elements.length; i++ ) {
-							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource ) {
+							if( e.target.getAttribute('src') == this.dataJSON.elements[i].imageSource  && !importPopupBool) {
                                 var temp = e.target.getBoundingClientRect();
 								displayPopup(this.dataJSON.elements[i].elementName, (temp.left+temp.right)/2 + document.documentElement.scrollLeft, temp.top + 
 									document.documentElement.scrollTop) ;
@@ -165,14 +165,19 @@
 
 			removeHighlightandDisplay(e) {
 
-				try {
+				if (!importPopupBool) {
+					try {
 
+						e.target.setAttribute("style", "background-color: white; padding: 1vh; box-sizing: border-box;");
+
+					} catch(err) {
+						console.log("Could Not highlight element : " + err.message);
+					}
+				
+					   closePopup();
+				} else {
 					e.target.setAttribute("style", "background-color: white; padding: 1vh; box-sizing: border-box;");
-
-				} catch(err) {
-					console.log("Could Not highlight element : " + err.message);
 				}
-                closePopup();
 
 			}
 

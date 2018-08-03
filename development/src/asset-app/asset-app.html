@@ -295,7 +295,7 @@
 
 .show {display: block;}
     </style>
-      <div id="ContentSection">
+      <div id="ContentSection" onclick="importUnfocused()">
         <div class="unselectable" draggable="false" id="leftSsection">
           <img src = "../../images/asset.png" draggable="false" id = "logo"></img>
           <workflow-elements draggable="false" id="elementsSelect" src="content.json"></workflow-elements>
@@ -329,11 +329,12 @@
           <div id="populateDetailsSection"></div>
           <br>
           <footer>
-              <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
           </footer>
         </div>
         <div class="clr"></div>
       </div>
+      
       <div class="popupContainer" id="popupContainer">
         <span class="popuptext" id="popup"></span>
       </div>

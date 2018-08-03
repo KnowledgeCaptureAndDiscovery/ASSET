@@ -794,18 +794,24 @@ function drawToCanvas(js, e) {
 	}
 
 }
+var importPopupBool = false;
 
 function importWorkflow(e) {
 
 	try {
-
-		var importText = "<center>Import Workflow Sketch</center><br><input type='file' id='fileToLoad' accept='application/json'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
-
+		e.stopPropagation();
+		var importText = "<center id = 'importPopupElement'>Import Workflow Sketch</center><br><input type='file' id='fileToLoad' accept='application/json'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
+		importPopupBool = true;
 		displayPopup(importText, e.clientX, e.clientY - 10);
 
 	} catch(err) {
 		alert("Could not import workflow sketch : " + err.message);
 	}
+}
+
+function importUnfocused() {
+	importPopupBool = false;
+	closePopup();
 }
 
 function loadWorkflowSketch() {
