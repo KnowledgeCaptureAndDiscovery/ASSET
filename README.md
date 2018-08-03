@@ -16,12 +16,12 @@ An overview of the tool can be seen below:
 ![alt text](https://github.com/KnowledgeCaptureAndDiscovery/ASSET/blob/master/documents/overview.png "ASSET Overview")
 
 
-##Demo
+## Demo
 
 A live demo of the project is available at: https://asset-6b864.firebaseapp.com/
 
 At the moment, the demo will only work on **Google Chrome**
 
-##Tutorial:
+## Tutorial:
 
 See the following link https://asset-6b864.firebaseapp.com/tutorial.html for a simple tutorial of the tool.
