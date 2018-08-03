@@ -59,6 +59,17 @@
 						}
 					]
 				},
+                
+                {
+					"elementName" : "Collection",
+					"imageSource": "/images/commonTasks/collection.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
 				
 				{
 					"elementName" : "Visualize",
