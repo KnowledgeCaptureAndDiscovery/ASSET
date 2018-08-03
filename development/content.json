@@ -37,6 +37,17 @@
 						}
 					]
 				},
+                
+                {
+					"elementName": "Upload Data",
+					"imageSource": "/images/commonTasks/uploadData.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
 				
 				{
 					"elementName" : "Run Code",
@@ -161,18 +172,7 @@
 						}
 					]
 				},
-                {
-					"elementName" : "Other",
-					"imageSource": "/images/other.png",
-					"properties": [
-						{
-							"propertyName": "Description",
-							"propertyType": "String"
-						}
-					]
-				}
-					
-
+                
 			]
 		},
 			
