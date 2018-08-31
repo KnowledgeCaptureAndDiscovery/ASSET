@@ -1,0 +1,1 @@
+Folder for storing the draft sketches done by users of the application
