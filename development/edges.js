@@ -125,58 +125,63 @@ function drawLine (x1 , y1 , x2, y2, ctx, e, isSelected) {
     We also have to check if an edge is clicked and if it is it's color is green and put it in selected edge (in part 2)
 */
 function drawEdge(obj1, obj2, e) {
-    var ctx = canvasElement.getContext('2d');
-    
-    //first step using the findDirection function
-    var direction = findDirection(obj1, obj2); //get direction of obj2 relative to obj1
-    var toSide; //what side of obj2 the arrow is pointing towards, basically oppside of direction
-    if (direction === "N") {
-        toSide = "S";
-    } else if (direction === "S") {
-        toSide = "N";
-    } else if (direction === "E") {
-        toSide = "W";
-    } else if (direction === "W") {
-        toSide = "E";
-    } else {
-        return;
-    }
-    var coordsFrom = getCoords (obj1, direction); //coords from obj1
-    var coordsTo = getCoords(obj2, toSide);//coords to obj2
-    var isSelected = selectedEdge != null && selectedEdge[0] == obj1.id && selectedEdge[1] == obj2.id;
-    //step 2
+    try {
+        var ctx = canvasElement.getContext('2d');
+        
+        //first step using the findDirection function
+        var direction = findDirection(obj1, obj2); //get direction of obj2 relative to obj1
+        var toSide; //what side of obj2 the arrow is pointing towards, basically oppside of direction
+        if (direction === "N") {
+            toSide = "S";
+        } else if (direction === "S") {
+            toSide = "N";
+        } else if (direction === "E") {
+            toSide = "W";
+        } else if (direction === "W") {
+            toSide = "E";
+        } else {
+            return;
+        }
+        var coordsFrom = getCoords (obj1, direction); //coords from obj1
+        var coordsTo = getCoords(obj2, toSide);//coords to obj2
+        var isSelected = selectedEdge != null && selectedEdge[0] == obj1.id && selectedEdge[1] == obj2.id;
+        //step 2
 
-    var arrowPath = new Path2D();
-    if( toSide == "W" ) {
-        if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x - 10) / currentScale, coordsTo.y / currentScale, ctx, e, isSelected)) {
-            selectedEdge = [obj1.id,obj2.id];
+        var arrowPath = new Path2D();
+        if( toSide == "W" ) {
+            if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x - 10) / currentScale, coordsTo.y / currentScale, ctx, e, isSelected)) {
+                selectedEdge = [obj1.id,obj2.id];
+            }
+            arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
+            arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y - 10)/currentScale);
+            arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y + 10)/currentScale);
+        } else if( toSide == "N" ) {
+            if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x) / currentScale, (coordsTo.y - 10) / currentScale, ctx, e, isSelected)) {
+                selectedEdge = [obj1.id,obj2.id];
+            }
+            arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
+            arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y - 10)/currentScale);
+            arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y - 10)/currentScale);
+        }  else if( toSide == "E" ) {
+            if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x + 10) / currentScale, coordsTo.y / currentScale, ctx, e, isSelected)) {
+                selectedEdge = [obj1.id,obj2.id];
+            }
+            arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
+            arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y - 10)/currentScale);
+            arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y + 10)/currentScale);
+        } else { //south
+            if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x) / currentScale, (coordsTo.y + 10) / currentScale, ctx, e, isSelected)) {
+                selectedEdge = [obj1.id,obj2.id];
+            }
+            arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
+            arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y + 10)/currentScale);
+            arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y + 10)/currentScale);
         }
-        arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
-        arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y - 10)/currentScale);
-        arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y + 10)/currentScale);
-    } else if( toSide == "N" ) {
-        if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x) / currentScale, (coordsTo.y - 10) / currentScale, ctx, e, isSelected)) {
-            selectedEdge = [obj1.id,obj2.id];
-        }
-        arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
-        arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y - 10)/currentScale);
-        arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y - 10)/currentScale);
-    }  else if( toSide == "E" ) {
-        if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x + 10) / currentScale, coordsTo.y / currentScale, ctx, e, isSelected)) {
-            selectedEdge = [obj1.id,obj2.id];
-        }
-        arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
-        arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y - 10)/currentScale);
-        arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y + 10)/currentScale);
-    } else { //south
-        if (drawLine (coordsFrom.x / currentScale, coordsFrom.y / currentScale, (coordsTo.x) / currentScale, (coordsTo.y + 10) / currentScale, ctx, e, isSelected)) {
-            selectedEdge = [obj1.id,obj2.id];
-        }
-        arrowPath.moveTo(coordsTo.x/currentScale, coordsTo.y/currentScale);
-        arrowPath.lineTo((coordsTo.x - 10)/currentScale, (coordsTo.y + 10)/currentScale);
-        arrowPath.lineTo((coordsTo.x + 10)/currentScale, (coordsTo.y + 10)/currentScale);
+        ctx.fill(arrowPath);
+
+    } catch(err) {
+        console.log("Could not draw edge : " + err.message);
     }
-    ctx.fill(arrowPath);
 }
 
 /*

@@ -672,6 +672,11 @@ function drawToCanvas(js, e) {
 		var ctx = canvasElement.getContext('2d');
 		var indexDictionary = {};
 
+		//Special elements that need to dominate(overwrite) over others in the canvas.
+		var hoverElement = null;
+		var doubleClickElement = null;
+		var clickElement = null;
+
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
 		//draws elements including the special ones
@@ -684,17 +689,7 @@ function drawToCanvas(js, e) {
 			ctx.beginPath();
 			if( selectedElement == mainObject.id ) {
 				if (edge == selectedElement) {
-					ctx.strokeStyle="red";
-					ctx.fillStyle="#FF000040";
-					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-
-					var lengthX = mainObject.startX/currentScale;
-					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-						var toolImage = new Image();
-						toolImage.src = mainObject.toolsUsed[j][1];
-						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
-						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
-					}
+					doubleClickElement = mainObject;
 
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
@@ -703,17 +698,7 @@ function drawToCanvas(js, e) {
 						}
 					}
 				} else {
-					ctx.strokeStyle = "green";
-					ctx.fillStyle="#00800040";
-					ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-
-					var lengthX = mainObject.startX/currentScale;
-					for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-						var toolImage = new Image();
-						toolImage.src = mainObject.toolsUsed[j][1];
-						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
-						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
-					}
+					clickElement = mainObject;
 
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
@@ -723,19 +708,7 @@ function drawToCanvas(js, e) {
 					}
 				}
 			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) {
-				ctx.strokeStyle = "orange";
-				ctx.fillStyle="#FFA50040";
-				ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
-
-				var lengthY = (mainObject.endY+9)/currentScale;
-				var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
-				for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-					var toolImage = new Image();
-					toolImage.src = mainObject.toolsUsed[j][1];
-					//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
-					ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
-					lengthY +=(mainObject.toolsUsed[j][3]+9)/currentScale;
-				}
+				hoverElement = mainObject;
 
 				ctx.fillStyle="black";
 				for (var j = 0; j < globalJSON.details[i].length; j++) {
@@ -751,7 +724,7 @@ function drawToCanvas(js, e) {
 				ctx.fillStyle="black";
 				for (var j = 0; j < js.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
 					}
 				}
 				ctx.font = "20px Arial";
@@ -783,6 +756,108 @@ function drawToCanvas(js, e) {
 			// }
 		}
 
+		if( doubleClickElement != null ) {
+
+			mainObject = doubleClickElement;
+			ctx.strokeStyle="red";
+			ctx.fillStyle="#FF000040";
+			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+
+			var lengthX = mainObject.startX/currentScale;
+			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+				var toolImage = new Image();
+				toolImage.src = mainObject.toolsUsed[j][1];
+				ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+			}
+
+			var imgElement = new Image();
+			imgElement.src = mainObject.imageSource;
+
+			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+
+		}
+
+		if( clickElement != null ) {
+
+			mainObject = clickElement;
+			ctx.strokeStyle = "green";
+			ctx.fillStyle="#00800040";
+			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+
+			var lengthX = mainObject.startX/currentScale;
+			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+				var toolImage = new Image();
+				toolImage.src = mainObject.toolsUsed[j][1];
+				ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+			}
+
+			var imgElement = new Image();
+			imgElement.src = mainObject.imageSource;
+
+			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+
+		}
+
+		if( hoverElement != null ) {
+
+			mainObject = hoverElement;
+
+			var lengthY = (mainObject.endY+9)/currentScale;
+			var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+
+			var childStartX = 0;
+			var childStartY = 0;
+			var childWidth = 0;
+			var childHeight = 0;
+
+			childStartY = (mainObject.endY+7)/currentScale;
+			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+				if( j == 0 ) {
+					childStartX = midpoint - mainObject.toolsUsed[j][2]/2/currentScale;
+				}
+				
+				if( mainObject.toolsUsed[j][2]/currentScale > childWidth ) {
+					childWidth = mainObject.toolsUsed[j][2]/currentScale;
+				}
+
+				if( midpoint - mainObject.toolsUsed[j][2]/2/currentScale < childStartX ) {
+					childStartX = midpoint - mainObject.toolsUsed[j][2]/2/currentScale;
+				}
+
+				childHeight += (mainObject.toolsUsed[j][3] + 4)/currentScale;
+			}
+
+			childStartX = childStartX - 2;
+			childWidth = childWidth + 4;
+
+			if(childStartX != 0) {
+				ctx.fillStyle="#F7C96C";
+				ctx.clearRect(childStartX, childStartY, childWidth, childHeight);
+				ctx.fillRect(childStartX, childStartY, childWidth, childHeight);
+			}
+
+			ctx.strokeStyle = "orange";
+			ctx.fillStyle="#F4B942";
+			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+
+			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
+				var toolImage = new Image();
+				toolImage.src = mainObject.toolsUsed[j][1];
+				//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
+				ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
+				lengthY +=(mainObject.toolsUsed[j][3]+4)/currentScale;
+			}
+
+			var imgElement = new Image();
+			imgElement.src = mainObject.imageSource;
+
+			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+
+		}
+
+
 		//draws edges including the selected one
 		for(var i = 0; i < js.edges.length; i++) {
 
@@ -794,6 +869,11 @@ function drawToCanvas(js, e) {
 	}
 
 }
+
+function truncateName(nameString) {
+	return ( (nameString.length <= 15) ? nameString: nameString.substring(0, 15) + "..." );
+}
+
 var importPopupBool = false;
 
 function importWorkflow(e) {
