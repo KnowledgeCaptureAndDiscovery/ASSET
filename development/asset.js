@@ -356,6 +356,9 @@ function saveTitle(e) {
 	Called when the download button is clicked
 */
 function downloaded(e) {
+	// To get the latest version of the JSON to be exported.
+	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); 
+	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 	saved = true;
 }
 
@@ -756,6 +759,12 @@ function drawToCanvas(js, e) {
 			// }
 		}
 
+		//draws edges including the selected one
+		for(var i = 0; i < js.edges.length; i++) {
+
+			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
+		}
+
 		if( doubleClickElement != null ) {
 
 			mainObject = doubleClickElement;
@@ -855,13 +864,6 @@ function drawToCanvas(js, e) {
 
 			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
 
-		}
-
-
-		//draws edges including the selected one
-		for(var i = 0; i < js.edges.length; i++) {
-
-			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
 		}
 
 	} catch(err) {
