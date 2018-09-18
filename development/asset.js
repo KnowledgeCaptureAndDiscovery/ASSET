@@ -110,7 +110,14 @@ function initialize() {
 		}
 	};
 
+	//to load the images
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCube Tools']")), 'click');
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tools']")), 'click');
+
 	Polymer.dom(assetAppElement.root).querySelector("#populateDetailsSection").innerHTML = "";
+
+	eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
 
 	//helpers for delete press
 	canvasElement.tabIndex = 1000;
@@ -143,28 +150,6 @@ function initialize() {
 
 	zoomInButton.style.cursor = "zoom-in";
 	zoomOutButton.style.cursor = "zoom-out";
-
-	//Fetch the source JSON Asynchronously	
-	var requestObject;
-	requestObject = new XMLHttpRequest();
-	requestObject.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			localStorage.setItem("sourceJSON", this.responseText);
-
-			var workflowElementsString = "<workflow-elements draggable='false' id='elementsSelect' src='content.json'></workflow-elements>";
-
-			var populateWorkflowElementsElement = Polymer.dom(assetAppElement.root).querySelector("#WorkFlowElementsSection");
-			populateWorkflowElementsElement.innerHTML = workflowElementsString;
-
-			//to load the images
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCube Tools']")), 'click');
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tools']")), 'click');
-		}
-	};
-	requestObject.open("GET", "content.json", true);
-	requestObject.send();
-	
 }
 
 function dropdown() {

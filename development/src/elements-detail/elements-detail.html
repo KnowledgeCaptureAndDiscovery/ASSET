@@ -71,6 +71,18 @@
 			    try {
 
 				    dataJSON = localStorage.getItem("sourceJSON");
+				    
+				    if( dataJSON == null || dataJSON == undefined ) {
+
+				    	console.log("Fetching JSON again");
+
+					    requestObject = new XMLHttpRequest();
+					    requestObject.open("GET", this.src, false);
+					    requestObject.send();
+
+				    	dataJSON = requestObject.responseText;
+				    }
+
 				    dataJSON = JSON.parse(dataJSON);
 					
 				    for(i = 0; i < dataJSON.workflowElements.length; i++) {

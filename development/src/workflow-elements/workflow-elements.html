@@ -69,7 +69,16 @@
 			    var requestObject;
 
 			    try {
-				    dataJSON = JSON.parse(localStorage.getItem("sourceJSON"));
+
+				    requestObject = new XMLHttpRequest();
+				    requestObject.open("GET", this.src, false);
+				    requestObject.send();
+
+				    localStorage.setItem("sourceJSON", requestObject.responseText);
+
+				    dataJSON = JSON.parse(requestObject.responseText);
+
+
 				    for(var i = 0; i < dataJSON.workflowElements.length; i++) {
 				    	this.push('workflowElements', dataJSON.workflowElements[i].name);
 				    }
