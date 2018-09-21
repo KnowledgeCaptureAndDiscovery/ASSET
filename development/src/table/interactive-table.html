@@ -1,6 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
 
 
 <dom-module id="interactive-table">
@@ -58,7 +59,22 @@
     </table>
 
     <br>
-    <button on-click= "addNewProperty">Add property</button>
+
+    <template is="dom-if" if="[[hasTools]]">
+      <select onclick="toolsFunction(event)">
+        <option value="default" selected="selected">Choose a Tool</option>
+        <template is="dom-repeat" items="{{tools}}">
+            <option onclick="cust(event)" value="[[item.count]]">[[item.name]]</option>
+        </template>
+      </select>
+      <br><br>
+    </template>
+
+    <template is="dom-if" if='[[isChild]]'>
+      <button onclick="deleteChild(event)">Delete</button>
+    </template>
+
+    <button on-click="addNewProperty">Add property</button>
     
   </template>
 
@@ -95,6 +111,26 @@
           focus : {
             type: Boolean,
             value : false
+          }
+          ,
+          hasTools : {
+            type: Boolean,
+            value: false
+          }
+          ,
+          tools : {
+            type: Array,
+            value: []
+          }
+          ,
+          isChild : {
+            type: Boolean,
+            value: false
+          }
+          ,
+          id : {
+            type: String,
+            value: ""
           }
         };
       }
@@ -139,15 +175,75 @@
         }
       }
 
-      loadDetails(details) {
+            loadDetails(details, json, index) {
+        this.tools = [];
+        this.hasTools = false;
+        this.isChild = true;
         this.details = details;
+        this.id = "";
+
+        if( index != -1 ) {
+          this.isChild = false;
+          this.id = json.mainObjects[index]["id"];
+          selectedSubElement = null;
+          if( json.mainObjects[index]["toolsUsed"].length > 0 ) {
+            this.hasTools = true;
+            this.loadDropDown(details, json, index);
+          }
+        }
+        
+      }
+
+      loadDropDown(details, json, index) {
+        var toolsArr = [];
+        for( var j = 0; j < json.mainObjects[index]["toolsUsed"].length; j++ ) {
+          var toolDetails = {"name": json.mainObjects[index]["toolsUsed"][j][0], "count": j};
+          toolsArr.push(toolDetails)
+        }
+        this.tools = toolsArr;
       }
 
       clear() {
         this.focus = false;
         this.details = null;
+        this.hasTools = false;
+        this.tools = null;
+        this.isChild = false;
       }
     }
     window.customElements.define(InteractiveTable.is, InteractiveTable);
+
+    function toolsFunction(event) {
+      if( event.target.value == "default" )
+        return;
+
+      descriptionTable.clear();
+      descriptionTable.editName("Child");
+      selectedElement = null;
+      selectedSubElement = {
+        parentId: descriptionTable.id,
+        index: event.target.value
+      };
+      event.target.value = "default";
+      descriptionTable.loadDetails(null, globalJSON, -1);
+      drawToCanvas(globalJSON, null);
+    }
+
+    function deleteChild(event) {
+
+      if( selectedSubElement != null ) {
+        for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+          if( globalJSON.mainObjects[i].id == selectedSubElement["parentId"] ) {
+            deletedElement = globalJSON.mainObjects[i]["toolsUsed"].splice(selectedSubElement["index"], 1);
+            selectedSubElement = null;
+            resetTable();
+            drawToCanvas(globalJSON, null);
+          }
+
+        }
+
+      }
+
+    }
   </script>
 </dom-module>

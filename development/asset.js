@@ -8,6 +8,7 @@ var editArray;
 var edge;
 var mouseOverElement;
 var selectedElement;
+var selectedSubElement;
 var descriptionElement;
 var descriptionTable;
 var detailTemplate;
@@ -443,6 +444,7 @@ function allowDrop(e) {
 */
 var selected = false;
 function canvasClick(e) {
+	selectedSubElement = null;
 	if (e == null) {
 		title.blur();
 		selectedEdge = null;
@@ -496,7 +498,7 @@ function canvasClick(e) {
 			selected = true;
 			descriptionTable.style.visibility = "visible";
 			descriptionTable.editName(element.name);
-			descriptionTable.loadDetails(globalJSON.details[i]);
+			descriptionTable.loadDetails(globalJSON.details[i], globalJSON, i);
 
 			drawToCanvas(g); //redraw everything but highlight element
 			selectedEdge = null;
@@ -590,7 +592,7 @@ function drop(e) {
 		selectedElement = newElement.id;
 		descriptionTable.style.visibility = "visible";
 		descriptionTable.editName(newElement.name);
-		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1]);
+		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1], globalJSON, globalJSON.details.length - 1);
 		drawToCanvas(globalJSON);
 	} else {
 		var detail = globalJSON.details[index][4]["detail"];
@@ -611,7 +613,7 @@ function drop(e) {
 		descriptionTable.style.visibility = "visible";
 		descriptionTable.editName(addToElement.name);
 		resetTable();
-		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index]), 10);
+		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index], globalJSON, index), 10);
 		descriptionTable.style.visibility = "visible";
 
 	}
@@ -753,6 +755,15 @@ function drawToCanvas(js, e) {
 					var toolImage = new Image();
 					toolImage.src = mainObject.toolsUsed[j][1];
 					//if (j % 2 == 0) { //if index of tools used of selected item in canvas is even
+					if( selectedSubElement != null ) {
+						if( selectedSubElement["parentId"] == mainObject.id && selectedSubElement["index"] == j ) {
+							ctx.fillStyle = "#00800040";
+							ctx.fillRect(lengthX, mainObject.endY/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
+							ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
+							lengthX += (mainObject.toolsUsed[j][2]+100)/currentScale/3;
+							continue;
+						}
+					}
 						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
 						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 					//} else {
