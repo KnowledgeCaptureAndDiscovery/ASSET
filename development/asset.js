@@ -14,7 +14,7 @@ var descriptionTable;
 var detailTemplate;
 var title;
 
-var globalJSON = {"mainObjects": [], "edges": [], "details": [], "title" : ""}; // the workflow elements and edges and details and title
+var globalJSON = {"mainObjects": [], "edges": [], "details": [], "subcomponent_details": [], "title" : ""}; // the workflow elements and edges and details and title
 
 var saved; //stores the boolean in which the workflow was exported or not
 
@@ -583,6 +583,7 @@ function drop(e) {
 	if( index == -1) { // if not overlapping with other element
 		globalJSON.mainObjects.push(newElement); //pushed into mainobjects
 		globalJSON.details.push(newTemplate());
+		globalJSON.subcomponent_details.push({"parentId" : newElement.id, "details": []});
 
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
@@ -616,6 +617,13 @@ function drop(e) {
 		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index], globalJSON, index), 10);
 		descriptionTable.style.visibility = "visible";
 
+		for(var i = 0; i < globalJSON.subcomponent_details.length; i++) {
+
+			if( globalJSON.subcomponent_details[i].parentId == globalJSON.mainObjects[index].id ) {
+				globalJSON.subcomponent_details[i].details.push(newTemplate());
+			}
+
+		}
 	}
 
 	//replace old globalJSON and download link
