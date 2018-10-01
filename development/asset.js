@@ -180,6 +180,7 @@ function loadExampleWorkflow(fileNum) {
 	
 	if (fileNum == 0) {
 		globalJSON = JSON.parse(algal);
+		globalJSON = updateJSONWithID(globalJSON);
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
@@ -189,6 +190,7 @@ function loadExampleWorkflow(fileNum) {
 		selected = false;
 	} else if (fileNum == 1) {
 		globalJSON = JSON.parse(lgm);
+		globalJSON = updateJSONWithID(globalJSON);
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
@@ -198,6 +200,7 @@ function loadExampleWorkflow(fileNum) {
 		selected = false;
 	} else if (fileNum == 2) {
 		globalJSON = JSON.parse(qgis);
+		globalJSON = updateJSONWithID(globalJSON);
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
@@ -227,23 +230,31 @@ function loadExampleWorkflow(fileNum) {
 		*removed* 7 : description table: details changed (id, index, previous value)
 		*removed* 8 : property added (id)
 		9: tool added (id, previousObject)
+		10 : subcomponent deleted ( tools used and element details )
 
 	"id" is element's id btw
 */
 function undo() {
+
+	if( undoArray.length == 0 ) {
+		console.log("No option for undo");
+		return;
+	}
+
 	selectedElement = null;
 	selectedEdge = null;
 	resetTable();
 	var eventNumber = undoArray[undoArray.length -1][0];
 	var param = undoArray[undoArray.length -1][1];
 	if (eventNumber == "0") { //delete element
-		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1)[0], globalJSON.details.splice(globalJSON.details.length-1, 1)[0]]]);
+		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1)[0], globalJSON.details.splice(globalJSON.details.length-1, 1)[0], globalJSON.subcomponent_details.splice(globalJSON.subcomponent_details.length-1, 1)[0]]]);
 	} else if (eventNumber == "1") { //add element
 		globalJSON.mainObjects.push(param[0]);
-		for (var i = 2; i < param.length; i++) {
+		for (var i = 3; i < param.length; i++) {
 			globalJSON.edges.push(param[i]);
 		}
 		globalJSON.details.push(param[1]);
+		globalJSON.subcomponent_details.push(param[2]);
 		redoArray.push([1,param[0]]);
 	} else if (eventNumber == "2") {
 		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
@@ -272,8 +283,13 @@ function undo() {
 	} else if (eventNumber == "8") {
 
 	} else if (eventNumber == "9") {
-		redoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
+		redoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]]))]]);
 		globalJSON.mainObjects[param[0]] = param[1];
+		globalJSON.subcomponent_details[param[0]] = param[2];
+	} else if (eventNumber == "10") {		
+		redoArray.push([10, [param[0], param[3]]]);
+		globalJSON.mainObjects[param[0]].toolsUsed.splice(param[3], 0, param[1]);
+		globalJSON.subcomponent_details[param[0]].details.splice(param[3], 0, param[2]);
 	}
 	undoArray.pop();
 	drawToCanvas(globalJSON);
@@ -297,6 +313,12 @@ function undo() {
 		*removed* 8 : property added (id)
 */
 function redo() {
+	
+	if( redoArray.length == 0 ) {
+		console.log("No option for redo");
+		return;
+	}
+
 	selectedElement = null;
 	selectedEdge = null;
 	resetTable();
@@ -305,6 +327,7 @@ function redo() {
 	if (eventNumber == "0") { //recreate an element
 		globalJSON.mainObjects.push(param[0]);
 		globalJSON.details.push(param[1]);
+		globalJSON.subcomponent_details.push(param[1]);
 		undoArray.push([0, null]);
 	} else if (eventNumber == "1") {
 		var undoElement= [];
@@ -314,6 +337,7 @@ function redo() {
 
 				undoElement.push(globalJSON.mainObjects.splice(i, 1)[0]);
                 undoElement.push(globalJSON.details.splice(i,1)[0]);
+				undoElement.push(globalJSON.subcomponent_details.splice(i,1)[0]);
 				break;
 			}
 		}
@@ -342,8 +366,11 @@ function redo() {
 	} else if (eventNumber == "7") {
 	} else if (eventNumber == "8") {
 	} else if (eventNumber == "9") {
-		undoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]]))]]);
+		undoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]]))]]);
 		globalJSON.mainObjects[param[0]] = param[1];
+		globalJSON.subcomponent_details[param[0]] = param[2];
+	} else if (eventNumber == "10") {
+		undoArray.push([10, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]].toolsUsed.splice(param[1], 1)[0])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]].details.splice(param[1], 1)[0])) ,param[1]]]);
 	}
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -598,8 +625,8 @@ function drop(e) {
 	} else {
 		var detail = globalJSON.details[index][4]["detail"];
 		var addedDetail = detail + ", " + newElement.name;
-		var addToElement = globalJSON.mainObjects[index];
-		undoArray.push([9, [index,JSON.parse(JSON.stringify(globalJSON.mainObjects[index]))]]);
+		var addToElement = globalJSON.mainObjects[index];	
+		undoArray.push([9, [index,JSON.parse(JSON.stringify(globalJSON.mainObjects[index])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[index]))]]);
 		redoArray = [];
 		addToElement.toolsUsed.push([newElement.name, newElement.imageSource, w, h]);
 		//addToElement.endY += scalingNum / 2;
@@ -707,6 +734,12 @@ function drawToCanvas(js, e) {
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
+		//draws edges including the selected one
+		for(var i = 0; i < js.edges.length; i++) {
+
+			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
+		}
+
 		//draws elements including the special ones
 		for(var i = 0; i < js.mainObjects.length; i++) {
 
@@ -791,12 +824,6 @@ function drawToCanvas(js, e) {
 			// 	toolImage.src = mainObject.toolsUsed[mainObject.toolsUsed.length -1][1];
 			// 	ctx.drawImage(toolImage, mainObject.startX/currentScale, mainObject.endY/currentScale, (mainObject.endX - mainObject.startX)/currentScale/2, (mainObject.endY - mainObject.startY)/currentScale/2 );
 			// }
-		}
-
-		//draws edges including the selected one
-		for(var i = 0; i < js.edges.length; i++) {
-
-			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
 		}
 
 		if( doubleClickElement != null ) {
@@ -940,6 +967,9 @@ function loadWorkflowSketch() {
 		fileReader.onload = function(fileLoadedEvent) {
 			var textFromFileLoaded = fileLoadedEvent.target.result;
 			globalJSON = JSON.parse(textFromFileLoaded);
+
+			globalJSON = updateJSONWithID(globalJSON);
+
 			closePopup();
 
 			//setting download link

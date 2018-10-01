@@ -240,17 +240,30 @@
     }
 
     function deleteChild(event) {
+      
+      var i = -1;
+      var j = -1;
+      var deletedSubElementData = [];
 
       if( selectedSubElement != null ) {
-        for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+        for( i = 0; i < globalJSON.mainObjects.length; i++ ) {
           if( globalJSON.mainObjects[i].id == selectedSubElement["parentId"] ) {
-            deletedElement = globalJSON.mainObjects[i]["toolsUsed"].splice(selectedSubElement["index"], 1);
-            selectedSubElement = null;
-            resetTable();
-            drawToCanvas(globalJSON, null);
+            deletedSubElementData.push(i);
+            deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.mainObjects[i]["toolsUsed"][selectedSubElement["index"]])));
+            deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.subcomponent_details[i].details[selectedSubElement["index"]])));
+            deletedSubElementData.push(selectedSubElement["index"]);
+            globalJSON.mainObjects[i]["toolsUsed"].splice(selectedSubElement["index"], 1);
+            globalJSON.subcomponent_details[i]["details"].splice(selectedSubElement["index"], 1);
+            break;
           }
-
         }
+        
+        undoArray.push([10, deletedSubElementData]);
+        redoArray = [];
+        
+        selectedSubElement = null;
+        resetTable();
+        drawToCanvas(globalJSON, null);
 
       }
 

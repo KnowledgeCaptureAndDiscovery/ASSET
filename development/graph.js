@@ -12,6 +12,7 @@ function deleteNode(id) {
 
 				undoElement.push(g.mainObjects.splice(i, 1)[0]);
                 undoElement.push(g.details.splice(i,1)[0]);
+                undoElement.push(g.subcomponent_details.splice(i, 1)[0]);
                 i--;
                 deletionFlag = true;
 				break;
