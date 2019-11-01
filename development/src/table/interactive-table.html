@@ -5,7 +5,7 @@
 
 
 <dom-module id="interactive-table">
-  <template id = "template">
+  <template id="template">
     <style>
       table {
         font-family: arial, sans-serif;
@@ -22,7 +22,8 @@
         margin-bottom: 1vh;
       }
 
-      td, th {
+      td,
+      th {
         border: 1px solid black;
         text-align: left;
         min-height: auto;
@@ -43,29 +44,35 @@
         background-color: #dddddd;
       }
 
-      #title, button {
+      #title,
+      button {
         float: left;
       }
     </style>
     <h2 id="title">[[elementTitle]]</h2>
 
     <br><br>
-    
-    <table>
+
+    <div>
+      <table>
         <template is="dom-repeat" items="{{details}}">
-            <tr class = "descriptionRow">
-            <td contenteditable="true" on-focus = "focusing" on-blur="onBlur" class = "name" id ="name[[index]]" on-keypress="save">[[item.name]]</td>
-            <td contenteditable="true" on-focus = "focusing" on-blur="onBlur" class = "detail" id ="detail[[index]]" on-keypress="save">[[item.detail]]</td>
+          <tr class="descriptionRow" id="[[index]]">
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="name[[index]]"
+              on-keypress="save">[[item.name]]</td>
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="detail[[index]]"
+              on-keypress="save">[[item.detail]]</td>
+            <td contenteditable="false" on-click="onDeleteClick"><b>x</b></td>
           </tr>
         </template>
-    </table>
+      </table>
+    </div>
     <br>
 
     <template is="dom-if" if="[[hasTools]]">
       <select onclick="toolsFunction(event)">
         <option value="default" selected="selected">Choose a Tool</option>
         <template is="dom-repeat" items="{{tools}}">
-            <option onclick="cust(event)" value="[[item.count]]">[[item.name]]</option>
+          <option onclick="cust(event)" value="[[item.count]]">[[item.name]]</option>
         </template>
       </select>
       <br><br>
@@ -76,7 +83,7 @@
     </template>
 
     <button on-click="addNewProperty">Add property</button>
-    
+
   </template>
 
   <script>
@@ -92,7 +99,7 @@
       static get is() { return 'interactive-table'; }
       static get properties() {
         return {
-          elementTitle : {
+          elementTitle: {
             type: String,
             value: ""
           }
@@ -104,44 +111,56 @@
             }
           }
           ,
-          detail : { //0 if name, 1 if detail
+          detail: { //0 if name, 1 if detail
             type: Number,
             value: null
           }
           ,
-          focus : {
-            type: Boolean,
-            value : false
-          }
-          ,
-          hasTools : {
+          focus: {
             type: Boolean,
             value: false
           }
           ,
-          tools : {
+          hasTools: {
+            type: Boolean,
+            value: false
+          }
+          ,
+          tools: {
             type: Array,
             value: []
           }
           ,
-          isChild : {
+          isChild: {
             type: Boolean,
             value: false
           }
           ,
-          id : {
+          id: {
             type: String,
             value: ""
+          },
+          parentId: {
+            type: Number,
+            value: -1
           }
         };
       }
 
+      // method to delete property 
+      onDeleteClick(event) {
+        let rowToDelete = event.model.children.find(child => child.nodeName == "TR");
+        this.details = this.details.filter((val, idx) => idx != rowToDelete.id);
+        // update the globalJSON object with the modified array
+        globalJSON.details[this.parentId] = this.details;
+      }
+
       addNewProperty() {
-        this.push("details", {name: "", detail: ""});
+        this.push("details", { name: "", detail: "" });
       }
 
       addProperty(theName, theDetail) {
-        this.push("details", {name: theName, detail: theDetail});
+        this.push("details", { name: theName, detail: theDetail });
       }
 
       editName(title) {
@@ -162,7 +181,7 @@
           this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerText;
           this.detail = 0;
           drawToCanvas(globalJSON);
-        } else if(e.target.className == "detail") {
+        } else if (e.target.className == "detail") {
           this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerText;
           this.detail = 1;
           drawToCanvas(globalJSON);
@@ -176,29 +195,30 @@
         }
       }
 
-            loadDetails(details, json, index) {
+      loadDetails(details, json, index) {
         this.tools = [];
         this.hasTools = false;
         this.isChild = true;
         this.details = details;
         this.id = "";
+        this.parentId = index;
 
-        if( index != -1 ) {
+        if (index != -1) {
           this.isChild = false;
           this.id = json.mainObjects[index]["id"];
           selectedSubElement = null;
-          if( json.mainObjects[index]["toolsUsed"].length > 0 ) {
+          if (json.mainObjects[index]["toolsUsed"].length > 0) {
             this.hasTools = true;
             this.loadDropDown(details, json, index);
           }
         }
-        
+
       }
 
       loadDropDown(details, json, index) {
         var toolsArr = [];
-        for( var j = 0; j < json.mainObjects[index]["toolsUsed"].length; j++ ) {
-          var toolDetails = {"name": json.mainObjects[index]["toolsUsed"][j][0], "count": j};
+        for (var j = 0; j < json.mainObjects[index]["toolsUsed"].length; j++) {
+          var toolDetails = { "name": json.mainObjects[index]["toolsUsed"][j][0], "count": j };
           toolsArr.push(toolDetails)
         }
         this.tools = toolsArr;
@@ -215,7 +235,7 @@
     window.customElements.define(InteractiveTable.is, InteractiveTable);
 
     function toolsFunction(event) {
-      if( event.target.value == "default" )
+      if (event.target.value == "default")
         return;
 
       selectedElement = null;
@@ -223,10 +243,10 @@
         parentId: descriptionTable.id,
         index: event.target.value
       };
-      
-      for(var i = 0; i < globalJSON.subcomponent_details.length; i++) {
-        
-        if( globalJSON.subcomponent_details[i].parentId == descriptionTable.id ) {
+
+      for (var i = 0; i < globalJSON.subcomponent_details.length; i++) {
+
+        if (globalJSON.subcomponent_details[i].parentId == descriptionTable.id) {
           resetTable();
           descriptionTable.style.visibility = "visible";
           descriptionTable.editName("Sub-Compunent : " + globalJSON.mainObjects[i].toolsUsed[event.target.value][0]);
@@ -240,14 +260,14 @@
     }
 
     function deleteChild(event) {
-      
+
       var i = -1;
       var j = -1;
       var deletedSubElementData = [];
 
-      if( selectedSubElement != null ) {
-        for( i = 0; i < globalJSON.mainObjects.length; i++ ) {
-          if( globalJSON.mainObjects[i].id == selectedSubElement["parentId"] ) {
+      if (selectedSubElement != null) {
+        for (i = 0; i < globalJSON.mainObjects.length; i++) {
+          if (globalJSON.mainObjects[i].id == selectedSubElement["parentId"]) {
             deletedSubElementData.push(i);
             deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.mainObjects[i]["toolsUsed"][selectedSubElement["index"]])));
             deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.subcomponent_details[i].details[selectedSubElement["index"]])));
@@ -257,10 +277,10 @@
             break;
           }
         }
-        
+
         undoArray.push([10, deletedSubElementData]);
         redoArray = [];
-        
+
         selectedSubElement = null;
         resetTable();
         drawToCanvas(globalJSON, null);
