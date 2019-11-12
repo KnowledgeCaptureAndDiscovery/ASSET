@@ -48,6 +48,10 @@
       button {
         float: left;
       }
+
+      .clickable {
+        cursor: pointer;
+      }
     </style>
     <h2 id="title">[[elementTitle]]</h2>
 
@@ -61,7 +65,8 @@
               on-keypress="save">[[item.name]]</td>
             <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="detail[[index]]"
               on-keypress="save">[[item.detail]]</td>
-            <td contenteditable="false" on-click="onDeleteClick"><b>x</b></td>
+            <td contenteditable="false" on-click="onDeleteClick"><span title="Delete" class="clickable"><b>X</b></span>
+            </td>
           </tr>
         </template>
       </table>
@@ -285,8 +290,7 @@
         resetTable();
         drawToCanvas(globalJSON, null);
 
-      }
-
+      } 
     }
   </script>
 </dom-module>

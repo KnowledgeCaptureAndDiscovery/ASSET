@@ -406,6 +406,16 @@
 							"propertyType": "String"
 						}
 					]
+				},
+				{
+					"elementName" : "Other",
+					"imageSource": "/images/other-black.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
 				}
                 
 			]

@@ -8,109 +8,144 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-body, html {
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+  body,
+  html {
     height: 100%;
     line-height: 1.8;
-}
-/* Full height image header */
-.bgimg-1 {
+  }
+
+  /* Full height image header */
+  .bgimg-1 {
     background-position: center;
     background-size: cover;
     background-image: url("/w3images/mac.jpg");
     min-height: 100%;
-}
-.w3-bar .w3-button {
+  }
+
+  /* .w3-bar .w3-button {
     padding: 16px;
-}
+  } */
+
+  .container-padding {
+    padding-top: 4em;
+  }
+
+  .center-align-tabs-content {
+    line-height: 42px;
+  }
+
+  /* the height values above and below this comment need to be same */
+  .asset-logo-height {
+    height: 42px;
+  }
 </style>
+
 <body>
 
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar w3-white w3-card" id="myNavbar">
-    <a href="index.html"><img class="w3-bar-item" src="images/asset.png" height="80px" alt="ASSET LOGO"/> </a>
-    <!-- Right-sided navbar links -->
-    <div class="w3-right w3-hide-small">
-      <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a>
-      <a href="#" class="w3-bar-item w3-button"> About</a>
-      <a href="tutorial.html" class="w3-bar-item w3-button"> Tutorial</a>
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-card center-align-tabs-content" id="myNavbar">
+      <a href="https://www.asset-project.info/index.html" target="_blank" class="w3-bar-item w3-button" title="About the ASSET Project">
+        <img src="images/asset.png" class="asset-logo-height" alt="ASSET LOGO" />
+      </a>
+      <!-- Right-sided navbar links -->
+      <div class="w3-right w3-hide-small">
+        <!-- <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a> -->
+        <a href="#" class="w3-bar-item w3-button"> About</a>
+        <a href="tutorial.html" class="w3-bar-item w3-button"> Tutorial</a>
+      </div>
+      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+        onclick="w3_open()">
+        <i class="fa fa-bars"></i>
+      </a>
     </div>
-    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
-      <i class="fa fa-bars"></i>
-    </a>
   </div>
-</div>
 
-<!-- Sidebar on small screens when clicking the menu icon -->
-<nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
-  <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a>
-  <a href="#" class="w3-bar-item w3-button"> About</a>
-  <a href="tutorial.html" class="w3-bar-item w3-button"> Tutorial</a>
-</nav>
+  <!-- Sidebar on small screens when clicking the menu icon -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
+    style="display:none" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
+    <!-- <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a> -->
+    <a href="#" class="w3-bar-item w3-button"> About</a>
+    <a href="tutorial.html" class="w3-bar-item w3-button"> Tutorial</a>
+  </nav>
 
-<!-- About Section -->
-<div class="w3-container" style="padding:128px 16px">
-  <div class="w3-row-padding w3-white">
-    <p class="w3-justify">
-      The Accelerating Scientific workflowS using EarthCube Technologies (ASSET) project is developing a framework to capture scientific workflows in different domains of geosciences, characterize the type of work and the amount of effort involved in each activity, and map workflow activities to available tools and infrastructure.  The ASSET workflow sketching interface enables scientists to specify their workflows and describe the steps involved.
-      
+  <!-- About Section -->
+  <div class="w3-container container-padding">
+    <div class="w3-white">
+      <p class="w3-justify">
+        The Accelerating Scientific workflowS using EarthCube Technologies (ASSET) project is developing a framework to
+        capture scientific workflows in different domains of geosciences, characterize the type of work and the amount
+        of effort involved in each activity, and map workflow activities to available tools and infrastructure. The
+        ASSET workflow sketching interface enables scientists to specify their workflows and describe the steps
+        involved.
+
       </p>
-      
-    <p>
-    Contributors to the ASSET sketching interface include:
-    </p>
-    <ul>
+
+      <p>
+        Contributors to the ASSET sketching interface include:
+      </p>
+      <ul>
         <li>Anant Chandra</li>
         <li>Abishek Prakash</li>
         <li>Jeffrey Wang</li>
         <li>Daniel Garijo</li>
         <li>Yolanda Gil</li>
         <li>Varun Ratnakar</li>
-    </ul>
-    
-    <p>The ASSET team also includes:</p>
+      </ul>
 
-    <ul> 
+      <p>The ASSET team also includes:</p>
+
+      <ul>
         <li>Cindy Bruyere</li>
         <li>Mike Daniels</li>
         <li>James Done</li>
         <li>Scott Peckham</li>
-    </ul>
-    
+      </ul>
+
+    </div>
   </div>
-</div>
 
 
-<!-- Footer 
+  <!-- Footer 
 <footer class="w3-center w3-black w3-padding-64">
   <a href="#home" class="w3-button w3-light-grey"><i class="fa fa-arrow-up w3-margin-right"></i>To the top</a>
   
   <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
 </footer>-->
- 
-<!-- Add Google Maps -->
-<script>
 
-// Toggle between showing and hiding the sidebar when clicking the menu icon
-var mySidebar = document.getElementById("mySidebar");
+  <!-- Add Google Maps -->
+  <script>
 
-function w3_open() {
-    if (mySidebar.style.display === 'block') {
+    // Toggle between showing and hiding the sidebar when clicking the menu icon
+    var mySidebar = document.getElementById("mySidebar");
+
+    function w3_open() {
+      if (mySidebar.style.display === 'block') {
         mySidebar.style.display = 'none';
-    } else {
+      } else {
         mySidebar.style.display = 'block';
+      }
     }
-}
 
-// Close the sidebar with the close button
-function w3_close() {
-    mySidebar.style.display = "none";
-}
-</script>
+    // Close the sidebar with the close button
+    function w3_close() {
+      mySidebar.style.display = "none";
+    }
+  </script>
 
 </body>
+
 </html>
