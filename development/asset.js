@@ -178,6 +178,7 @@ function loadExampleWorkflow(fileNum) {
 		return;
 	}
 	
+	resetTable();
 	if (fileNum == 0) {
 		globalJSON = JSON.parse(algal);
 		globalJSON = updateJSONWithID(globalJSON);
