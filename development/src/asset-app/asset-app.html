@@ -521,6 +521,11 @@
         var me = this;
         Polymer.RenderStatus.afterNextRender(this, function () {
           initialize();
+          setTimeout(
+          () => {  
+          // fire the click event on the first button after the initialization has been completed (>=)
+          eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click')
+          },100);
         });
       }
     }
