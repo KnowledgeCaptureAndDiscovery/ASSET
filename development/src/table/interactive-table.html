@@ -254,7 +254,7 @@
         if (globalJSON.subcomponent_details[i].parentId == descriptionTable.id) {
           resetTable();
           descriptionTable.style.visibility = "visible";
-          descriptionTable.editName("Sub-Compunent : " + globalJSON.mainObjects[i].toolsUsed[event.target.value][0]);
+          descriptionTable.editName("Sub-Component : " + globalJSON.mainObjects[i].toolsUsed[event.target.value][0]);
           descriptionTable.loadDetails(globalJSON.subcomponent_details[i].details[event.target.value], globalJSON, -1);
           break;
         }
