@@ -343,6 +343,16 @@
 				},
 
 				{
+					"elementName" : "OPEN REFINE",
+					"imageSource": "/images/data_science_tools/openrefine.jpg",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
 					"elementName" : "SCIKIT LEARN",
 					"imageSource": "/images/data_science_tools/scikit_learn.png",
 					"properties": [
@@ -408,6 +418,16 @@
 					]
 				},
 				{
+					"elementName" : "MATPLOTLIB",
+					"imageSource": "/images/data_science_tools/matplotlib.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
 					"elementName" : "Other",
 					"imageSource": "/images/other-black.png",
 					"properties": [
@@ -460,6 +480,16 @@
                 {
 					"elementName" : "Matlab",
 					"imageSource": "/images/commonTools/matlab.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
+					"elementName" : "Jupyter Notebook",
+					"imageSource": "/images/commonTools/jupyter.png",
 					"properties": [
 						{
 							"propertyName": "Description",
