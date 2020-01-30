@@ -178,6 +178,7 @@ function loadExampleWorkflow(fileNum) {
 		return;
 	}
 	
+	resetTable();
 	if (fileNum == 0) {
 		globalJSON = JSON.parse(algal);
 		globalJSON = updateJSONWithID(globalJSON);
@@ -732,6 +733,21 @@ function drawToCanvas(js, e) {
 		var doubleClickElement = null;
 		var clickElement = null;
 
+		// Offsets for the title and tools of a main object
+		const titleOffset = 20;
+		const toolImgOffset = 25; 
+		
+		// Offsets for the title and tools when a main object is hovered over
+		const titleOffsetHover = 30;
+		const toolImgOffsetHover = 30; 
+
+		// Offsets for the title and tools when a main object is clicked (single or double)
+		const titleOffsetClicked = 30;
+		const toolImgOffsetClicked = 35; 
+
+		// zoomed in font value
+		const zoomedFont = "18px Arial";
+
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
 		//draws edges including the selected one
@@ -749,13 +765,14 @@ function drawToCanvas(js, e) {
 
 			ctx.beginPath();
 			if( selectedElement == mainObject.id ) {
+				ctx.font = zoomedFont;
 				if (edge == selectedElement) {
 					doubleClickElement = mainObject;
 
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetClicked)/currentScale);
 						}
 					}
 				} else {
@@ -764,7 +781,7 @@ function drawToCanvas(js, e) {
 					ctx.fillStyle="black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetClicked)/currentScale);
 						}
 					}
 				}
@@ -772,9 +789,10 @@ function drawToCanvas(js, e) {
 				hoverElement = mainObject;
 
 				ctx.fillStyle="black";
+				ctx.font = zoomedFont;
 				for (var j = 0; j < globalJSON.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetHover)/currentScale);
 					}
 				}
 			} else {
@@ -785,7 +803,7 @@ function drawToCanvas(js, e) {
 				ctx.fillStyle="black";
 				for (var j = 0; j < js.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.startY-10)/currentScale);
+						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffset)/currentScale);
 					}
 				}
 				ctx.font = "20px Arial";
@@ -799,13 +817,13 @@ function drawToCanvas(js, e) {
 					if( selectedSubElement != null ) {
 						if( selectedSubElement["parentId"] == mainObject.id && selectedSubElement["index"] == j ) {
 							ctx.fillStyle = "#00800040";
-							ctx.fillRect(lengthX, mainObject.endY/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
-							ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
+							ctx.fillRect(lengthX, (mainObject.endY + toolImgOffset)/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
+							ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset)/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
 							lengthX += (mainObject.toolsUsed[j][2]+100)/currentScale/3;
 							continue;
 						}
 					}
-						ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+						ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
 						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 					//} else {
 					//	ctx.drawImage(toolImage, mainObject.startX/currentScale + lengthX, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
@@ -837,7 +855,7 @@ function drawToCanvas(js, e) {
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 				var toolImage = new Image();
 				toolImage.src = mainObject.toolsUsed[j][1];
-				ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
 				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 			}
 
@@ -859,7 +877,7 @@ function drawToCanvas(js, e) {
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 				var toolImage = new Image();
 				toolImage.src = mainObject.toolsUsed[j][1];
-				ctx.drawImage(toolImage, lengthX, mainObject.endY/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
+				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
 				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
 			}
 
@@ -874,7 +892,7 @@ function drawToCanvas(js, e) {
 
 			mainObject = hoverElement;
 
-			var lengthY = (mainObject.endY+9)/currentScale;
+			var lengthY = (mainObject.endY+9 + toolImgOffsetHover)/currentScale;
 			var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
 
 			var childStartX = 0;
@@ -904,8 +922,8 @@ function drawToCanvas(js, e) {
 
 			if(childStartX != 0) {
 				ctx.fillStyle="#F7C96C";
-				ctx.clearRect(childStartX, childStartY, childWidth, childHeight);
-				ctx.fillRect(childStartX, childStartY, childWidth, childHeight);
+				ctx.clearRect(childStartX, childStartY + toolImgOffsetHover, childWidth, childHeight);
+				ctx.fillRect(childStartX, childStartY + toolImgOffsetHover, childWidth, childHeight);
 			}
 
 			ctx.strokeStyle = "orange";
@@ -943,13 +961,28 @@ function importWorkflow(e) {
 
 	try {
 		e.stopPropagation();
-		var importText = "<center id = 'importPopupElement'>Import Workflow Sketch</center><br><input type='file' id='fileToLoad' accept='application/json'><br><button onclick='loadWorkflowSketch()'>Load Workflow</button>";
+		var importText = 
+		`
+		<center id = 'importPopupElement'>Import Workflow Sketch</center>
+		<br>
+		<input type='file' id='fileToLoad' accept='application/json'>
+		<br>
+		<button onclick='loadWorkflowSketch()' style="cursor: pointer">Load Workflow</button>
+		<br>
+		<button onclick='closeImportPopup()' style="cursor: pointer">Close</button>
+		`;
 		importPopupBool = true;
 		displayPopup(importText, e.clientX, e.clientY - 10);
 
 	} catch(err) {
 		alert("Could not import workflow sketch : " + err.message);
 	}
+}
+
+// handler for close button on the Import Sketch pop-up
+function closeImportPopup(){
+	importPopupBool = false;
+	closePopup();
 }
 
 function importUnfocused() {
@@ -970,6 +1003,8 @@ function loadWorkflowSketch() {
 
 			globalJSON = updateJSONWithID(globalJSON);
 
+			// reset the import pop-up bool flag so that pop-up can be used to highlight elements
+			importPopupBool = false;
 			closePopup();
 
 			//setting download link

@@ -4,148 +4,198 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" type="image/x-icon" href="images/icon.ico" />
-<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="../css/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-body, html {
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Raleway", sans-serif
+  }
+
+  body,
+  html {
     height: 100%;
     line-height: 1.8;
-}
-/* Full height image header */
-.bgimg-1 {
+  }
+
+  /* Full height image header */
+  .bgimg-1 {
     background-position: center;
     background-size: cover;
     background-image: url("/w3images/mac.jpg");
     min-height: 100%;
-}
-.w3-bar .w3-button {
+  }
+
+  /* .w3-bar .w3-button {
     padding: 16px;
-}
+  } */
+
+
+  .container-padding {
+    padding-top: 4em;
+  }
+
+  .center-align-tabs-content {
+    line-height: 42px;
+  }
+
+  /* the height values above and below this comment need to be same */
+  .asset-logo-height {
+    height: 42px;
+  }
 </style>
+
 <body>
 
-<!-- Navbar (sit on top) -->
-<div class="w3-top">
-  <div class="w3-bar w3-white w3-card" id="myNavbar">
-    <a href="index.html"><img class="w3-bar-item" src="images/asset.png" height="80px" alt="ASSET LOGO"/> </a>
-    <!-- Right-sided navbar links -->
-    <div class="w3-right w3-hide-small">
-      <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a>
-      <a href="about.html" class="w3-bar-item w3-button"> About</a>
-      <a href="#" class="w3-bar-item w3-button"> Tutorial</a>
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-card center-align-tabs-content" id="myNavbar">
+      <a href="https://www.asset-project.info/index.html" target="_blank" class="w3-bar-item w3-button" title="About the ASSET Project">
+        <img src="images/asset.png" class="asset-logo-height" alt="ASSET LOGO" />
+      </a>
+      <!-- Right-sided navbar links -->
+      <div class="w3-right w3-hide-small">
+        <!-- <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a> -->
+        <a href="about.html" class="w3-bar-item w3-button"> About</a>
+        <a href="#" class="w3-bar-item w3-button"> Tutorial</a>
+      </div>
+      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+        onclick="w3_open()">
+        <i class="fa fa-bars"></i>
+      </a>
     </div>
-    <!-- Hide right-floated links on small screens and replace them with a menu icon -->
-
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
-      <i class="fa fa-bars"></i>
-    </a>
   </div>
-</div>
 
-<!-- Sidebar on small screens when clicking the menu icon -->
-<nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
-  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
-  <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a>
-  <a href="about.html" class="w3-bar-item w3-button"> About</a>
-  <a href="#" class="w3-bar-item w3-button"> Tutorial</a>
-</nav>
+  <!-- Sidebar on small screens when clicking the menu icon -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
+    style="display:none" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
+    <!-- <a href="index.html" class="w3-bar-item w3-button">Back to ASSET</a> -->
+    <a href="about.html" class="w3-bar-item w3-button"> About</a>
+    <a href="#" class="w3-bar-item w3-button"> Tutorial</a>
+  </nav>
 
-<!-- About Section -->
-<div class="w3-container" style="padding:128px 16px">
-  <div class="w3-row-padding w3-white">
-    
-    <h1>ASSET Tutorial</h1>
-    This document highlights the main activities covered by ASSET
-    <ol>
-    <li><a href="#rename">Renaming your document</a></li>
-    <li><a href="#addElement">Adding an element to your sketch</a></li>
-    <li><a href="#describe">Describing an element in your sketch</a></li>
-    <li><a href="#delete">Deleting an element in your sketch</a></li>
-    <li><a href="#connect">Connecting two elements in your sketch</a></li>
-    <li><a href="#tools">Describing which tools were used in a sketch</a></li>
-    <li><a href="#export">Exporting your sketch</a></li>
-    
-    </ol>
-    
-    <h3 id="rename" style="padding-top:100px">Renaming your document</h3>
-    <p class="w3-justify">
-    In order to rename your current sketch, you have to hover your mouse over the title and click:
-    </p>
-    <img src="images/tutorial/rename.png" width="70%" style='border:1px solid #000000' alt="Hovering over title"/>
-    <p class="w3-justify">
-    The title will become editable and will be saved with the new text entered. 
-    </p>
-    
-    <h3 id="addElement" style="padding-top:100px">Adding an element to your sketch</h3>
-    <p class="w3-justify">
-    First, click on any of the buttons placed in the left of the screen (e.g., "Common Tasks"). This will trigger a list of tools to appear at the bottom of the screen.
-    </p>
-    <img src="images/tutorial/hoverElement.png" width="70%" style='border:1px solid #000000' alt="Hovering over element"/>
-    <p class="w3-justify">
-    Now just click the desired element and drag it to the canvas:
-    </p>
-    <img src="images/tutorial/clickAndDrag.png" width="70%" style='border:1px solid #000000' alt="Hovering over element"/>
-    
-    <h3 id="describe" style="padding-top:100px">Describing an element in your sketch</h3>
-    <p class="w3-justify">
-    Click on the desired element and a table will appear on the left of the screen. Any of the properties of the table can be edited or deleted. By clicking on "Add property", a new row will be added in the table. The "Name" property will be displayed on the sketch.
-    </p>
-    <img src="images/tutorial/selected.png" width="70%" style='border:1px solid #000000' alt="Selecting an element"/>
-    
-    <h3 id="delete" style="padding-top:100px">Deleting an element in your sketch</h3>
-    <p class="w3-justify">
-    Select an element (an arrow or a task in the canvas) and press the "delete" key on your keyboard.
-    </p>
-    
-    <h3 id="connect" style="padding-top:100px">Connecting two elements in your sketch</h3>
-    <p class="w3-justify">
-    First, add the two elements you which to connect in your canvas. Double click on one of the elements to turn it red.
-    </p>
-    <img src="images/tutorial/selected.png" width="70%" style='border:1px solid #000000' alt="Selecting an element"/>
-    <p class="w3-justify">
-    Then click on the target element and an arrow will be drawn:
-    </p>
-    <img src="images/tutorial/paintArrow.png" width="70%" style='border:1px solid #000000' alt="Connecting two elements"/>
-    
-    <h3 id="tools" style = "padding-top:100px">Describing which tools were used in a step</h3>
-    <p class= "w3-justify">
-    To show what tools you used in a certain step of your sketch, first create a sketch and add a step.
-    </p>
-    <img src="images/tutorial/addStep.png" width = "70%" style='border:1px solid #000000' alt="Sketch with step'"/>
-    <p class= "w3-justify">
-    Next, drag your desired tool from the bottom to the target element in your sketch and drop it. The selected tool will be shown under the element and will expand when the element is hovered over. In the description table, "tools used" will be automatically updated.
-    </p>
-    <img src="images/tutorial/toolsDropped.png" width = "70%" style='border:1px solid #000000' alt="Tool is dropped;"/>
-    <h3 id="export" style="padding-top:100px">Exporting your sketch</h3>
-    <p class="w3-justify">
-    Press on the "Export sketch" link on the lower part of the screen.
-    </p>
-    
+  <!-- About Section -->
+  <div class="w3-container container-padding">
+    <div class="w3-white">
+
+      <h1>ASSET Tutorial</h1>
+      This document highlights the main activities covered by ASSET
+      <ol>
+        <li><a href="#rename">Renaming your document</a></li>
+        <li><a href="#addElement">Adding an element to your sketch</a></li>
+        <li><a href="#describe">Describing an element in your sketch</a></li>
+        <li><a href="#delete">Deleting an element in your sketch</a></li>
+        <li><a href="#connect">Connecting two elements in your sketch</a></li>
+        <li><a href="#tools">Describing which tools were used in a sketch</a></li>
+        <li><a href="#export">Exporting your sketch</a></li>
+        <li><a href="#import">Importing a sketch</a></li>
+
+      </ol>
+
+      <h3 id="rename" style="padding-top:100px">Renaming your document</h3>
+      <p class="w3-justify">
+        In order to rename your current sketch, you have to hover your mouse over the title and click:
+      </p>
+      <img src="images/tutorial/rename.png" width="70%" style='border:1px solid #000000' alt="Hovering over title" />
+      <p class="w3-justify">
+        The title will become editable and will be saved with the new text entered.
+      </p>
+
+      <h3 id="addElement" style="padding-top:100px">Adding an element to your sketch</h3>
+      <p class="w3-justify">
+        <!-- First, click on any of the buttons placed in the left of the screen (e.g., "Common Tasks"). This will trigger a
+        list of tools to appear at the bottom of the screen. -->
+        On loading the ASSET sketching interface, at the bottom of the screen, a list of common tools (corresponding to the "Common Tasks" button) will be loaded in the tools panel 
+        adjacent to the 3 buttons. Clicking on the other buttons will load their respective tools in the tools panel.
+        <br/>
+        Hovering over an item in the tools panel will show the item's name.
+      </p>
+      <img src="images/tutorial/hoverElement.png" width="70%" style='border:1px solid #000000'
+        alt="Hovering over element" />
+      <p class="w3-justify">
+        Now just click the desired element and drag it to the canvas:
+      </p>
+      <img src="images/tutorial/clickAndDrag.png" width="70%" style='border:1px solid #000000'
+        alt="Hovering over element" />
+
+      <h3 id="describe" style="padding-top:100px">Describing an element in your sketch</h3>
+      <p class="w3-justify">
+        Click on the desired element and a table will appear on the left of the screen. Any of the properties of the
+        table can be edited or deleted. By clicking on "Add property", a new row will be added in the table. The "Name"
+        property will be displayed on the sketch.
+      </p>
+      <img src="images/tutorial/selected.png" width="70%" style='border:1px solid #000000' alt="Selecting an element" />
+
+      <h3 id="delete" style="padding-top:100px">Deleting an element in your sketch</h3>
+      <p class="w3-justify">
+        Select an element (an arrow or a task in the canvas) and press the "delete" key on your keyboard.
+      </p>
+
+      <h3 id="connect" style="padding-top:100px">Connecting two elements in your sketch</h3>
+      <p class="w3-justify">
+        First, add the two elements you which to connect in your canvas. Double click on one of the elements to turn it
+        red.
+      </p>
+      <img src="images/tutorial/doubleClick.png" width="70%" style='border:1px solid #000000' alt="Selecting an element" />
+      <p class="w3-justify">
+        Then click on the target element and an arrow will be drawn:
+      </p>
+      <img src="images/tutorial/paintArrow.png" width="70%" style='border:1px solid #000000'
+        alt="Connecting two elements" />
+
+      <h3 id="tools" style="padding-top:100px">Describing which tools were used in a step</h3>
+      <p class="w3-justify">
+        To show what tools you used in a certain step of your sketch, first create a sketch and add a step.
+      </p>
+      <img src="images/tutorial/stepSelected.png" width="70%" style='border:1px solid #000000' alt="Sketch with step'" />
+      <p class="w3-justify">
+        Next, drag your desired tool from the bottom to the target element in your sketch and drop it. The selected tool
+        will be shown under the element and will expand when the element is hovered over. In the description table,
+        "tools used" will be automatically updated.
+      </p>
+      <img src="images/tutorial/toolsDropped.png" width="70%" style='border:1px solid #000000' alt="Tool is dropped;" />
+      <h3 id="export" style="padding-top:100px">Exporting your sketch</h3>
+      <p class="w3-justify">
+        Click on the "Export Sketch" link on the lower part of the screen.
+      </p>
+      <h3 id="import" style="padding-top:100px">Importing a sketch</h3>
+      <p class="w3-justify">
+        Click on the "Import Sketch" link on the lower part of the screen and choose a previously exported sketch from your file system.
+      </p>
+      <img src="images/tutorial/importSketch.png" width="70%" style='border:1px solid #000000' alt="Import Sketch;" />
+    </div>
   </div>
-</div>
 
- 
-<!-- Add Google Maps -->
-<script>
 
-// Toggle between showing and hiding the sidebar when clicking the menu icon
-var mySidebar = document.getElementById("mySidebar");
+  <!-- Add Google Maps -->
+  <script>
 
-function w3_open() {
-    if (mySidebar.style.display === 'block') {
+    // Toggle between showing and hiding the sidebar when clicking the menu icon
+    var mySidebar = document.getElementById("mySidebar");
+
+    function w3_open() {
+      if (mySidebar.style.display === 'block') {
         mySidebar.style.display = 'none';
-    } else {
+      } else {
         mySidebar.style.display = 'block';
+      }
     }
-}
 
-// Close the sidebar with the close button
-function w3_close() {
-    mySidebar.style.display = "none";
-}
-</script>
+    // Close the sidebar with the close button
+    function w3_close() {
+      mySidebar.style.display = "none";
+    }
+  </script>
 
 </body>
+
 </html>

@@ -177,12 +177,12 @@
 		},
 			
 		{
-			"name": "EarthCube Tools",
+			"name": "Data Science Tools",
 			"elements": [
                 
                 {		
-					"elementName": "ASSET",
-					"imageSource": "/images/earthCubeTools/asset.png",
+					"elementName": "PYTORCH",
+					"imageSource": "/images/data_science_tools/pytorch.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -191,8 +191,8 @@
 					]
 				},
 				{		
-					"elementName": "CHORDS",
-					"imageSource": "/images/earthCubeTools/chords.png",
+					"elementName": "TENSORFLOW",
+					"imageSource": "/images/data_science_tools/tensorflow.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -202,8 +202,8 @@
 				},
 					
 				{
-					"elementName": "CINERGI",
-					"imageSource": "/images/earthCubeTools/cinergi.png",
+					"elementName": "APACHE SPARK",
+					"imageSource": "/images/data_science_tools/spark.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -212,8 +212,8 @@
 					]
 				},
                 {
-					"elementName": "Digital Crust",
-					"imageSource": "/images/earthCubeTools/dc.png",
+					"elementName": "TABLEAU",
+					"imageSource": "/images/data_science_tools/tableau.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -223,8 +223,8 @@
 				},
 					
 				{
-					"elementName": "DisConBB",
-					"imageSource": "/images/earthCubeTools/discon.png",
+					"elementName": "D3",
+					"imageSource": "/images/data_science_tools/d3.jpeg",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -234,8 +234,8 @@
 				},
 				
                 {
-					"elementName": "Drilsdown",
-					"imageSource": "/images/earthCubeTools/drilsdown.png",
+					"elementName": "PYSPARK",
+					"imageSource": "/images/data_science_tools/py_spark.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -244,8 +244,8 @@
 					]
 				},
 				{
-					"elementName": "EarthSystemBridge",
-					"imageSource": "/images/earthCubeTools/earth.png",
+					"elementName": "THEANO",
+					"imageSource": "/images/data_science_tools/theano.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -255,8 +255,8 @@
 				},
                 
                 {
-					"elementName": "EarthCollab",
-					"imageSource": "/images/earthCubeTools/earthcollab.png",
+					"elementName": "APACHE MXNET",
+					"imageSource": "/images/data_science_tools/mx_net.jpeg",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -266,8 +266,8 @@
 				},
                 
                 {
-					"elementName": "ECITE",
-					"imageSource": "/images/earthCubeTools/ectools_ecite.png",
+					"elementName": "CNTK",
+					"imageSource": "/images/data_science_tools/cntk.jpeg",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -277,8 +277,8 @@
 				},
                 
                 {
-					"elementName": "ECOGEO",
-					"imageSource": "/images/earthCubeTools/ectools_ecogeo.png",
+					"elementName": "KERAS",
+					"imageSource": "/images/data_science_tools/keras.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -288,8 +288,8 @@
 				},
                 
                 {
-					"elementName": "FlyOverCountry",
-					"imageSource": "/images/earthCubeTools/ectools_flyovercountry.png",
+					"elementName": "CAFFE",
+					"imageSource": "/images/data_science_tools/caffe.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -299,8 +299,8 @@
 				},
                 
                 {
-					"elementName": "GeoDataSpace",
-					"imageSource": "/images/earthCubeTools/ectools_geodataspace.png",
+					"elementName": "CAFFE 2",
+					"imageSource": "/images/data_science_tools/caffe2.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -310,8 +310,8 @@
 				},
 				
 				{
-					"elementName" : "GeoDeepDive",
-					"imageSource": "/images/earthCubeTools/ectools_geodeepdive.png",
+					"elementName" : "HADOOP",
+					"imageSource": "/images/data_science_tools/hadoop.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -321,8 +321,8 @@
 				},
 				
 				{
-					"elementName" : "GeoSemantics",
-					"imageSource": "/images/earthCubeTools/ectools_geosemantics.png",
+					"elementName" : "BIG ML",
+					"imageSource": "/images/data_science_tools/big_ml.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -332,8 +332,29 @@
 				},
 				
 				{
-					"elementName" : "I-Samples",
-					"imageSource": "/images/earthCubeTools/ectools_isamples.png",
+					"elementName" : "ELASTIC SEARCH",
+					"imageSource": "/images/data_science_tools/elastic_search.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+
+				{
+					"elementName" : "OPEN REFINE",
+					"imageSource": "/images/data_science_tools/openrefine.jpg",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
+					"elementName" : "SCIKIT LEARN",
+					"imageSource": "/images/data_science_tools/scikit_learn.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -343,8 +364,8 @@
 				},
                 
                 {
-					"elementName" : "Seaview",
-					"imageSource": "/images/earthCubeTools/ectools_seaview.png",
+					"elementName" : "NLTK",
+					"imageSource": "/images/data_science_tools/nltk.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -354,8 +375,8 @@
 				},
                 
                  {
-					"elementName" : "Suave",
-					"imageSource": "/images/earthCubeTools/ectools_suave.png",
+					"elementName" : "OPEN NLP",
+					"imageSource": "/images/data_science_tools/open_nlp.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -365,8 +386,8 @@
 				},
                 
                 {
-					"elementName" : "XDomes",
-					"imageSource": "/images/earthCubeTools/ectools_xdomes.png",
+					"elementName" : "PANDAS",
+					"imageSource": "/images/data_science_tools/pandas.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -376,8 +397,8 @@
 				},
                 
                 {
-					"elementName" : "I-Microbe",
-					"imageSource": "/images/earthCubeTools/imicrobe.png",
+					"elementName" : "SCIPY",
+					"imageSource": "/images/data_science_tools/scipy.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -387,8 +408,8 @@
 				},
                 
                 {
-					"elementName" : "Linked Earth",
-					"imageSource": "/images/earthCubeTools/le.png",
+					"elementName" : "NUMPY",
+					"imageSource": "/images/data_science_tools/numpy.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -396,43 +417,9 @@
 						}
 					]
 				},
-                
-                {
-					"elementName" : "Microstructures",
-					"imageSource": "/images/earthCubeTools/micro.png",
-					"properties": [
-						{
-							"propertyName": "Description",
-							"propertyType": "String"
-						}
-					]
-				},
-                
-                {
-					"elementName" : "NetCDF-CF",
-					"imageSource": "/images/earthCubeTools/netcdfCF.png",
-					"properties": [
-						{
-							"propertyName": "Description",
-							"propertyType": "String"
-						}
-					]
-				},
-				
-                {
-					"elementName" : "Ocean Protein",
-					"imageSource": "/images/earthCubeTools/ocean-protein-portal.png",
-					"properties": [
-						{
-							"propertyName": "Description",
-							"propertyType": "String"
-						}
-					]
-				},
-                
 				{
-					"elementName" : "OntoSoft",
-					"imageSource": "/images/earthCubeTools/ontosoft.png",
+					"elementName" : "MATPLOTLIB",
+					"imageSource": "/images/data_science_tools/matplotlib.png",
 					"properties": [
 						{
 							"propertyName": "Description",
@@ -440,8 +427,7 @@
 						}
 					]
 				},
-                
-                {
+				{
 					"elementName" : "Other",
 					"imageSource": "/images/other-black.png",
 					"properties": [
@@ -451,7 +437,7 @@
 						}
 					]
 				}
-				
+                
 			]
 		},
 		{
@@ -494,6 +480,16 @@
                 {
 					"elementName" : "Matlab",
 					"imageSource": "/images/commonTools/matlab.png",
+					"properties": [
+						{
+							"propertyName": "Description",
+							"propertyType": "String"
+						}
+					]
+				},
+				{
+					"elementName" : "Jupyter Notebook",
+					"imageSource": "/images/commonTools/jupyter.png",
 					"properties": [
 						{
 							"propertyName": "Description",

@@ -20,12 +20,11 @@
       }
 
       #titleSection {
-        text-align: center;
-        font-size: .8vw;
-        height: 4vw;
-        margin-bottom: 3.5vh;
+        /* text-align: center; */
+        /* height: 4vw; */
+        margin-bottom: .5em;
         display: inline-block;
-        width: inherit;
+        width: 100%;
       }
 
       #title {
@@ -37,7 +36,7 @@
       }
 
       #title:hover {
-        background-color:#e8e3e3;
+        background-color: #e8e3e3;
         border: 1px solid #ccc;
         font-style: oblique;
       }
@@ -47,6 +46,7 @@
         background-color: white;
         border: 1px solid #ccc;
       }
+
       #ContentSection {
         column-count: 2 auto;
         margin: 1vw;
@@ -57,7 +57,7 @@
         height: 75vh;
       }
 
-      #leftSsection{
+      #leftSsection {
         float: left;
         width: 15vw;
         text-align: center;
@@ -69,24 +69,25 @@
         width: 77vw;
         height: 75vh;
         user-select: none;
-        float: right;
+        /* float: right; */
       }
 
       #populateDetailsSection {
-        margin-top: 10px;
-        padding: .35%;
+        /* margin-top: 10px; */
+        /* padding: .35%; */
         border: 1px solid #ccc;
-        width: auto;
-        height: auto;
-		    overflow: auto;
+        /* width: auto; */
+        /* height: auto; */
+        overflow: auto;
         cursor: grab;
       }
+
       #populateDetailsSection:active {
         cursor: grabbing;
       }
 
       .clr {
-        clear: both;
+        clear: left;
       }
 
       /* Popup container - can be anything you want */
@@ -117,6 +118,7 @@
         bottom: 125%;
         left: 15%;
         margin-left: -150px;
+        cursor: default;
       }
 
       /* Popup arrow */
@@ -138,7 +140,7 @@
 
       #canvasContainerSection {
         width: 100%;
-        height: 87%;
+        height: 100%;
         border: 1px solid #ccc;
         cursor: grab;
         /*overflow: scroll;*/
@@ -148,36 +150,36 @@
         cursor: grabbing;
       }
 
-        /*slider stuff from w3schools https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
+      /*slider stuff from w3schools https://www.w3schools.com/howto/howto_js_rangeslider.asp*/
 
-        #sizeSlider {
+      #sizeSlider {
         -webkit-appearance: none;
         width: 100%;
         height: 15px;
         border-radius: 5px;
         background: #d3d3d3;
         outline: none;
-        opacity:1;
+        opacity: 1;
         -webkit-transition: .15s;
         transition: opacity .15s;
-        overflow : visible;
-        }
+        overflow: visible;
+      }
 
-        #sizeSlider:hover {
-            opacity: 1;
-        }
+      #sizeSlider:hover {
+        opacity: 1;
+      }
 
-        #sizeSlider::-webkit-slider-thumb {
+      #sizeSlider::-webkit-slider-thumb {
         -webkit-appearance: none;
-         appearance: none;
+        appearance: none;
         height: 20px;
         width: 20px;
         border-radius: 50%;
         background: #4CAF50;
         cursor: pointer;
-        }
+      }
 
-        hr {
+      hr {
         display: block;
         margin-top: 1em;
         margin-bottom: 1em;
@@ -185,168 +187,316 @@
         margin-right: auto;
         border-style: inset;
         border-width: 1px;
-        }
+      }
 
-        footer {
-          user-select: none;
-          margin: auto;
-          text-align: center;
-        }
+      footer {
+        user-select: none;
+        margin: auto;
+        text-align: center;
+      }
 
-        paper-slider {
-          --paper-slider-knob-start-color: #388e3c;
-          --paper-slider-active-color: #388e3c;
-          --paper-slider-knob-color: #388e3c;
-          --paper-slider-disabled-knob-color: #228B22;
-          --paper-slider-disabled-active-color: #228B22;
-          opacity: 1;
-          visibility: hidden;
-          left: 1px;
-          top: 1px;
-        }
+      paper-slider {
+        --paper-slider-knob-start-color: #388e3c;
+        --paper-slider-active-color: #388e3c;
+        --paper-slider-knob-color: #388e3c;
+        --paper-slider-disabled-knob-color: #228B22;
+        --paper-slider-disabled-active-color: #228B22;
+        opacity: 1;
+        visibility: hidden;
+        left: 1px;
+        top: 1px;
+      }
 
-        .buttonImage {
-          height : 70%;
-          top: 0;
-        }
+      .buttonImage {
+        height: 70%;
+        top: 0;
+      }
 
-        #undoButton, #redoButton {
-          visibility: hidden;
-          position: absolute;
-          padding: 0;
-          margin: 0;
-          font-size: 2vw;
-          margin-top: .3em;
-          margin-left: .3em;
-          min-width: 0px;
-          width: 1em;
-          height: 1em;
-          border-style: solid;
-          border-width: 1px;
-          border-radius: .4em;
-          border-color: #555;
-          background-color: white;
-        }
+      #undoButton,
+      #redoButton {
+        visibility: hidden;
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        font-size: 2vw;
+        margin-top: .3em;
+        margin-left: .3em;
+        min-width: 0px;
+        width: 1em;
+        height: 1em;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: .4em;
+        border-color: #555;
+        background-color: white;
+      }
 
-        #logo {
-          width: 15vw;
-          margin-bottom: 1vh;
-        }
-        .unselectable {
-          -webkit-touch-callout: none;
-          -webkit-user-select: none;
-          -khtml-user-select: none;
-          -moz-user-select: none;
-          -ms-user-select: none;
-          user-select: none;
-        }
+      #logo {
+        width: 15vw;
+        margin-bottom: 1vh;
+      }
 
-        .links, .dropdown {
-          float: right;
-          display: inline-block;
-          margin-right: 1vw;
-          margin-top: 3vh;
-        }
+      .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-        #undoButton:hover, #redoButton:hover, #zoomIn:hover, #zoomOut:hover{
-          background-color: #ccc;
-          opacity: .7;
-        }
+      .links,
+      .dropdown {
+        float: left;
+        /* display: inline-block; */
+        /* margin-right: 1vw; */
+        margin-top: 1em;
+      }
 
-        #undoButton:active, #redoButton:active, #zoomIn:active, #zoomOut:active{
-          opacity: 1;
-        }
+      #undoButton:hover,
+      #redoButton:hover,
+      #zoomIn:hover,
+      #zoomOut:hover {
+        background-color: #ccc;
+        opacity: .7;
+      }
 
-        #zoomIn, #zoomOut {
-          visibility: hidden;
-          position: absolute;
-          padding: 0;
-          margin: 0;
-          font-size: 2vw;
-          margin-left: .3em;
-          min-width: 0px;
-          width: 1em;
-          height: 1em;
-          border-style: solid;
-          border-width: 1px;
-          border-radius: .4em;
-          border-color: #555;
-          background-color: white;
-        }
+      #undoButton:active,
+      #redoButton:active,
+      #zoomIn:active,
+      #zoomOut:active {
+        opacity: 1;
+      }
 
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
+      #zoomIn,
+      #zoomOut {
+        visibility: hidden;
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        font-size: 2vw;
+        margin-left: .3em;
+        min-width: 0px;
+        width: 1em;
+        height: 1em;
+        border-style: solid;
+        border-width: 1px;
+        border-radius: .4em;
+        border-color: #555;
+        background-color: white;
+      }
 
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: #f1f1f1;
-          min-width: 150px;
-          overflow: auto;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-          z-index: 1;
-        }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
 
-        .dropdown-content a {
-          color: black;
-          padding: 12px 16px;
-          text-decoration: none;
-          display: block;
-        }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 150px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+      }
 
-.dropdown a:hover {background-color: #ddd;}
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
 
-.show {display: block;}
+      .dropdown a:hover {
+        background-color: #ddd;
+      }
+
+      .show {
+        display: block;
+      }
+
+      .title-div {
+        height: 7%;
+      }
+
+      .top-div {
+        height: 70%;
+      }
+
+      .bottom-div {
+        height: 23%;
+      }
+
+      .fixed-height {
+        height: 45em;
+      }
+
+      .float-left {
+        float: left;
+      }
+
+      .left-div {
+        width: 18%;
+      }
+
+      .right-div {
+        width: 80%;
+        margin-left: 1.5%;
+      }
+
+      .bottom-margin {
+        margin-bottom: 1em;
+      }
+
+      .full-height {
+        height: 100%;
+      }
+
+      .indigo {
+        background-color: #8d8886;
+        color: white;
+        /* width: 90%; */
+        height: 3vh;
+        text-align: center;
+        font-size: 1vmax;
+      }
+
+      .word-wrap {
+        word-wrap: break-word;
+      }
+
+      .examples-menu-font {
+        font-size: 1vw;
+      }
+
+      .title-font {
+        font-size: .8vw;
+      }
+
+      .center-align {
+        text-align: center;
+      }
+
+      #descriptionSection {
+        max-height: inherit;
+        overflow-y: auto;
+      }
     </style>
-      <div id="ContentSection" onclick="importUnfocused()">
-        <div class="unselectable" draggable="false" id="leftSsection">
-          <img src = "../../images/asset.png" draggable="false" id = "logo"></img>
-          <div id="WorkFlowElementsSection"></div>
-          <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1" id="sizeSlider"></paper-slider>
+    <!-- <div id="ContentSection" onclick="importUnfocused()">
+      <div class="unselectable" draggable="false" id="leftSsection">
+        <img src="../../images/asset.png" draggable="false" id="logo"></img>
 
-          <hr>
-          <div id="descriptionSection">
-            <interactive-table id="table" style= "visibility: hidden;"></interactive-table>
+        <div id="descriptionSection" class="top-div">
+          <interactive-table id="table" style="visibility: hidden;"></interactive-table>
+        </div>
+
+        <hr>
+
+        <div class="botton-div">
+          <div id="WorkFlowElementsSection"></div>
+          <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1"
+            id="sizeSlider"></paper-slider>
+        </div>
+
+
+      </div>
+      <div id="rightSsection" style="float: left">
+        <div id="titleSection">
+          <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id="title">
+            Untitled Workflow
+          </h1>
+          <a href="tutorial.html" target="_blank" class="links">Tutorial</a>
+          <a href="about.html" target="_blank" class="links">About</a>
+          <div class="dropdown">
+            <button onclick="dropdown()" class="dropbtn">Examples</button>
+            <div id="myDropdown" class="dropdown-content">
+              <a onclick="loadExampleWorkflow(0)">Algal Blooms</a>
+              <a onclick="loadExampleWorkflow(1)">Glacial termination</a>
+              <a onclick="loadExampleWorkflow(2)">Hydrology from FLDAS</a>
+            </div>
           </div>
         </div>
 
-        <div id="rightSsection">
-          <div id="titleSection">
-            <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id = "title">Untitled Workflow</h1>
-            <a href= "tutorial.html" target="_blank" class="links">Tutorial</a>
-            <a href= "about.html" target="_blank" class="links">About</a>
-            <div class="dropdown">
-                <button onclick="dropdown()" class="dropbtn">Examples</button>
-                  <div id="myDropdown" class="dropdown-content">
-                    <a onclick="loadExampleWorkflow(0)">Algal Blooms</a>
-                    <a onclick="loadExampleWorkflow(1)">Glacial termination</a>
-                    <a onclick="loadExampleWorkflow(2)">Hydrology from FLDAS</a>
-                  </div>
-              </div>
+        <div id="canvasContainerSection">
+          <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)"
+            onwheel="mouseScrollingCanvas(event)" onmousemove="mouseMoveFunction(event)"
+            onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas"
+            ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
+        </div>
+        <div id="populateDetailsSection"></div>
+        <div class="clr"></div>
+        <br>
+        <footer>
+          <a href="#" id="exportAnchor" onclick="downloaded(event)" draggable="false">Export Sketch</a> | <a href="#"
+            draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+        </footer>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="clr"></div> -->
 
-          </div>
+    <div class="fixed-height">
 
-          <div id="canvasContainerSection">
-            <canvas onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)" onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)"  onmousemove="mouseMoveFunction(event)" onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas" ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
+      <div id="titleSection" class="title-div">
+        <div id="examples_div" class="left-div float-left dropdown examples-menu-font">
+          <paper-button onclick="dropdown()" class="dropbtn indigo">Example Sketches</paper-button>
+          <div id="myDropdown" class="dropdown-content">
+            <a onclick="loadExampleWorkflow(0)">Algal Blooms</a>
+            <a onclick="loadExampleWorkflow(1)">Glacial termination</a>
+            <a onclick="loadExampleWorkflow(2)">Hydrology from FLDAS</a>
           </div>
-          <div id="populateDetailsSection"></div>
-          <br>
-          <footer>
-            <a href="#" id="exportAnchor" onclick= "downloaded(event)" draggable = "false">Export Sketch</a>  |  <a href="#" draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
-          </footer>
+          <!-- <a href="tutorial.html" target="_blank" class="links">Tutorial</a>
+                <a href="about.html" target="_blank" class="links">About</a> -->
+
+        </div>
+        <div id="title-container" class="right-div float-left word-wrap title-font center-align">
+          <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id="title">
+            Untitled Workflow
+          </h1>
         </div>
         <div class="clr"></div>
       </div>
-      
-      <div class="popupContainer" id="popupContainer">
-        <span class="popuptext" id="popup"></span>
+      <div class="top-div bottom-margin">
+        <div id="descriptionSection" class="left-div full-height float-left unselectable scrollable">
+          <interactive-table id="table" style="visibility: hidden;"></interactive-table>
+        </div>
+        <div class="right-div full-height float-left">
+
+          <div id="canvasContainerSection">
+            <canvas class="full-height" onkeydown="buttonPressed(event)" ondblclick="onDoubleClick(event)"
+              onclick="canvasClick(event)" onwheel="mouseScrollingCanvas(event)" onmousemove="mouseMoveFunction(event)"
+              onmousedown="mouseDownFunction(event)" onmouseup="mouseUpFunction(event)" id="workflowSketchCanvas"
+              ondragover="allowDrop(event)" ondrop="drop(event)">Your browser does not support HTML5 Canvas</canvas>
+          </div>
+        </div>
+        <div class="clr"></div>
       </div>
-      <paper-button onclick = "zoomIn()" id = "zoomIn">+</paper-button>
-      <paper-button onclick = "zoomOut()" id = "zoomOut">–</paper-button>
-      <paper-button draggable="false" id = "undoButton" onclick="undo()"><img src = "../../images/backButton.png" draggable="false" class = "buttonImage"></paper-button>
-      <paper-button draggable="false" id = "redoButton" onclick="redo()"><img src = "../../images/redoButton.png" draggable="false" class = "buttonImage"></paper-button>
+      <hr>
+      <div class="bottom-div">
+        <div class="left-div full-height float-left">
+          <div id="WorkFlowElementsSection"></div>
+          <paper-slider disabled draggable="false" ignore-bar-touch="true" step=".1" min="1" max="3" value="1"
+            id="sizeSlider"></paper-slider>
+        </div>
+        <div id="populateDetailsSection" class="right-div full-height float-left"></div>
+        <div class="clr"></div>
+      </div>
+      <footer>
+        <a href="#" id="exportAnchor" onclick="downloaded(event)" draggable="false">Export Sketch</a> | <a href="#"
+          draggable="false" onclick="importWorkflow(event)" id="importAnchor">Import Sketch</a>
+      </footer>
+    </div>
+
+    <div class="popupContainer" id="popupContainer">
+      <span class="popuptext" id="popup"></span>
+    </div>
+    <paper-button onclick="zoomIn()" id="zoomIn">+</paper-button>
+    <paper-button onclick="zoomOut()" id="zoomOut">–</paper-button>
+    <paper-button draggable="false" id="undoButton" onclick="undo()"><img src="../../images/backButton.png"
+        draggable="false" class="buttonImage"></paper-button>
+    <paper-button draggable="false" id="redoButton" onclick="redo()"><img src="../../images/redoButton.png"
+        draggable="false" class="buttonImage"></paper-button>
 
 
   </template>
@@ -369,8 +519,13 @@
       ready() {
         super.ready();
         var me = this;
-        Polymer.RenderStatus.afterNextRender(this, function() {
+        Polymer.RenderStatus.afterNextRender(this, function () {
           initialize();
+          setTimeout(
+          () => {  
+          // fire the click event on the first button after the initialization has been completed (>=)
+          eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click')
+          },100);
         });
       }
     }

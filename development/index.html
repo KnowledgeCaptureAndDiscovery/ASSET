@@ -1,18 +1,65 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
-      <link rel="shortcut icon" type="image/x-icon" href="images/icon.ico" />
-    <title>ASSET - Workflow Sketching</title>
-    <meta name="description" content="Workflow sketching">
 
-    <!-- See https://goo.gl/OOhYW5 -->
-    <link rel="manifest" href="/manifest.json">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <link rel="shortcut icon" type="image/x-icon" href="images/icon.ico" />
+  <title>ASSET - Workflow Sketching</title>
+  <meta name="description" content="Workflow sketching">
 
-    <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+  <!-- See https://goo.gl/OOhYW5 -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" type="image/x-icon" href="images/icon.ico" />
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Raleway", sans-serif
+    }
 
-    <link rel="import" href="/src/asset-app/asset-app.html">
+    body,
+    html {
+      height: 100%;
+      line-height: 1.8;
+    }
+
+    /* Full height image header */
+    .bgimg-1 {
+      background-position: center;
+      background-size: cover;
+      background-image: url("/w3images/mac.jpg");
+      min-height: 100%;
+    }
+
+    /* .w3-bar .w3-button {
+      padding: 10px;
+    } */
+
+    .container-padding {
+      padding-top: 4em;
+    }
+
+    .center-align-tabs-content {
+      line-height: 42px;
+    }
+
+    /* the height values above and below this comment need to be same */
+    .asset-logo-height {
+      height: 42px;
+    }
+  </style>
+
+  <script src="/bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+
+  <link rel="import" href="/src/asset-app/asset-app.html">
 
   <script type="text/javascript">
     localStorage.clear();
@@ -23,8 +70,63 @@
 
   <!--<link rel="stylesheet" type="text/css" href="asset.css">-->
 
-  </head>
-  <body>
-    <asset-app></asset-app>
-  </body>
+</head>
+
+<body>
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-card center-align-tabs-content" id="myNavbar">
+      <a href="https://www.asset-project.info/index.html" target="_blank" class="w3-bar-item w3-button" title="About the ASSET Project">
+        <img src="images/asset.png" class="asset-logo-height" alt="ASSET LOGO" />
+      </a>
+      <!-- Right-sided navbar links -->
+      <div class="w3-right w3-hide-small">
+      <!-- <a href="#" class="w3-bar-item w3-button">Back to ASSET</a> -->
+      <a href="about.html" target="_blank" class="w3-bar-item w3-button"> About</a>
+      <a href="tutorial.html" target="_blank" class="w3-bar-item w3-button"> Tutorial</a>
+      </div>
+      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+        onclick="w3_open()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Sidebar on small screens when clicking the menu icon -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
+    style="display:none" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
+    <!-- <a href="#" class="w3-bar-item w3-button">Back to ASSET</a> -->
+    <a href="about.html" class="w3-bar-item w3-button"> About</a>
+    <a href="tutorial.html" class="w3-bar-item w3-button"> Tutorial</a>
+  </nav>
+
+  <div class="w3-container container-padding">
+    <div class="w3-white">
+      <asset-app></asset-app>
+    </div>
+  </div>
+
+  <script>
+
+    // Toggle between showing and hiding the sidebar when clicking the menu icon
+    var mySidebar = document.getElementById("mySidebar");
+
+    function w3_open() {
+      if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+      } else {
+        mySidebar.style.display = 'block';
+      }
+    }
+
+    // Close the sidebar with the close button
+    function w3_close() {
+      mySidebar.style.display = "none";
+    }
+  </script>
+</body>
+
 </html>
