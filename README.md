@@ -18,7 +18,7 @@ An overview of the tool can be seen below:
 
 ## Demo
 
-A live demo of the project is available at: https://asset-6b864.firebaseapp.com/
+A live demo of the project is available at: w3id.org/asset-tool (redirects to https://asset-6b864.firebaseapp.com/)
 
 At the moment, the demo will only work on **Google Chrome**
 
