@@ -200,9 +200,6 @@ function loadExampleWorkflow(fileNum) {
         case 6:
 		    globalJSON = JSON.parse(ex7);
             break;
-        case 7:
-		    globalJSON = JSON.parse(ex8);
-            break;
         case 8:
 		    globalJSON = JSON.parse(ex9);
             break;
