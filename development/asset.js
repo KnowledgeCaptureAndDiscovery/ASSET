@@ -13,8 +13,9 @@ var descriptionElement;
 var descriptionTable;
 var detailTemplate;
 var title;
+var description;
 
-var globalJSON = {"mainObjects": [], "edges": [], "details": [], "subcomponent_details": [], "title" : ""}; // the workflow elements and edges and details and title
+var globalJSON = {"mainObjects": [], "edges": [], "details": [], "subcomponent_details": [], "title" : "", "description" : ""}; // the workflow elements and edges and details and title
 
 var saved; //stores the boolean in which the workflow was exported or not
 
@@ -98,6 +99,9 @@ function initialize() {
 
 	title = Polymer.dom(assetAppElement.root).querySelector("#title");
 	globalJSON["title"] = title.innerHTML; //saves the title
+
+	description = Polymer.dom(assetAppElement.root).querySelector("#description");
+	globalJSON["description"] = description.innerHTML; //saves the description
 
 	exportAnchorElement = Polymer.dom(assetAppElement.root).querySelector("#exportAnchor"); //adds export button as a field
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
@@ -391,6 +395,20 @@ function saveTitle(e) {
 		exportAnchorElement.download = globalJSON["title"] + ".json";
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+		saved = false;
+	}
+}
+
+/*
+	Called when the description loses focus or pressed enter
+
+	Saves the description to globalJSON and download file
+*/
+function saveDescription(e) {
+	if (globalJSON["description"] != description.innerHTML) {
+		//undoArray.push([5, globalJSON["title"]]);
+		globalJSON["description"] = description.innerHTML;
+		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		saved = false;
 	}
 }

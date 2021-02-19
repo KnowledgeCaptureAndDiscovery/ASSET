@@ -67,5 +67,6 @@ function ignoreEnters(e) {
 		e.preventDefault();
 		title.blur();
 		saveTitle(e);
+		saveDescription(e);
 	}
 }
