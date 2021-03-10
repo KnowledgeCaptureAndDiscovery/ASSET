@@ -1,0 +1,165 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+
+<dom-module id="arrow-table">
+  <template id="template">
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .detail {
+        min-width: 5vw;
+      }
+
+      h2 {
+        margin: 0em;
+        margin-bottom: 1vh;
+      }
+
+      td,
+      th {
+        border: 1px solid black;
+        text-align: left;
+        min-height: auto;
+        font-size: .8vw;
+        overflow: auto;
+        padding: 8px;
+      }
+
+      td:nth-child(even) {
+        max-width: 9.5vw;
+      }
+
+      td:nth-child(odd) {
+        max-width: 4.5vw;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+
+      #title,
+      button {
+        float: left;
+      }
+
+      .clickable {
+        cursor: pointer;
+      }
+    </style>
+    <h2 id="title">[[elementTitle]]</h2>
+    <br><br>
+
+    <div>
+      <table>
+        <template is="dom-repeat" items="{{arrowDetails}}">
+          <tr class="arrowDescriptionRow" id="[[edgeIdx]]">
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="arrowname[[edgeIdx]]"
+              on-keypress="save">[[item.name]]</td>
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="arrowdetail[[edgeIdx]]"
+              on-keypress="save">[[item.detail]]</td>
+          </tr>
+        </template>
+      </table>
+    </div>
+    <br>
+
+  </template>
+
+  <script>
+    /**
+     * `arrow-table`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class ArrowTable extends Polymer.Element {
+      static get is() { return 'arrow-table'; }
+      static get properties() {
+        return {
+          elementTitle: {
+            type: String,
+            value: ""
+          }
+          ,
+          details: {
+            type: Array,
+            value() {
+              return [];
+            }
+          }
+          ,
+          arrowDetails: {
+            type: Array,
+            value() {
+              return [];
+            }
+          }
+          ,
+          edges: {
+            type: Array,
+            value() {
+              return [];
+            }
+          }
+          ,
+          edgeIdx: { 
+            type: Number,
+            value: null
+          }
+          ,
+          focus: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      editName(title) {
+        this.elementTitle = title;
+      }
+
+      focusing() {
+        this.focus = true;
+      }
+
+      onBlur(e) {
+        this.save(e);
+        this.focus = false;
+      }
+      save(e) {
+        if (e.target.className == "detail") {
+          globalJSON.arrowDetails[this.edgeIdx][0]["detail"] = e.target.innerText; //save arrowDetails in JSON
+
+          this.edges[2] = e.target.innerText;
+          globalJSON.edges[this.edgeIdx] = this.edges; //globalJSON.edges store object1id, object2id, and the description of the arrow between two tasks
+          drawToCanvas(globalJSON);
+        } 
+      }
+
+      loadDetails(taskDetails, json, index, edges, arrowDetails, edgeIdx) {
+        this.details = taskDetails;
+        this.parentId = index;
+        this.edges = edges; 
+        this.arrowDetails = arrowDetails;
+        this.edgeIdx = edgeIdx;
+      }
+
+      clear() {
+        this.focus = false;
+        this.arrowDetails = null;
+        this.edges = null;
+        this.edgeIdx = null;
+      }
+    }
+    window.customElements.define(ArrowTable.is, ArrowTable);
+
+  </script>
+</dom-module>
