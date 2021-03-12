@@ -109,7 +109,7 @@ function drawLine (x1 , y1 , x2, y2, ctx, e, isSelected, selectedEdge) {
             }
 
             arrowTable.editName("Arrow");
-            arrowTable.loadDetails(globalJSON.details[0], globalJSON, 0, selectedEdge, globalJSON.arrowDetails[edgeIdx], edgeIdx);
+            arrowTable.loadDetails(globalJSON, globalJSON.arrowDetails.length - 1, selectedEdge, globalJSON.arrowDetails[edgeIdx], edgeIdx);
 
             ctx.strokeStyle = "red";
             ctx.fillStyle = "red";

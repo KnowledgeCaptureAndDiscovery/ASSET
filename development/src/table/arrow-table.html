@@ -58,10 +58,10 @@
     <div>
       <table>
         <template is="dom-repeat" items="{{arrowDetails}}">
-          <tr class="arrowDescriptionRow" id="[[edgeIdx]]">
-            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="arrowname[[edgeIdx]]"
+          <tr class="arrowDescriptionRow" id="[[index]]">
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="[[index]]"
               on-keypress="save">[[item.name]]</td>
-            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="arrowdetail[[edgeIdx]]"
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="[[index]]"
               on-keypress="save">[[item.detail]]</td>
           </tr>
         </template>
@@ -136,16 +136,18 @@
       }
       save(e) {
         if (e.target.className == "detail") {
-          globalJSON.arrowDetails[this.edgeIdx][0]["detail"] = e.target.innerText; //save arrowDetails in JSON
+          globalJSON.arrowDetails[this.edgeIdx][e.target.id]["detail"] = e.target.innerText; //save arrowDetails in JSON
 
-          this.edges[2] = e.target.innerText;
-          globalJSON.edges[this.edgeIdx] = this.edges; //globalJSON.edges store object1id, object2id, and the description of the arrow between two tasks
+          if(e.target.id == 0){ //display what's stored in the name row onto the canvas
+            this.edges[2] = e.target.innerText;
+            globalJSON.edges[this.edgeIdx] = this.edges; //globalJSON.edges store object1id, object2id, and the description of the arrow between two tasks
+          }
+          
           drawToCanvas(globalJSON);
         } 
       }
 
-      loadDetails(taskDetails, json, index, edges, arrowDetails, edgeIdx) {
-        this.details = taskDetails;
+      loadDetails(json, index, edges, arrowDetails, edgeIdx) {
         this.parentId = index;
         this.edges = edges; 
         this.arrowDetails = arrowDetails;

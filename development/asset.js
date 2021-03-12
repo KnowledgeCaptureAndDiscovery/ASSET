@@ -72,6 +72,7 @@ function initialize() {
 		];
 
 	arrowDetailTemplate = [
+		{name: 'Name', detail: ''}, 
 		{name: 'Description', detail: ''}
 	];
 
