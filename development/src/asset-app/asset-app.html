@@ -4,6 +4,7 @@
 <link rel="import" href="../elements-detail/elements-detail.html">
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="../table/interactive-table.html">
+<link rel="import" href="../table/arrow-table.html">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="../../asset.js"></script>
@@ -476,7 +477,13 @@
       </div>
       <div class="top-div bottom-margin">
         <div id="descriptionSection" class="left-div full-height float-left unselectable scrollable">
-          <interactive-table id="table" style="visibility: hidden;"></interactive-table>
+          <interactive-table id="table" style="display: none;"></interactive-table>
+          <arrow-table id="arrowTable" style="display: none;"></arrow-table>
+          <br>
+          <div id="arrowInstruction" style="display: none;">
+            <p>Use the table to describe dependencies or relationships between two tasks.</p> 
+            <p>For example: install xxx package OR require 90%+ accuracy to start the next task </p>
+          </div>
         </div>
         <div class="right-div full-height float-left">
 

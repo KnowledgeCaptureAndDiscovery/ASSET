@@ -12,10 +12,11 @@ var selectedSubElement;
 var descriptionElement;
 var descriptionTable;
 var detailTemplate;
+var arrowDetailTemplate
 var title;
 var description;
 
-var globalJSON = {"mainObjects": [], "edges": [], "details": [], "subcomponent_details": [], "title" : "", "description" : ""}; // the workflow elements and edges and details and title
+var globalJSON = {"mainObjects": [], "edges": [], "details": [], "arrowDetails": [], "subcomponent_details": [], "title" : "", "description" : ""}; // the workflow elements and edges and details and title
 
 var saved; //stores the boolean in which the workflow was exported or not
 
@@ -59,6 +60,9 @@ function initialize() {
 
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
+	arrowTable = Polymer.dom(assetAppElement.root).querySelector("#arrowTable")
+	arrowInstruction = Polymer.dom(assetAppElement.root).querySelector("#arrowInstruction")
+
 	detailTemplate = [
 			{name: 'Name', detail: ''},
 			{name: 'Description', detail: ''},
@@ -66,6 +70,11 @@ function initialize() {
 			{name: 'Duration', detail: ''},
 			{name: 'Tools used', detail: ''}
 		];
+
+	arrowDetailTemplate = [
+		{name: 'Name', detail: ''}, 
+		{name: 'Description', detail: ''}
+	];
 
 	//canvas container: adds the canvas so it doesnt expand and stuff
     var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
@@ -512,7 +521,7 @@ function canvasClick(e) {
 	for (var i = 0; i < g.mainObjects.length; i++) {
 
 		var element = g.mainObjects[i]; //the current element
-
+		resetTable()
 		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
 
@@ -524,7 +533,12 @@ function canvasClick(e) {
 					drawToCanvas(g);
 					return;
 				}
-				globalJSON.edges.push([edge, selectedElement]);
+
+				globalJSON.edges.push([edge, selectedElement]); //adding an edge between two tasks to globalJSON [id1, id2]
+				globalJSON.arrowDetails.push(newArrowTemplate());
+
+				arrowTable.editName("Arrow");
+				arrowTable.loadDetails(globalJSON.details[i], globalJSON, i, selectedEdge, globalJSON.arrowDetails[globalJSON.arrowDetails.length - 1], globalJSON.arrowDetails.length - 1);
 				undoArray.push([3]);
 				/*if (checkIfCycleExists()) {
 					alert("You created a cycle!");
@@ -542,7 +556,7 @@ function canvasClick(e) {
 			}
 			
 			selected = true;
-			descriptionTable.style.visibility = "visible";
+			descriptionTable.style.display = "block";
 			descriptionTable.editName(element.name);
 			descriptionTable.loadDetails(globalJSON.details[i], globalJSON, i);
 
@@ -571,12 +585,20 @@ function newTemplate() {
 	return newInstance;
 }
 
+function newArrowTemplate() {
+	var newInstance = JSON.parse(JSON.stringify(arrowDetailTemplate));
+	return newInstance;
+}
+
 /*
 	Clear table and reset it
 */
 function resetTable() {
 	descriptionTable.clear();
-	descriptionTable.style.visibility = "hidden";
+	descriptionTable.style.display = "none";
+	arrowTable.clear();
+	arrowTable.style.display = "none";
+	arrowInstruction.style.display = "none";
 }
 
 /*
@@ -637,7 +659,7 @@ function drop(e) {
 		undoArray.push([0, null]);
 		redoArray = [];
 		selectedElement = newElement.id;
-		descriptionTable.style.visibility = "visible";
+		descriptionTable.style.display = "block";
 		descriptionTable.editName(newElement.name);
 		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1], globalJSON, globalJSON.details.length - 1);
 		drawToCanvas(globalJSON);
@@ -657,11 +679,11 @@ function drop(e) {
 		}
 		selectedElement = addToElement.id;
 		drawToCanvas(globalJSON);
-		descriptionTable.style.visibility = "visible";
+		descriptionTable.style.display = "block";
 		descriptionTable.editName(addToElement.name);
 		resetTable();
 		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index], globalJSON, index), 10);
-		descriptionTable.style.visibility = "visible";
+		descriptionTable.style.display = "block";
 
 		for(var i = 0; i < globalJSON.subcomponent_details.length; i++) {
 
@@ -768,12 +790,43 @@ function drawToCanvas(js, e) {
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-		//draws edges including the selected one
+		//draws edges including the selected one		
+		const arrowOffset = 30;
+
 		for(var i = 0; i < js.edges.length; i++) {
-
 			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
-		}
 
+			var x1,y1,x2,y2;
+			
+			for(var j=0; j < js.mainObjects.length; j++){
+				if(js.mainObjects[j].id === js.edges[i][0]){ //task1id
+					x1 = (js.mainObjects[j].startX + js.mainObjects[j].endX) / 2
+					y1 = (js.mainObjects[j].startY + js.mainObjects[j].endY) / 2
+				}
+				if(js.mainObjects[j].id === js.edges[i][1]){ //task2id
+					x2 = (js.mainObjects[j].startX + js.mainObjects[j].endX) / 2
+					y2 = (js.mainObjects[j].startY + js.mainObjects[j].endY) / 2
+				}
+			}
+
+			ctx.beginPath();
+			ctx.font = zoomedFont;
+			ctx.fillStyle="black";
+			if(typeof globalJSON.edges[i][2] !== "undefined"){
+				var arrowText = "";
+				if(globalJSON.edges[i][2].length > 15){
+					for(var z=0; z<15; z++){
+						arrowText += globalJSON.edges[i][2][z]
+					}
+					arrowText += "..."; //add ... if the text is too long to show on the canvas
+				}
+				else{
+					arrowText = globalJSON.edges[i][2];
+				}
+				ctx.fillText(arrowText, (x1 + x2) / 2 / currentScale, ((y1 + y2)/2 + arrowOffset)/currentScale); //display the arrow description on the canvas
+		
+			}
+		}
 		//draws elements including the special ones
 		for(var i = 0; i < js.mainObjects.length; i++) {
 
@@ -782,9 +835,9 @@ function drawToCanvas(js, e) {
 			indexDictionary[mainObject.id] = i;
 
 			ctx.beginPath();
-			if( selectedElement == mainObject.id ) {
+			if( selectedElement == mainObject.id ) { //element clicked
 				ctx.font = zoomedFont;
-				if (edge == selectedElement) {
+				if (edge == selectedElement) { //double clicked
 					doubleClickElement = mainObject;
 
 					ctx.fillStyle="black";
@@ -793,7 +846,7 @@ function drawToCanvas(js, e) {
 							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetClicked)/currentScale);
 						}
 					}
-				} else {
+				} else { //clicked once
 					clickElement = mainObject;
 
 					ctx.fillStyle="black";
@@ -803,7 +856,7 @@ function drawToCanvas(js, e) {
 						}
 					}
 				}
-			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) {
+			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) { //hover on element
 				hoverElement = mainObject;
 
 				ctx.fillStyle="black";
@@ -813,7 +866,7 @@ function drawToCanvas(js, e) {
 						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetHover)/currentScale);
 					}
 				}
-			} else {
+			} else { //hover or clicking on canvas
 				ctx.strokeStyle="black";
 				ctx.font = "15px Arial";
 				var length = mainObject.toolsUsed.length;
