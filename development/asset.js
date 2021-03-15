@@ -178,7 +178,6 @@ function initialize() {
 	};
 	requestObject.open("GET", "content.json", true);
 	requestObject.send();
-	
 }
 
 function dropdown() {
@@ -192,37 +191,55 @@ function loadExampleWorkflow(fileNum) {
 	}
 	
 	resetTable();
-	if (fileNum == 0) {
-		globalJSON = JSON.parse(algal);
-		globalJSON = updateJSONWithID(globalJSON);
-		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
-		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+    switch (fileNum) {
+        case 0:
+            globalJSON = JSON.parse(algal);
+            break;
+        case 1:
+		    globalJSON = JSON.parse(lgm);
+            break;
+        case 2:
+		    globalJSON = JSON.parse(qgis);
+            break;
+        case 3:
+		    globalJSON = JSON.parse(ex4);
+            break;
+        case 4:
+		    globalJSON = JSON.parse(ex5);
+            break;
+        case 5:
+		    globalJSON = JSON.parse(ex6);
+            break;
+        case 6:
+		    globalJSON = JSON.parse(ex7);
+            break;
+        case 8:
+		    globalJSON = JSON.parse(ex9);
+            break;
+        case 9:
+		    globalJSON = JSON.parse(ex10);
+            break;
+        case 10:
+		    globalJSON = JSON.parse(ex11);
+            break;
+        case 11:
+		    globalJSON = JSON.parse(ex12);
+            break;
+        case 12:
+		    globalJSON = JSON.parse(ex13);
+            break;
+        default:
+            alert("Sorry, we could not load selected sketch.");
+            return;
+    }
+    globalJSON = updateJSONWithID(globalJSON);
+    localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+    exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
-		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
-		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
-		drawToCanvas(globalJSON);
-		selected = false;
-	} else if (fileNum == 1) {
-		globalJSON = JSON.parse(lgm);
-		globalJSON = updateJSONWithID(globalJSON);
-		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
-		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-
-		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
-		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
-		drawToCanvas(globalJSON);
-		selected = false;
-	} else if (fileNum == 2) {
-		globalJSON = JSON.parse(qgis);
-		globalJSON = updateJSONWithID(globalJSON);
-		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
-		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
-
-		Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
-		exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
-		drawToCanvas(globalJSON);
-		selected = false;
-	}
+    Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+    exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+    drawToCanvas(globalJSON);
+    selected = false;
 }
 
 /*
@@ -762,6 +779,7 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
 	most of the time it will be null so just ignore it; only when an edge is clicked it will have effect
 */
 function drawToCanvas(js, e) {
+    //console.log('render:', js);
 
 	try {
 
@@ -786,7 +804,8 @@ function drawToCanvas(js, e) {
 		const toolImgOffsetClicked = 35; 
 
 		// zoomed in font value
-		const zoomedFont = "18px Arial";
+        const zoomedFont = Math.floor(18 / currentScale) + "px Arial";
+        //"18px Arial";
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
@@ -868,7 +887,7 @@ function drawToCanvas(js, e) {
 				}
 			} else { //hover or clicking on canvas
 				ctx.strokeStyle="black";
-				ctx.font = "15px Arial";
+                ctx.font = Math.floor(15 / currentScale) + "px Arial";
 				var length = mainObject.toolsUsed.length;
 
 				ctx.fillStyle="black";
@@ -877,7 +896,7 @@ function drawToCanvas(js, e) {
 						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffset)/currentScale);
 					}
 				}
-				ctx.font = "20px Arial";
+                ctx.font = Math.floor(20 / currentScale) + "px Arial";
 				
 				var lengthX = mainObject.startX/currentScale;
 				//var lengthY = (mainObject.endY - mainObject.startY)/currentScale;
@@ -1109,9 +1128,14 @@ function mouseDownFunction(e) {
 		var y = e.clientY - rect.top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
 
-			if( (x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale ) && ( y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale ) ) {
+			if ((x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale) &&
+ 			    (y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale)) {
 
-				canvasDragElement = {"element": g.mainObjects[i], "offsetX": (e.clientX - g.mainObjects[i].startX), "offsetY": (e.clientY - g.mainObjects[i].startY)};
+				canvasDragElement = {
+					"element": g.mainObjects[i],
+					"offsetX": currentScale * e.clientX - g.mainObjects[i].startX,
+                    "offsetY": currentScale * e.clientY - g.mainObjects[i].startY
+                };
 				originalDragElement = JSON.parse(JSON.stringify(g.mainObjects[i]));
 				return;
 
@@ -1165,24 +1189,14 @@ function mouseMoveFunction(e) {
 			drawToCanvas(globalJSON);
 		} else {
 			var g = globalJSON;
-			var xDifference = canvasDragElement.element.startX ;
-			var yDifference = canvasDragElement.element.startY;
+			let h = canvasDragElement.element.endY - canvasDragElement.element.startY;
+			let w = canvasDragElement.element.endX - canvasDragElement.element.startX;
 
-			canvasDragElement.element.startX = e.clientX - canvasDragElement.offsetX;
-			canvasDragElement.element.startY = e.clientY - canvasDragElement.offsetY;
+			canvasDragElement.element.startX = currentScale * e.clientX - canvasDragElement.offsetX;
+			canvasDragElement.element.startY = currentScale * e.clientY - canvasDragElement.offsetY;
 
-			xDifference =  canvasDragElement.element.startX - xDifference;
-			yDifference = canvasDragElement.element.startY - yDifference;
-
-			canvasDragElement.element.endX += xDifference;
-			canvasDragElement.element.endY += yDifference;
-
-			setTimeout(() => function() {
-				canvasDragElement.element.startX += xDifference;
-				canvasDragElement.element.endX += xDifference;
-				canvasDragElement.element.startY += yDifference;
-				canvasDragElement.element.endY += yDifference;
-			}, 30);
+			canvasDragElement.element.endX = canvasDragElement.element.startX + w; 
+			canvasDragElement.element.endY = canvasDragElement.element.startY + h; 
 
 			drawToCanvas(globalJSON);
 			localStorage.setItem("globalJSON", JSON.stringify(g));
