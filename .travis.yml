@@ -1,0 +1,29 @@
+language: node_js
+node_js:
+- stable
+addons:
+  ssh_known_hosts:
+  - mint.isi.edu
+  - 54.148.90.74
+cache:
+  npm: true
+script:
+- pushd development/
+- polymer install
+- polymer build --bundle
+- mv build/default asset_build
+install:
+- npm install -g bower
+- npm install -g polymer-cli
+before_deploy:
+- echo $key_pass | gpg --passphrase-fd 0 id_travis_rsa.gpg
+- eval "$(ssh-agent -s)"
+- chmod 600 id_travis_rsa
+- ssh-add id_travis_rsa
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: bash deploy.sh $TRAVIS_BUILD_DIR/asset_build assert_$TRAVIS_BRANCH
+  on:
+    all_branches: true
+    condition: "$TRAVIS_BRANCH =~ ^(master|dev)$"
