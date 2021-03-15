@@ -11,7 +11,8 @@ script:
 - pushd development/
 - polymer install
 - polymer build --bundle
-- mv build/default asset_build
+- mv build/default ../asset_build
+- popd
 install:
 - npm install -g bower
 - npm install -g polymer-cli
