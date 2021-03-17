@@ -110,7 +110,7 @@
             }
           }
           ,
-          edgeIdx: { 
+          edgeIdx: {
             type: Number,
             value: null
           }
@@ -138,18 +138,18 @@
         if (e.target.className == "detail") {
           globalJSON.arrowDetails[this.edgeIdx][e.target.id]["detail"] = e.target.innerText; //save arrowDetails in JSON
 
-          if(e.target.id == 0){ //display what's stored in the name row onto the canvas
+          if (e.target.id == 0) { //display what's stored in the name row onto the canvas
             this.edges[2] = e.target.innerText;
             globalJSON.edges[this.edgeIdx] = this.edges; //globalJSON.edges store object1id, object2id, and the description of the arrow between two tasks
           }
-          
+
           drawToCanvas(globalJSON);
-        } 
+        }
       }
 
       loadDetails(json, index, edges, arrowDetails, edgeIdx) {
         this.parentId = index;
-        this.edges = edges; 
+        this.edges = edges;
         this.arrowDetails = arrowDetails;
         this.edgeIdx = edgeIdx;
       }

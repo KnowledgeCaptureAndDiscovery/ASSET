@@ -47,7 +47,7 @@
       }
 
       #description {
-        margin-top:-1vw;
+        margin-top: -1vw;
       }
 
       #description:hover {
@@ -464,6 +464,7 @@
             <a onclick="loadExampleWorkflow(4)">LOCA Download Process for Local Use</a>
             <a onclick="loadExampleWorkflow(5)">CZIMEA EEA Manuscript Data Analysis</a>
             <a onclick="loadExampleWorkflow(6)">Changes in extreme precipitation and temperature in a warmer climate</a>
+            <a onclick="loadExampleWorkflow(7)">Lightning Project</a>
             <a onclick="loadExampleWorkflow(8)">MRIO for Marine Biosecurity</a>
             <a onclick="loadExampleWorkflow(9)">Objective Precipitation Regions</a>
             <a onclick="loadExampleWorkflow(10)">Primary Atmospheric Drivers of Great Plains Pluvial Years</a>
@@ -490,7 +491,7 @@
           <arrow-table id="arrowTable" style="display: none;"></arrow-table>
           <br>
           <div id="arrowInstruction" style="display: none;">
-            <p>Use the table to describe dependencies or relationships between two tasks.</p> 
+            <p>Use the table to describe dependencies or relationships between two tasks.</p>
             <p>For example: install xxx package OR require 90%+ accuracy to start the next task </p>
           </div>
         </div>
@@ -555,10 +556,10 @@
         Polymer.RenderStatus.afterNextRender(this, function () {
           initialize();
           setTimeout(
-          () => {  
-          // fire the click event on the first button after the initialization has been completed (>=)
-          eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click')
-          },100);
+            () => {
+              // fire the click event on the first button after the initialization has been completed (>=)
+              eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click')
+            }, 100);
         });
       }
     }
