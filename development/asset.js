@@ -420,7 +420,9 @@ function redo() {
 function saveTitle(e) {
 	if (globalJSON["title"] != title.innerHTML) {
 		//undoArray.push([5, globalJSON["title"]]);
-		globalJSON["title"] = title.innerHTML;
+		var stripTitle = title.innerHTML.trimStart().trimEnd();
+		stripTitle = removeSpace(stripTitle);
+		globalJSON["title"] = stripTitle;
 		exportAnchorElement.download = globalJSON["title"] + ".json";
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -428,6 +430,11 @@ function saveTitle(e) {
 	}
 }
 
+function removeSpace(val) {
+	var idx = val.indexOf("&nbsp"); //remove the &nbsp spaces
+	var idx2 = val.substring(0, idx).indexOf("br"); //remove the br spaces
+	return val.substring(0, idx2);
+}
 /*
 	Called when the description loses focus or pressed enter
 
