@@ -16,7 +16,7 @@ var arrowDetailTemplate
 var title;
 var description;
 
-var globalJSON = {"mainObjects": [], "edges": [], "details": [], "arrowDetails": [], "subcomponent_details": [], "title" : "", "description" : ""}; // the workflow elements and edges and details and title
+var globalJSON = { "mainObjects": [], "edges": [], "details": [], "arrowDetails": [], "subcomponent_details": [], "title": "", "description": "" }; // the workflow elements and edges and details and title
 
 var saved; //stores the boolean in which the workflow was exported or not
 
@@ -64,23 +64,23 @@ function initialize() {
 	arrowInstruction = Polymer.dom(assetAppElement.root).querySelector("#arrowInstruction")
 
 	detailTemplate = [
-			{name: 'Name', detail: ''},
-			{name: 'Description', detail: ''},
-			{name: 'Author', detail: ''},
-			{name: 'Duration', detail: ''},
-			{name: 'Tools used', detail: ''}
-		];
+		{ name: 'Name', detail: '' },
+		{ name: 'Description', detail: '' },
+		{ name: 'Author', detail: '' },
+		{ name: 'Duration', detail: '' },
+		{ name: 'Tools used', detail: '' }
+	];
 
 	arrowDetailTemplate = [
-		{name: 'Name', detail: ''}, 
-		{name: 'Description', detail: ''}
+		{ name: 'Name', detail: '' },
+		{ name: 'Description', detail: '' }
 	];
 
 	//canvas container: adds the canvas so it doesnt expand and stuff
-    var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
-    canvasElement.width = canvasholder.offsetWidth-3;
-	canvasElement.height = canvasholder.offsetHeight-2;
-	var rect= canvasElement.getBoundingClientRect();
+	var canvasholder = Polymer.dom(assetAppElement.root).querySelector("#canvasContainerSection");
+	canvasElement.width = canvasholder.offsetWidth - 3;
+	canvasElement.height = canvasholder.offsetHeight - 2;
+	var rect = canvasElement.getBoundingClientRect();
 
 	zoomInButton = Polymer.dom(assetAppElement.root).querySelector("#zoomIn");
 	zoomInButton.style.top = "calc(" + (rect.bottom - zoomInButton.offsetHeight * 2) + "px - .6em)";
@@ -118,8 +118,8 @@ function initialize() {
 
 	//for saving and warnings
 	saved = true;
-	window.onbeforeunload = function() {
-		if (!saved){
+	window.onbeforeunload = function () {
+		if (!saved) {
 			return "Data will be lost if you leave the page, are you sure?";
 		}
 	};
@@ -137,14 +137,14 @@ function initialize() {
 
 	currentScale = slider.immediateValue;
 
-	window.onresize = function() {
-		canvasElement.width = canvasholder.offsetWidth-3;
-		canvasElement.height = canvasholder.offsetHeight-2;
+	window.onresize = function () {
+		canvasElement.width = canvasholder.offsetWidth - 3;
+		canvasElement.height = canvasholder.offsetHeight - 2;
 		ctx.textAlign = "center";
 		ctx.font = "20px Arial";
 		currentScale = slider.immediateValue;
 
-		var rect= canvasElement.getBoundingClientRect();
+		var rect = canvasElement.getBoundingClientRect();
 		zoomInButton.style.top = "calc(" + (rect.bottom - zoomInButton.offsetHeight * 2) + "px - .6em)";
 		zoomInButton.style.left = rect.left + "px";
 		zoomOutButton.style.top = "calc(" + (rect.bottom - zoomOutButton.offsetHeight) + "px - .3em)";
@@ -161,7 +161,7 @@ function initialize() {
 	//Fetch the source JSON Asynchronously	
 	var requestObject;
 	requestObject = new XMLHttpRequest();
-	requestObject.onreadystatechange = function() {
+	requestObject.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			localStorage.setItem("sourceJSON", this.responseText);
 
@@ -181,7 +181,7 @@ function initialize() {
 }
 
 function dropdown() {
-    Polymer.dom(assetAppElement.root).querySelector("#myDropdown").classList.toggle("show");
+	Polymer.dom(assetAppElement.root).querySelector("#myDropdown").classList.toggle("show");
 }
 
 function loadExampleWorkflow(fileNum) {
@@ -189,57 +189,60 @@ function loadExampleWorkflow(fileNum) {
 	if (saved == false && !confirm("Your work may be deleted. Continue?")) {
 		return;
 	}
-	
-	resetTable();
-    switch (fileNum) {
-        case 0:
-            globalJSON = JSON.parse(algal);
-            break;
-        case 1:
-		    globalJSON = JSON.parse(lgm);
-            break;
-        case 2:
-		    globalJSON = JSON.parse(qgis);
-            break;
-        case 3:
-		    globalJSON = JSON.parse(ex4);
-            break;
-        case 4:
-		    globalJSON = JSON.parse(ex5);
-            break;
-        case 5:
-		    globalJSON = JSON.parse(ex6);
-            break;
-        case 6:
-		    globalJSON = JSON.parse(ex7);
-            break;
-        case 8:
-		    globalJSON = JSON.parse(ex9);
-            break;
-        case 9:
-		    globalJSON = JSON.parse(ex10);
-            break;
-        case 10:
-		    globalJSON = JSON.parse(ex11);
-            break;
-        case 11:
-		    globalJSON = JSON.parse(ex12);
-            break;
-        case 12:
-		    globalJSON = JSON.parse(ex13);
-            break;
-        default:
-            alert("Sorry, we could not load selected sketch.");
-            return;
-    }
-    globalJSON = updateJSONWithID(globalJSON);
-    localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
-    exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 
-    Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
-    exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
-    drawToCanvas(globalJSON);
-    selected = false;
+	resetTable();
+	switch (fileNum) {
+		case 0:
+			globalJSON = JSON.parse(algal);
+			break;
+		case 1:
+			globalJSON = JSON.parse(lgm);
+			break;
+		case 2:
+			globalJSON = JSON.parse(qgis);
+			break;
+		case 3:
+			globalJSON = JSON.parse(ex4);
+			break;
+		case 4:
+			globalJSON = JSON.parse(ex5);
+			break;
+		case 5:
+			globalJSON = JSON.parse(ex6);
+			break;
+		case 6:
+			globalJSON = JSON.parse(ex7);
+			break;
+		case 7:
+			globalJSON = JSON.parse(ex8);
+			break;
+		case 8:
+			globalJSON = JSON.parse(ex9);
+			break;
+		case 9:
+			globalJSON = JSON.parse(ex10);
+			break;
+		case 10:
+			globalJSON = JSON.parse(ex11);
+			break;
+		case 11:
+			globalJSON = JSON.parse(ex12);
+			break;
+		case 12:
+			globalJSON = JSON.parse(ex13);
+			break;
+		default:
+			alert("Sorry, we could not load selected sketch.");
+			return;
+	}
+	globalJSON = updateJSONWithID(globalJSON);
+	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
+	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+
+	Polymer.dom(assetAppElement.root).querySelector("#title").innerHTML = globalJSON["title"]; //title change
+	exportAnchorElement.download = globalJSON["title"] + ".json"; //download name set to the new one
+	drawToCanvas(globalJSON);
+	selected = false;
 }
 
 /*
@@ -267,7 +270,7 @@ function loadExampleWorkflow(fileNum) {
 */
 function undo() {
 
-	if( undoArray.length == 0 ) {
+	if (undoArray.length == 0) {
 		console.log("No option for undo");
 		return;
 	}
@@ -275,10 +278,10 @@ function undo() {
 	selectedElement = null;
 	selectedEdge = null;
 	resetTable();
-	var eventNumber = undoArray[undoArray.length -1][0];
-	var param = undoArray[undoArray.length -1][1];
+	var eventNumber = undoArray[undoArray.length - 1][0];
+	var param = undoArray[undoArray.length - 1][1];
 	if (eventNumber == "0") { //delete element
-		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length-1, 1)[0], globalJSON.details.splice(globalJSON.details.length-1, 1)[0], globalJSON.subcomponent_details.splice(globalJSON.subcomponent_details.length-1, 1)[0]]]);
+		redoArray.push([0, [globalJSON.mainObjects.splice(globalJSON.mainObjects.length - 1, 1)[0], globalJSON.details.splice(globalJSON.details.length - 1, 1)[0], globalJSON.subcomponent_details.splice(globalJSON.subcomponent_details.length - 1, 1)[0]]]);
 	} else if (eventNumber == "1") { //add element
 		globalJSON.mainObjects.push(param[0]);
 		for (var i = 3; i < param.length; i++) {
@@ -286,7 +289,7 @@ function undo() {
 		}
 		globalJSON.details.push(param[1]);
 		globalJSON.subcomponent_details.push(param[2]);
-		redoArray.push([1,param[0]]);
+		redoArray.push([1, param[0]]);
 	} else if (eventNumber == "2") {
 		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 			if (param.id == globalJSON.mainObjects[i].id) {
@@ -295,10 +298,10 @@ function undo() {
 			}
 		}
 	} else if (eventNumber == "3") { // delete the edge
-		redoArray.push([3,globalJSON.edges.pop()]);
+		redoArray.push([3, globalJSON.edges.pop()]);
 	} else if (eventNumber == "4") { // create the edge
 		globalJSON.edges.push(param);
-		redoArray.push([4,null]);
+		redoArray.push([4, null]);
 	} else if (eventNumber == "5") {
 		//redoArray = "param"
 		//globalJSON.title = param;
@@ -317,7 +320,7 @@ function undo() {
 		redoArray.push([9, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]]))]]);
 		globalJSON.mainObjects[param[0]] = param[1];
 		globalJSON.subcomponent_details[param[0]] = param[2];
-	} else if (eventNumber == "10") {		
+	} else if (eventNumber == "10") {
 		redoArray.push([10, [param[0], param[3]]]);
 		globalJSON.mainObjects[param[0]].toolsUsed.splice(param[3], 0, param[1]);
 		globalJSON.subcomponent_details[param[0]].details.splice(param[3], 0, param[2]);
@@ -325,7 +328,7 @@ function undo() {
 	undoArray.pop();
 	drawToCanvas(globalJSON);
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
-		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
+	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 }
 /*
 	See undo function
@@ -344,8 +347,8 @@ function undo() {
 		*removed* 8 : property added (id)
 */
 function redo() {
-	
-	if( redoArray.length == 0 ) {
+
+	if (redoArray.length == 0) {
 		console.log("No option for redo");
 		return;
 	}
@@ -353,32 +356,32 @@ function redo() {
 	selectedElement = null;
 	selectedEdge = null;
 	resetTable();
-	var eventNumber = redoArray[redoArray.length -1][0];
-	var param = redoArray[redoArray.length -1][1];
+	var eventNumber = redoArray[redoArray.length - 1][0];
+	var param = redoArray[redoArray.length - 1][1];
 	if (eventNumber == "0") { //recreate an element
 		globalJSON.mainObjects.push(param[0]);
 		globalJSON.details.push(param[1]);
 		globalJSON.subcomponent_details.push(param[1]);
 		undoArray.push([0, null]);
 	} else if (eventNumber == "1") {
-		var undoElement= [];
-		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+		var undoElement = [];
+		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 
-			if( globalJSON.mainObjects[i].id == param.id ) {
+			if (globalJSON.mainObjects[i].id == param.id) {
 
 				undoElement.push(globalJSON.mainObjects.splice(i, 1)[0]);
-                undoElement.push(globalJSON.details.splice(i,1)[0]);
-				undoElement.push(globalJSON.subcomponent_details.splice(i,1)[0]);
+				undoElement.push(globalJSON.details.splice(i, 1)[0]);
+				undoElement.push(globalJSON.subcomponent_details.splice(i, 1)[0]);
 				break;
 			}
 		}
 
 		for (var j = 0; j < globalJSON.edges.length; j++) {
-			if( globalJSON.edges[j][0] == param.id || globalJSON.edges[j][1] == param.id ) {
+			if (globalJSON.edges[j][0] == param.id || globalJSON.edges[j][1] == param.id) {
 				undoElement.push(globalJSON.edges.splice(j, 1)[0]);
 				j--;
 			}
-        }
+		}
 		undoArray.push([1, undoElement]);
 	} else if (eventNumber == "2") {
 		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
@@ -389,9 +392,9 @@ function redo() {
 		}
 	} else if (eventNumber == "3") {
 		globalJSON.edges.push(param);
-		undoArray.push([3,null]);
+		undoArray.push([3, null]);
 	} else if (eventNumber == "4") {
-		undoArray.push([4,globalJSON.edges.pop()]);
+		undoArray.push([4, globalJSON.edges.pop()]);
 	} else if (eventNumber == "5") {
 	} else if (eventNumber == "6") {
 	} else if (eventNumber == "7") {
@@ -401,7 +404,7 @@ function redo() {
 		globalJSON.mainObjects[param[0]] = param[1];
 		globalJSON.subcomponent_details[param[0]] = param[2];
 	} else if (eventNumber == "10") {
-		undoArray.push([10, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]].toolsUsed.splice(param[1], 1)[0])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]].details.splice(param[1], 1)[0])) ,param[1]]]);
+		undoArray.push([10, [param[0], JSON.parse(JSON.stringify(globalJSON.mainObjects[param[0]].toolsUsed.splice(param[1], 1)[0])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[param[0]].details.splice(param[1], 1)[0])), param[1]]]);
 	}
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -417,7 +420,9 @@ function redo() {
 function saveTitle(e) {
 	if (globalJSON["title"] != title.innerHTML) {
 		//undoArray.push([5, globalJSON["title"]]);
-		globalJSON["title"] = title.innerHTML;
+		var stripTitle = title.innerHTML.trimStart().trimEnd();
+		stripTitle = removeSpace(stripTitle);
+		globalJSON["title"] = stripTitle;
 		exportAnchorElement.download = globalJSON["title"] + ".json";
 		localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 		exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
@@ -425,6 +430,11 @@ function saveTitle(e) {
 	}
 }
 
+function removeSpace(val) {
+	var idx = val.indexOf("&nbsp"); //remove the &nbsp spaces
+	var idx2 = val.substring(0, idx).indexOf("br"); //remove the br spaces
+	return val.substring(0, idx2);
+}
 /*
 	Called when the description loses focus or pressed enter
 
@@ -445,7 +455,7 @@ function saveDescription(e) {
 */
 function downloaded(e) {
 	// To get the latest version of the JSON to be exported.
-	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); 
+	localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 	saved = true;
 }
@@ -485,13 +495,13 @@ function displayPopup(popupText, clientX, clientY) {
 		popupElement.style.visibility = "visible";
 		popupElement.innerHTML = popupText;
 
-        if (clientX === null) {
-            console.log("function displayPopup bad args");
-        } else {
-		    popupContainerElement.style.left = clientX + "px";
-            popupContainerElement.style.top = clientY + "px";
-        }
-    } catch(err) {
+		if (clientX === null) {
+			console.log("function displayPopup bad args");
+		} else {
+			popupContainerElement.style.left = clientX + "px";
+			popupContainerElement.style.top = clientY + "px";
+		}
+	} catch (err) {
 		console.log("Could not Display popup : " + err.message);
 	}
 }
@@ -539,7 +549,7 @@ function canvasClick(e) {
 
 		var element = g.mainObjects[i]; //the current element
 		resetTable()
-		if( (x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale ) && ( y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale ) ) { // checks if click was in bounds of the element
+		if ((x >= (element.startX - 4) / currentScale && x <= (element.endX + 4) / currentScale) && (y >= (element.startY - 4) / currentScale && y <= (element.endY + 4) / currentScale)) { // checks if click was in bounds of the element
 			selectedElement = element.id; //sets the currently selected element to be this element
 
 			if (edge != null && edge != selectedElement) { //check if the edge exists already
@@ -564,14 +574,14 @@ function canvasClick(e) {
 				} else {
 					redoArray = [];
 				}*/
-				edge= null;
+				edge = null;
 			}
-			
+
 			redoArray = [];
 			if (selected == true) {
 				break;
 			}
-			
+
 			selected = true;
 			descriptionTable.style.display = "block";
 			descriptionTable.editName(element.name);
@@ -640,38 +650,38 @@ function drop(e) {
 
 	//width and height of new image (keeping same aspect ratio of the old), scale it to height of scalingNum
 	var scalingNum = 75;
-	w = scalingNum * w /h;
+	w = scalingNum * w / h;
 	h = scalingNum;
 	imgElement.height = h + "px";
 	imgElement.width = w + "px";
 
 	//getting the bounds of the image
-	var startX = (e.clientX - rect.left - parseInt(w/2))* currentScale;
-	var startY =( e.clientY - rect.top - parseInt(h/2)) * currentScale;
+	var startX = (e.clientX - rect.left - parseInt(w / 2)) * currentScale;
+	var startY = (e.clientY - rect.top - parseInt(h / 2)) * currentScale;
 	var endX = startX + w;
 	var endY = startY + h;
 
-	var index = checkifOverlapping(startX, startY, endX , endY);//check if overlapping
+	var index = checkifOverlapping(startX, startY, endX, endY);//check if overlapping
 
 	var activeWorkflowElement = JSON.parse(localStorage.getItem("activeWorkflowElement")); //The current set of workflow diagrams that is being used ex: "common tasks" and "earthcube tools"
 
-	var newElement = {"id": "d"+(new Date()).getTime(), "name": "", "imageSource": "", "startX": startX, "startY": startY, "endX": endX, "endY": endY, "toolsUsed": []}; //create new element
+	var newElement = { "id": "d" + (new Date()).getTime(), "name": "", "imageSource": "", "startX": startX, "startY": startY, "endX": endX, "endY": endY, "toolsUsed": [] }; //create new element
 
 	//finds which element the currently dragged element adds fields to the new Element
-	for( var i = 0; i < activeWorkflowElement.elements.length; i++) {
-		if( activeWorkflowElement.elements[i].imageSource == src ) {
+	for (var i = 0; i < activeWorkflowElement.elements.length; i++) {
+		if (activeWorkflowElement.elements[i].imageSource == src) {
 			newElement.name = activeWorkflowElement.elements[i].elementName; //saves name
 			newElement.imageSource = src; //saves image
 		}
 	}
 
-	if( index == -1) { // if not overlapping with other element
+	if (index == -1) { // if not overlapping with other element
 		globalJSON.mainObjects.push(newElement); //pushed into mainobjects
 		globalJSON.details.push(newTemplate());
-		globalJSON.subcomponent_details.push({"parentId" : newElement.id, "details": []});
+		globalJSON.subcomponent_details.push({ "parentId": newElement.id, "details": [] });
 
 		//draws the image to the canvas
-		ctx.drawImage(imgElement, startX/currentScale, startY/currentScale, w/currentScale, h/currentScale);
+		ctx.drawImage(imgElement, startX / currentScale, startY / currentScale, w / currentScale, h / currentScale);
 
 		undoArray.push([0, null]);
 		redoArray = [];
@@ -683,8 +693,8 @@ function drop(e) {
 	} else {
 		var detail = globalJSON.details[index][4]["detail"];
 		var addedDetail = detail + ", " + newElement.name;
-		var addToElement = globalJSON.mainObjects[index];	
-		undoArray.push([9, [index,JSON.parse(JSON.stringify(globalJSON.mainObjects[index])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[index]))]]);
+		var addToElement = globalJSON.mainObjects[index];
+		undoArray.push([9, [index, JSON.parse(JSON.stringify(globalJSON.mainObjects[index])), JSON.parse(JSON.stringify(globalJSON.subcomponent_details[index]))]]);
 		redoArray = [];
 		addToElement.toolsUsed.push([newElement.name, newElement.imageSource, w, h]);
 		//addToElement.endY += scalingNum / 2;
@@ -702,9 +712,9 @@ function drop(e) {
 		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index], globalJSON, index), 10);
 		descriptionTable.style.display = "block";
 
-		for(var i = 0; i < globalJSON.subcomponent_details.length; i++) {
+		for (var i = 0; i < globalJSON.subcomponent_details.length; i++) {
 
-			if( globalJSON.subcomponent_details[i].parentId == globalJSON.mainObjects[index].id ) {
+			if (globalJSON.subcomponent_details[i].parentId == globalJSON.mainObjects[index].id) {
 				globalJSON.subcomponent_details[i].details.push(newTemplate());
 			}
 
@@ -721,7 +731,7 @@ function drop(e) {
 }
 
 function getWorkflowElementById(id) {
-	for(var i = 0; i < globalJSON.mainObjects.length; i++) {
+	for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 		if (globalJSON.mainObjects[i].id === id) {
 			return globalJSON.mainObjects[i];
 		}
@@ -748,18 +758,18 @@ function checkifOverlapping(sx, sy, ex, ey) {
 
 	try {
 
-		for(var i = 0; i < globalJSON.mainObjects.length; i++) {
+		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 
 			var overlapValue = isOverlap(sx, sy, ex, ey, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY);
 
-			if( overlapValue == true )
+			if (overlapValue == true)
 				return i;
 
 		}
 
 		return -1;
 
-	} catch(err) {
+	} catch (err) {
 
 		return -1;
 	}
@@ -769,7 +779,7 @@ function checkifOverlapping(sx, sy, ex, ey) {
 	returns true if there is overlap
 */
 function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
-    return ( !( ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2 ) );
+	return (!(ey1 < sy2 || sy1 > ey2 || ex1 < sx2 || sx1 > ex2));
 }
 
 /*
@@ -779,7 +789,7 @@ function isOverlap(sx1, sy1, ex1, ey1, sx2, sy2, ex2, ey2) {
 	most of the time it will be null so just ignore it; only when an edge is clicked it will have effect
 */
 function drawToCanvas(js, e) {
-    //console.log('render:', js);
+	//console.log('render:', js);
 
 	try {
 
@@ -793,36 +803,36 @@ function drawToCanvas(js, e) {
 
 		// Offsets for the title and tools of a main object
 		const titleOffset = 20;
-		const toolImgOffset = 25; 
-		
+		const toolImgOffset = 25;
+
 		// Offsets for the title and tools when a main object is hovered over
 		const titleOffsetHover = 30;
-		const toolImgOffsetHover = 30; 
+		const toolImgOffsetHover = 30;
 
 		// Offsets for the title and tools when a main object is clicked (single or double)
 		const titleOffsetClicked = 30;
-		const toolImgOffsetClicked = 35; 
+		const toolImgOffsetClicked = 35;
 
 		// zoomed in font value
-        const zoomedFont = Math.floor(18 / currentScale) + "px Arial";
-        //"18px Arial";
+		const zoomedFont = Math.floor(18 / currentScale) + "px Arial";
+		//"18px Arial";
 
 		ctx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
 		//draws edges including the selected one		
 		const arrowOffset = 30;
 
-		for(var i = 0; i < js.edges.length; i++) {
-			drawEdge(getWorkflowElementById(js.edges[i][0]),getWorkflowElementById(js.edges[i][1]), e);
+		for (var i = 0; i < js.edges.length; i++) {
+			drawEdge(getWorkflowElementById(js.edges[i][0]), getWorkflowElementById(js.edges[i][1]), e);
 
-			var x1,y1,x2,y2;
-			
-			for(var j=0; j < js.mainObjects.length; j++){
-				if(js.mainObjects[j].id === js.edges[i][0]){ //task1id
+			var x1, y1, x2, y2;
+
+			for (var j = 0; j < js.mainObjects.length; j++) {
+				if (js.mainObjects[j].id === js.edges[i][0]) { //task1id
 					x1 = (js.mainObjects[j].startX + js.mainObjects[j].endX) / 2
 					y1 = (js.mainObjects[j].startY + js.mainObjects[j].endY) / 2
 				}
-				if(js.mainObjects[j].id === js.edges[i][1]){ //task2id
+				if (js.mainObjects[j].id === js.edges[i][1]) { //task2id
 					x2 = (js.mainObjects[j].startX + js.mainObjects[j].endX) / 2
 					y2 = (js.mainObjects[j].startY + js.mainObjects[j].endY) / 2
 				}
@@ -830,91 +840,91 @@ function drawToCanvas(js, e) {
 
 			ctx.beginPath();
 			ctx.font = zoomedFont;
-			ctx.fillStyle="black";
-			if(typeof globalJSON.edges[i][2] !== "undefined"){
+			ctx.fillStyle = "black";
+			if (typeof globalJSON.edges[i][2] !== "undefined") {
 				var arrowText = "";
-				if(globalJSON.edges[i][2].length > 15){
-					for(var z=0; z<15; z++){
+				if (globalJSON.edges[i][2].length > 15) {
+					for (var z = 0; z < 15; z++) {
 						arrowText += globalJSON.edges[i][2][z]
 					}
 					arrowText += "..."; //add ... if the text is too long to show on the canvas
 				}
-				else{
+				else {
 					arrowText = globalJSON.edges[i][2];
 				}
-				ctx.fillText(arrowText, (x1 + x2) / 2 / currentScale, ((y1 + y2)/2 + arrowOffset)/currentScale); //display the arrow description on the canvas
-		
+				ctx.fillText(arrowText, (x1 + x2) / 2 / currentScale, ((y1 + y2) / 2 + arrowOffset) / currentScale); //display the arrow description on the canvas
+
 			}
 		}
 		//draws elements including the special ones
-		for(var i = 0; i < js.mainObjects.length; i++) {
+		for (var i = 0; i < js.mainObjects.length; i++) {
 
 			var mainObject = js.mainObjects[i];
 
 			indexDictionary[mainObject.id] = i;
 
 			ctx.beginPath();
-			if( selectedElement == mainObject.id ) { //element clicked
+			if (selectedElement == mainObject.id) { //element clicked
 				ctx.font = zoomedFont;
 				if (edge == selectedElement) { //double clicked
 					doubleClickElement = mainObject;
 
-					ctx.fillStyle="black";
+					ctx.fillStyle = "black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetClicked)/currentScale);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY + titleOffsetClicked) / currentScale);
 						}
 					}
 				} else { //clicked once
 					clickElement = mainObject;
 
-					ctx.fillStyle="black";
+					ctx.fillStyle = "black";
 					for (var j = 0; j < js.details[i].length; j++) {
 						if (globalJSON.details[i][j]["name"] == "Name") {
-							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetClicked)/currentScale);
+							ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY + titleOffsetClicked) / currentScale);
 						}
 					}
 				}
-			} else if(mouseOverElement != null && mouseOverElement == mainObject.id) { //hover on element
+			} else if (mouseOverElement != null && mouseOverElement == mainObject.id) { //hover on element
 				hoverElement = mainObject;
 
-				ctx.fillStyle="black";
+				ctx.fillStyle = "black";
 				ctx.font = zoomedFont;
 				for (var j = 0; j < globalJSON.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffsetHover)/currentScale);
+						ctx.fillText(globalJSON.details[i][j]["detail"], (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY + titleOffsetHover) / currentScale);
 					}
 				}
 			} else { //hover or clicking on canvas
-				ctx.strokeStyle="black";
-                ctx.font = Math.floor(15 / currentScale) + "px Arial";
+				ctx.strokeStyle = "black";
+				ctx.font = Math.floor(15 / currentScale) + "px Arial";
 				var length = mainObject.toolsUsed.length;
 
-				ctx.fillStyle="black";
+				ctx.fillStyle = "black";
 				for (var j = 0; j < js.details[i].length; j++) {
 					if (globalJSON.details[i][j]["name"] == "Name") {
-						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY+titleOffset)/currentScale);
+						ctx.fillText(truncateName(globalJSON.details[i][j]["detail"]), (mainObject.startX + mainObject.endX) / 2 / currentScale, (mainObject.endY + titleOffset) / currentScale);
 					}
 				}
-                ctx.font = Math.floor(20 / currentScale) + "px Arial";
-				
-				var lengthX = mainObject.startX/currentScale;
+				ctx.font = Math.floor(20 / currentScale) + "px Arial";
+
+				var lengthX = mainObject.startX / currentScale;
 				//var lengthY = (mainObject.endY - mainObject.startY)/currentScale;
 				for (var j = 0; j < length; j++) {
 					var toolImage = new Image();
 					toolImage.src = mainObject.toolsUsed[j][1];
 					//if (j % 2 == 0) { //if index of tools used of selected item in canvas is even
-					if( selectedSubElement != null ) {
-						if( selectedSubElement["parentId"] == mainObject.id && selectedSubElement["index"] == j ) {
+					if (selectedSubElement != null) {
+						if (selectedSubElement["parentId"] == mainObject.id && selectedSubElement["index"] == j) {
 							ctx.fillStyle = "#00800040";
-							ctx.fillRect(lengthX, (mainObject.endY + toolImgOffset)/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
-							ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset)/currentScale, (mainObject.toolsUsed[j][2] + 80)/currentScale/3, (mainObject.toolsUsed[j][3] + 80)/currentScale/3);
-							lengthX += (mainObject.toolsUsed[j][2]+100)/currentScale/3;
+							ctx.fillRect(lengthX, (mainObject.endY + toolImgOffset) / currentScale, (mainObject.toolsUsed[j][2] + 80) / currentScale / 3, (mainObject.toolsUsed[j][3] + 80) / currentScale / 3);
+							ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset) / currentScale, (mainObject.toolsUsed[j][2] + 80) / currentScale / 3, (mainObject.toolsUsed[j][3] + 80) / currentScale / 3);
+							lengthX += (mainObject.toolsUsed[j][2] + 100) / currentScale / 3;
 							continue;
 						}
 					}
-						ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
-						lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+					ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffset) / currentScale, mainObject.toolsUsed[j][2] / currentScale / 3, mainObject.toolsUsed[j][3] / currentScale / 3);
+					lengthX += (mainObject.toolsUsed[j][2] + 20) / currentScale / 3;
 					//} else {
 					//	ctx.drawImage(toolImage, mainObject.startX/currentScale + lengthX, mainObject.endY/currentScale + lengthY*(j/2)/currentScale, lengthX, lengthY-2);
 					//}
@@ -924,7 +934,7 @@ function drawToCanvas(js, e) {
 			var imgElement = new Image();
 			imgElement.src = mainObject.imageSource;
 
-			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			ctx.drawImage(imgElement, mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX) / currentScale, (mainObject.endY - mainObject.startY) / currentScale);
 
 
 			// if (length %2 ==1) {
@@ -934,115 +944,115 @@ function drawToCanvas(js, e) {
 			// }
 		}
 
-		if( doubleClickElement != null ) {
+		if (doubleClickElement != null) {
 
 			mainObject = doubleClickElement;
-			ctx.strokeStyle="red";
-			ctx.fillStyle="#FF000040";
-			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+			ctx.strokeStyle = "red";
+			ctx.fillStyle = "#FF000040";
+			ctx.fillRect((mainObject.startX - 5) / currentScale, (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10) / currentScale, (mainObject.endY - mainObject.startY + 10) / currentScale);
 
-			var lengthX = mainObject.startX/currentScale;
+			var lengthX = mainObject.startX / currentScale;
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 				var toolImage = new Image();
 				toolImage.src = mainObject.toolsUsed[j][1];
-				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
-				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked) / currentScale, mainObject.toolsUsed[j][2] / currentScale / 3, mainObject.toolsUsed[j][3] / currentScale / 3);
+				lengthX += (mainObject.toolsUsed[j][2] + 20) / currentScale / 3;
 			}
 
 			var imgElement = new Image();
 			imgElement.src = mainObject.imageSource;
 
-			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			ctx.drawImage(imgElement, mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX) / currentScale, (mainObject.endY - mainObject.startY) / currentScale);
 
 		}
 
-		if( clickElement != null ) {
+		if (clickElement != null) {
 
 			mainObject = clickElement;
 			ctx.strokeStyle = "green";
-			ctx.fillStyle="#00800040";
-			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+			ctx.fillStyle = "#00800040";
+			ctx.fillRect((mainObject.startX - 5) / currentScale, (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10) / currentScale, (mainObject.endY - mainObject.startY + 10) / currentScale);
 
-			var lengthX = mainObject.startX/currentScale;
+			var lengthX = mainObject.startX / currentScale;
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 				var toolImage = new Image();
 				toolImage.src = mainObject.toolsUsed[j][1];
-				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked)/currentScale, mainObject.toolsUsed[j][2]/currentScale/3, mainObject.toolsUsed[j][3]/currentScale/3);
-				lengthX += (mainObject.toolsUsed[j][2]+20)/currentScale/3;
+				ctx.drawImage(toolImage, lengthX, (mainObject.endY + toolImgOffsetClicked) / currentScale, mainObject.toolsUsed[j][2] / currentScale / 3, mainObject.toolsUsed[j][3] / currentScale / 3);
+				lengthX += (mainObject.toolsUsed[j][2] + 20) / currentScale / 3;
 			}
 
 			var imgElement = new Image();
 			imgElement.src = mainObject.imageSource;
 
-			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			ctx.drawImage(imgElement, mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX) / currentScale, (mainObject.endY - mainObject.startY) / currentScale);
 
 		}
 
-		if( hoverElement != null ) {
+		if (hoverElement != null) {
 
 			mainObject = hoverElement;
 
-			var lengthY = (mainObject.endY+9 + toolImgOffsetHover)/currentScale;
-			var midpoint = (mainObject.startX + mainObject.endX)/2/currentScale;
+			var lengthY = (mainObject.endY + 9 + toolImgOffsetHover) / currentScale;
+			var midpoint = (mainObject.startX + mainObject.endX) / 2 / currentScale;
 
 			var childStartX = 0;
 			var childStartY = 0;
 			var childWidth = 0;
 			var childHeight = 0;
 
-			childStartY = (mainObject.endY+7)/currentScale;
+			childStartY = (mainObject.endY + 7) / currentScale;
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
-				if( j == 0 ) {
-					childStartX = midpoint - mainObject.toolsUsed[j][2]/2/currentScale;
-				}
-				
-				if( mainObject.toolsUsed[j][2]/currentScale > childWidth ) {
-					childWidth = mainObject.toolsUsed[j][2]/currentScale;
+				if (j == 0) {
+					childStartX = midpoint - mainObject.toolsUsed[j][2] / 2 / currentScale;
 				}
 
-				if( midpoint - mainObject.toolsUsed[j][2]/2/currentScale < childStartX ) {
-					childStartX = midpoint - mainObject.toolsUsed[j][2]/2/currentScale;
+				if (mainObject.toolsUsed[j][2] / currentScale > childWidth) {
+					childWidth = mainObject.toolsUsed[j][2] / currentScale;
 				}
 
-				childHeight += (mainObject.toolsUsed[j][3] + 4)/currentScale;
+				if (midpoint - mainObject.toolsUsed[j][2] / 2 / currentScale < childStartX) {
+					childStartX = midpoint - mainObject.toolsUsed[j][2] / 2 / currentScale;
+				}
+
+				childHeight += (mainObject.toolsUsed[j][3] + 4) / currentScale;
 			}
 
 			childStartX = childStartX - 2;
 			childWidth = childWidth + 4;
 
-			if(childStartX != 0) {
-				ctx.fillStyle="#F7C96C";
+			if (childStartX != 0) {
+				ctx.fillStyle = "#F7C96C";
 				ctx.clearRect(childStartX, childStartY + toolImgOffsetHover, childWidth, childHeight);
 				ctx.fillRect(childStartX, childStartY + toolImgOffsetHover, childWidth, childHeight);
 			}
 
 			ctx.strokeStyle = "orange";
-			ctx.fillStyle="#F4B942";
-			ctx.fillRect((mainObject.startX - 5) / currentScale , (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10)/currentScale, (mainObject.endY - mainObject.startY + 10)/currentScale);
+			ctx.fillStyle = "#F4B942";
+			ctx.fillRect((mainObject.startX - 5) / currentScale, (mainObject.startY - 5) / currentScale, (mainObject.endX - mainObject.startX + 10) / currentScale, (mainObject.endY - mainObject.startY + 10) / currentScale);
 
 			for (var j = 0; j < mainObject.toolsUsed.length; j++) {
 				var toolImage = new Image();
 				toolImage.src = mainObject.toolsUsed[j][1];
 				//ctx.fillRect((midpoint - mainObject.toolsUsed[j][2]/2 - 5) / thiis is wrong BTW double divided currentScale currentScale , (lengthY - 5) / currentScale, (mainObject.toolsUsed[j][2] + 10)/currentScale, (mainObject.toolsUsed[j][3] + 10)/currentScale);
-				ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2]/2/currentScale, lengthY, mainObject.toolsUsed[j][2]/currentScale, mainObject.toolsUsed[j][3]/currentScale);
-				lengthY +=(mainObject.toolsUsed[j][3]+4)/currentScale;
+				ctx.drawImage(toolImage, midpoint - mainObject.toolsUsed[j][2] / 2 / currentScale, lengthY, mainObject.toolsUsed[j][2] / currentScale, mainObject.toolsUsed[j][3] / currentScale);
+				lengthY += (mainObject.toolsUsed[j][3] + 4) / currentScale;
 			}
 
 			var imgElement = new Image();
 			imgElement.src = mainObject.imageSource;
 
-			ctx.drawImage(imgElement, mainObject.startX/currentScale, mainObject.startY/currentScale, (mainObject.endX - mainObject.startX)/currentScale, (mainObject.endY - mainObject.startY)/currentScale);
+			ctx.drawImage(imgElement, mainObject.startX / currentScale, mainObject.startY / currentScale, (mainObject.endX - mainObject.startX) / currentScale, (mainObject.endY - mainObject.startY) / currentScale);
 
 		}
 
-	} catch(err) {
-	 	console.log("Could not draw onto canvas : " + err.message);
+	} catch (err) {
+		console.log("Could not draw onto canvas : " + err.message);
 	}
 
 }
 
 function truncateName(nameString) {
-	return ( (nameString.length <= 15) ? nameString: nameString.substring(0, 15) + "..." );
+	return ((nameString.length <= 15) ? nameString : nameString.substring(0, 15) + "...");
 }
 
 var importPopupBool = false;
@@ -1051,8 +1061,8 @@ function importWorkflow(e) {
 
 	try {
 		e.stopPropagation();
-		var importText = 
-		`
+		var importText =
+			`
 		<center id = 'importPopupElement'>Import Workflow Sketch</center>
 		<br>
 		<input type='file' id='fileToLoad' accept='application/json'>
@@ -1064,13 +1074,13 @@ function importWorkflow(e) {
 		importPopupBool = true;
 		displayPopup(importText, e.clientX, e.clientY - 10);
 
-	} catch(err) {
+	} catch (err) {
 		alert("Could not import workflow sketch : " + err.message);
 	}
 }
 
 // handler for close button on the Import Sketch pop-up
-function closeImportPopup(){
+function closeImportPopup() {
 	importPopupBool = false;
 	closePopup();
 }
@@ -1087,7 +1097,7 @@ function loadWorkflowSketch() {
 		var uploadFileElement = Polymer.dom(assetAppElement.root).querySelector("#fileToLoad").files[0];
 		var fileReader = new FileReader();
 
-		fileReader.onload = function(fileLoadedEvent) {
+		fileReader.onload = function (fileLoadedEvent) {
 			var textFromFileLoaded = fileLoadedEvent.target.result;
 			globalJSON = JSON.parse(textFromFileLoaded);
 
@@ -1109,7 +1119,7 @@ function loadWorkflowSketch() {
 
 		fileReader.readAsText(uploadFileElement, "UTF-8");
 
-	} catch(err) {
+	} catch (err) {
 		alert("Cannot load Workflow from invalid JSON : " + err.message);
 	}
 
@@ -1128,14 +1138,14 @@ function mouseDownFunction(e) {
 		var y = e.clientY - rect.top;
 		for (var i = 0; i < g.mainObjects.length; i++) {
 
-			if ((x >=( g.mainObjects[i].startX - 4)/currentScale && x <= (g.mainObjects[i].endX + 4)/currentScale) &&
- 			    (y >= (g.mainObjects[i].startY - 4)/currentScale && y <= (g.mainObjects[i].endY + 4)/currentScale)) {
+			if ((x >= (g.mainObjects[i].startX - 4) / currentScale && x <= (g.mainObjects[i].endX + 4) / currentScale) &&
+				(y >= (g.mainObjects[i].startY - 4) / currentScale && y <= (g.mainObjects[i].endY + 4) / currentScale)) {
 
 				canvasDragElement = {
 					"element": g.mainObjects[i],
 					"offsetX": currentScale * e.clientX - g.mainObjects[i].startX,
-                    "offsetY": currentScale * e.clientY - g.mainObjects[i].startY
-                };
+					"offsetY": currentScale * e.clientY - g.mainObjects[i].startY
+				};
 				originalDragElement = JSON.parse(JSON.stringify(g.mainObjects[i]));
 				return;
 
@@ -1143,9 +1153,9 @@ function mouseDownFunction(e) {
 		}
 		canvasDragElement = null;
 
-		dragWorkflowArray = [x * currentScale,y * currentScale];
+		dragWorkflowArray = [x * currentScale, y * currentScale];
 
-	} catch(err) {
+	} catch (err) {
 		canvasDragElement = null;
 		console.log("Could not start drag : " + err.message);
 	}
@@ -1156,7 +1166,7 @@ function mouseMoveFunction(e) {
 		if (dragWorkflowArray.length != 0) {
 			var rect = canvasElement.getBoundingClientRect();
 			var x = (e.clientX - rect.left) * currentScale - dragWorkflowArray[0]; //displacemnt x since mouse down
-			var y =(e.clientY - rect.top) * currentScale - dragWorkflowArray[1]; //displacemnt y since mouse down
+			var y = (e.clientY - rect.top) * currentScale - dragWorkflowArray[1]; //displacemnt y since mouse down
 			var length = globalJSON.mainObjects.length;
 			for (var i = 0; i < length; i++) {
 				globalJSON.mainObjects[i].startX += x;
@@ -1164,12 +1174,12 @@ function mouseMoveFunction(e) {
 				globalJSON.mainObjects[i].startY += y;
 				globalJSON.mainObjects[i].endY += y;
 			}
-			dragWorkflowArray = [(e.clientX - rect.left)*currentScale, (e.clientY - rect.top) * currentScale];
+			dragWorkflowArray = [(e.clientX - rect.left) * currentScale, (e.clientY - rect.top) * currentScale];
 			drawToCanvas(globalJSON);
 			return;
 		}
 
-		if( canvasDragElement == null ) {
+		if (canvasDragElement == null) {
 
 			var rect = canvasElement.getBoundingClientRect();
 			var x = e.clientX - rect.left;
@@ -1179,7 +1189,7 @@ function mouseMoveFunction(e) {
 
 				var element = globalJSON.mainObjects[i]; //the current element
 
-				if( x >= element.startX / currentScale && x <= element.endX / currentScale  && y >= element.startY / currentScale && y <= element.endY / currentScale ) { // checks if click was in bounds of the element
+				if (x >= element.startX / currentScale && x <= element.endX / currentScale && y >= element.startY / currentScale && y <= element.endY / currentScale) { // checks if click was in bounds of the element
 					mouseOverElement = element.id; //sets the currently selected element to be this element
 					drawToCanvas(globalJSON);
 					return;
@@ -1195,15 +1205,15 @@ function mouseMoveFunction(e) {
 			canvasDragElement.element.startX = currentScale * e.clientX - canvasDragElement.offsetX;
 			canvasDragElement.element.startY = currentScale * e.clientY - canvasDragElement.offsetY;
 
-			canvasDragElement.element.endX = canvasDragElement.element.startX + w; 
-			canvasDragElement.element.endY = canvasDragElement.element.startY + h; 
+			canvasDragElement.element.endX = canvasDragElement.element.startX + w;
+			canvasDragElement.element.endY = canvasDragElement.element.startY + h;
 
 			drawToCanvas(globalJSON);
 			localStorage.setItem("globalJSON", JSON.stringify(g));
 			exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON")));
 		}
 
-	} catch(err) {
+	} catch (err) {
 		console.log("Failed to drag : " + err.message);
 	}
 }
@@ -1213,10 +1223,10 @@ function mouseUpFunction(e) {
 	try {
 		dragWorkflowArray = [];
 
-		if( canvasDragElement == null )
+		if (canvasDragElement == null)
 			return;
 
-		if( canvasDragElement.element.startX == originalDragElement.startX && canvasDragElement.element.endX == originalDragElement.endX && canvasDragElement.element.startY == originalDragElement.startY && canvasDragElement.element.endY == originalDragElement.endY ) {
+		if (canvasDragElement.element.startX == originalDragElement.startX && canvasDragElement.element.endX == originalDragElement.endX && canvasDragElement.element.startY == originalDragElement.startY && canvasDragElement.element.endY == originalDragElement.endY) {
 			canvasDragElement = null;
 			return;
 		}
@@ -1224,14 +1234,14 @@ function mouseUpFunction(e) {
 		undoArray.push([2, originalDragElement]);
 		redoArray = [];
 
-		for( var i = 0; i < globalJSON.mainObjects.length; i++ ) {
+		for (var i = 0; i < globalJSON.mainObjects.length; i++) {
 
-			if( globalJSON.mainObjects[i].id == canvasDragElement.element.id )
+			if (globalJSON.mainObjects[i].id == canvasDragElement.element.id)
 				continue;
 
-			if( isOverlap(canvasDragElement.element.startX, canvasDragElement.element.startY, canvasDragElement.element.endX, canvasDragElement.element.endY, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY) == true) {
-				for( var j = 0; j < globalJSON.mainObjects.length; j++ ) {
-					if( globalJSON.mainObjects[j].id == canvasDragElement.element.id ) {
+			if (isOverlap(canvasDragElement.element.startX, canvasDragElement.element.startY, canvasDragElement.element.endX, canvasDragElement.element.endY, globalJSON.mainObjects[i].startX, globalJSON.mainObjects[i].startY, globalJSON.mainObjects[i].endX, globalJSON.mainObjects[i].endY) == true) {
+				for (var j = 0; j < globalJSON.mainObjects.length; j++) {
+					if (globalJSON.mainObjects[j].id == canvasDragElement.element.id) {
 						globalJSON.mainObjects[j] = originalDragElement;
 						canvasDragElement = null;
 						localStorage.setItem("globalJSON", JSON.stringify(globalJSON));
@@ -1243,9 +1253,9 @@ function mouseUpFunction(e) {
 			}
 		}
 		canvasDragElement = null;
-		
 
-	} catch(err) {
+
+	} catch (err) {
 
 		alert("Could not move element : " + err.message);
 	}
