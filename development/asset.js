@@ -16,7 +16,9 @@ var arrowDetailTemplate
 var title;
 var description;
 
-var globalJSON = { "mainObjects": [], "edges": [], "details": [], "arrowDetails": [], "subcomponent_details": [], "title": "", "description": "" }; // the workflow elements and edges and details and title
+var globalJSON = {
+	"mainObjects": [], "edges": [], "details": [], "arrowDetails": [], "subcomponent_details": [], "title": "", "workflowDetails": [], "description": ""
+};
 
 var saved; //stores the boolean in which the workflow was exported or not
 
@@ -37,7 +39,7 @@ var zoomOutButton;
 
 /*
 	 Called when body is initialized
-
+	
 	 TO DO: FIX ZOOM
 */
 function initialize() {
@@ -62,6 +64,7 @@ function initialize() {
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
 	arrowTable = Polymer.dom(assetAppElement.root).querySelector("#arrowTable")
 	arrowInstruction = Polymer.dom(assetAppElement.root).querySelector("#arrowInstruction")
+	workflowTable = Polymer.dom(assetAppElement.root).querySelector("#workflowTable")
 
 	detailTemplate = [
 		{ name: 'Name', detail: '' },
@@ -74,6 +77,14 @@ function initialize() {
 	arrowDetailTemplate = [
 		{ name: 'Name', detail: '' },
 		{ name: 'Description', detail: '' }
+	];
+
+	workflowTemplate = [
+		{ name: 'Description', detail: '' },
+		{ name: 'Author(s)', detail: '' },
+		{ name: 'Date', detail: '' },
+		{ name: 'Version', detail: '' },
+		{ name: 'License', detail: '' }
 	];
 
 	//canvas container: adds the canvas so it doesnt expand and stuff
@@ -108,9 +119,6 @@ function initialize() {
 
 	title = Polymer.dom(assetAppElement.root).querySelector("#title");
 	globalJSON["title"] = title.innerHTML; //saves the title
-
-	description = Polymer.dom(assetAppElement.root).querySelector("#description");
-	globalJSON["description"] = description.innerHTML; //saves the description
 
 	exportAnchorElement = Polymer.dom(assetAppElement.root).querySelector("#exportAnchor"); //adds export button as a field
 	exportAnchorElement.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(localStorage.getItem("globalJSON"))); // returns the workflow file and the globalJSON
@@ -431,9 +439,16 @@ function saveTitle(e) {
 }
 
 function removeSpace(val) {
-	var idx = val.indexOf("&nbsp"); //remove the &nbsp spaces
-	var idx2 = val.substring(0, idx).indexOf("br"); //remove the br spaces
-	return val.substring(0, idx2);
+	var idx = val.indexOf("&nbsp");
+	if (idx != -1) {
+		val = val.substring(0, idx); //remove the &nbsp spaces
+	}
+
+	var idx2 = val.indexOf("br");
+	if (idx != -1) {
+		val = val.substring(0, idx); //remove the br spaces
+	}
+	return val;
 }
 /*
 	Called when the description loses focus or pressed enter
@@ -518,6 +533,17 @@ function closePopup() {
 */
 function allowDrop(e) {
 	e.preventDefault();
+}
+
+function changeWorkflowDescription(e) {
+	resetTable();
+	if (globalJSON.workflowDetails.length == 0) {
+		globalJSON.workflowDetails.push(newWorkflowTemplate());
+	}
+
+	workflowTable.style.display = "block";
+	workflowTable.editName("Workflow Information");
+	workflowTable.loadDetails(globalJSON.workflowDetails[0]);
 }
 
 /*
@@ -617,6 +643,11 @@ function newArrowTemplate() {
 	return newInstance;
 }
 
+function newWorkflowTemplate() {
+	var newInstance = JSON.parse(JSON.stringify(workflowTemplate));
+	return newInstance;
+}
+
 /*
 	Clear table and reset it
 */
@@ -626,6 +657,8 @@ function resetTable() {
 	arrowTable.clear();
 	arrowTable.style.display = "none";
 	arrowInstruction.style.display = "none";
+	workflowTable.clear();
+	workflowTable.style.display = "none";
 }
 
 /*
@@ -682,7 +715,7 @@ function drop(e) {
 
 		//draws the image to the canvas
 		ctx.drawImage(imgElement, startX / currentScale, startY / currentScale, w / currentScale, h / currentScale);
-
+		resetTable();
 		undoArray.push([0, null]);
 		redoArray = [];
 		selectedElement = newElement.id;

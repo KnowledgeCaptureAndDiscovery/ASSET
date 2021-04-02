@@ -5,6 +5,7 @@
 <link rel="import" href="../../bower_components/polymer/lib/utils/gestures.html">
 <link rel="import" href="../table/interactive-table.html">
 <link rel="import" href="../table/arrow-table.html">
+<link rel="import" href="../table/workflow-table.html">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="../../asset.js"></script>
@@ -397,6 +398,11 @@
         max-height: inherit;
         overflow-y: auto;
       }
+
+      #editWorkflowDescription {
+        margin-left: 20px;
+        transform: translate(0, -30%);
+      }
     </style>
     <!-- <div id="ContentSection" onclick="importUnfocused()">
       <div class="unselectable" draggable="false" id="leftSsection">
@@ -477,11 +483,10 @@
         </div>
         <div id="title-container" class="right-div float-left word-wrap title-font center-align">
           <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id="title">
-            Untitled Workflow
+            Untitled Sketch
           </h1>
-          <h3 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveDescription(event)" id="description">
-            Description
-          </h3>
+          <button id="editWorkflowDescription" onclick=changeWorkflowDescription(event)>Edit information about the
+            sketch</button>
         </div>
         <div class="clr"></div>
       </div>
@@ -489,6 +494,7 @@
         <div id="descriptionSection" class="left-div full-height float-left unselectable scrollable">
           <interactive-table id="table" style="display: none;"></interactive-table>
           <arrow-table id="arrowTable" style="display: none;"></arrow-table>
+          <workflow-table id="workflowTable" style="display: none;"></workflow-table>
           <br>
           <div id="arrowInstruction" style="display: none;">
             <p>Use the table to describe dependencies or relationships between two tasks.</p>

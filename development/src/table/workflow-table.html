@@ -1,0 +1,185 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../../bower_components/polymer/lib/elements/dom-if.html">
+
+<dom-module id="workflow-table">
+    <template id="template">
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            .detail {
+                min-width: 5vw;
+            }
+
+            h2 {
+                margin: 0em;
+                margin-bottom: 1vh;
+            }
+
+            td,
+            th {
+                border: 1px solid black;
+                text-align: left;
+                min-height: auto;
+                font-size: .8vw;
+                overflow: auto;
+                padding: 8px;
+            }
+
+            td:nth-child(even) {
+                max-width: 9.5vw;
+            }
+
+            td:nth-child(odd) {
+                max-width: 4.5vw;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+
+            #title,
+            button {
+                float: left;
+            }
+
+            .clickable {
+                cursor: pointer;
+            }
+        </style>
+        <h2 id="title">[[elementTitle]]</h2>
+
+        <br><br>
+
+        <div>
+            <table>
+                <template is="dom-repeat" items="{{details}}">
+                    <tr class="descriptionRow" id="[[index]]">
+                        <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="name[[index]]"
+                            on-keypress="save">[[item.name]]</td>
+                        <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail"
+                            id="detail[[index]]" on-keypress="save">[[item.detail]]</td>
+                        <td contenteditable="false" on-click="onDeleteClick"><span title="Delete"
+                                class="clickable"><b>X</b></span>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+        <br>
+
+        <button on-click="addNewProperty">Add property</button>
+
+    </template>
+
+    <script>
+        /**
+         * `workflow-table`
+         * 
+         *
+         * @customElement
+         * @polymer
+         * @demo demo/index.html
+         */
+        class WorkflowTable extends Polymer.Element {
+            static get is() { return 'workflow-table'; }
+            static get properties() {
+                return {
+                    elementTitle: {
+                        type: String,
+                        value: ""
+                    }
+                    ,
+                    details: {
+                        type: Array,
+                        value() {
+                            return [];
+                        }
+                    }
+                    ,
+                    detail: { //0 if name, 1 if detail
+                        type: Number,
+                        value: null
+                    }
+                    ,
+                    focus: {
+                        type: Boolean,
+                        value: false
+                    }
+                    ,
+                    parentId: {
+                        type: Number,
+                        value: -1
+                    }
+                };
+            }
+
+            // method to delete property 
+            onDeleteClick(event) {
+                let rowToDelete = event.model.children.find(child => child.nodeName == "TR");
+                this.details = this.details.filter((val, idx) => idx != rowToDelete.id);
+                // update the globalJSON object with the modified array
+                globalJSON.workflowDetails[this.parentId] = this.details;
+            }
+
+            addNewProperty() {
+                this.push("details", { name: "", detail: "" });
+            }
+
+            addProperty(theName, theDetail) {
+                this.push("details", { name: theName, detail: theDetail });
+            }
+
+            editName(title) {
+                this.elementTitle = title;
+            }
+
+            focusing() {
+                this.focus = true;
+            }
+
+            onBlur(e) {
+                this.save(e);
+                this.focus = false;
+            }
+            save(e) {
+                if (e.target.className == "name") {
+                    //undoArray.push([6, [selectedElement, parseInt(e.target.id.substring(4)), this.details[parseInt(e.target.id.substring(4))]["name"]]])
+                    this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerText;
+                    this.detail = 0;
+                    drawToCanvas(globalJSON);
+                } else if (e.target.className == "detail") {
+                    this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerText;
+                    this.detail = 1;
+                    drawToCanvas(globalJSON);
+                } else {
+                    console.log("this happened");
+                    if (this.detail === 1) {
+                        this.details[parseInt(e.target.id.substring(6))]["detail"] = e.target.innerText;
+                    } else if (this.detail === 0) {
+                        this.details[parseInt(e.target.id.substring(4))]["name"] = e.target.innerText;
+                    }
+                }
+            }
+
+            loadDetails(details) {
+                this.details = details;
+                this.parentId = 0;
+            }
+
+            clear() {
+                this.focus = false;
+                this.details = null;
+                this.hasTools = false;
+                this.tools = null;
+            }
+        }
+        window.customElements.define(WorkflowTable.is, WorkflowTable);
+
+    </script>
+</dom-module>
