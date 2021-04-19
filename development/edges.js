@@ -98,7 +98,6 @@ function drawLine(x1, y1, x2, y2, ctx, e, isSelected, selectedEdge) {
         var y = e.clientY - rect.top;
         if (ctx.isPointInPath(linePath, x, y)) {
             arrowTable.style.display = "block";
-            arrowInstruction.style.display = "block";
 
             var edgeIdx;
             for (var z = 0; z < globalJSON.edges.length; z++) {
