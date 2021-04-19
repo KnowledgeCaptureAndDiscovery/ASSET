@@ -37,6 +37,7 @@ var step;
 var zoomInButton;
 var zoomOutButton;
 
+
 /*
 	 Called when body is initialized
 	
@@ -47,6 +48,8 @@ function initialize() {
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); //maps tuple of two lists (main Objects and edges)
 
 	assetAppElement = Polymer.dom(this.root).querySelector("asset-app"); //adds asset-app as a field
+	console.log("assetAppElement", assetAppElement)
+	console.log("tableElement", Polymer.dom(this.root).querySelector("#interactive-table"))
 
 	//adds popup element as field
 	popupElement = Polymer.dom(assetAppElement.root).querySelector("#popup");
@@ -63,7 +66,6 @@ function initialize() {
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
 	arrowTable = Polymer.dom(assetAppElement.root).querySelector("#arrowTable")
-	arrowInstruction = Polymer.dom(assetAppElement.root).querySelector("#arrowInstruction")
 	workflowTable = Polymer.dom(assetAppElement.root).querySelector("#workflowTable")
 
 	detailTemplate = [
@@ -542,7 +544,7 @@ function changeWorkflowDescription(e) {
 	}
 
 	workflowTable.style.display = "block";
-	workflowTable.editName("Workflow Information");
+	workflowTable.editName("Sketch Information");
 	workflowTable.loadDetails(globalJSON.workflowDetails[0]);
 }
 
@@ -656,7 +658,6 @@ function resetTable() {
 	descriptionTable.style.display = "none";
 	arrowTable.clear();
 	arrowTable.style.display = "none";
-	arrowInstruction.style.display = "none";
 	workflowTable.clear();
 	workflowTable.style.display = "none";
 }
@@ -724,6 +725,11 @@ function drop(e) {
 		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1], globalJSON, globalJSON.details.length - 1);
 		drawToCanvas(globalJSON);
 	} else {
+		//add tools used row back if the user deleted the row and then dragged new tools
+		if (globalJSON.details[index].length != 5) {
+			globalJSON.details[index].push({ name: 'Tools used', detail: '' });
+		}
+
 		var detail = globalJSON.details[index][4]["detail"];
 		var addedDetail = detail + ", " + newElement.name;
 		var addToElement = globalJSON.mainObjects[index];

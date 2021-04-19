@@ -403,6 +403,13 @@
         margin-left: 20px;
         transform: translate(0, -30%);
       }
+
+      #pencilButton {
+        text-transform: none;
+        font-size: 12px;
+        padding-top: 25px;
+        height: 60px;
+      }
     </style>
     <!-- <div id="ContentSection" onclick="importUnfocused()">
       <div class="unselectable" draggable="false" id="leftSsection">
@@ -485,8 +492,12 @@
           <h1 contenteditable="true" onkeypress="ignoreEnters(event)" onblur="saveTitle(event)" id="title">
             Untitled Sketch
           </h1>
-          <button id="editWorkflowDescription" onclick=changeWorkflowDescription(event)>Edit information about the
-            sketch</button>
+          <paper-button draggable="false" id="pencilButton" pointerDown="changeWorkflowDescription(event)"
+            onclick=changeWorkflowDescription(event)>
+            <!-- Edit information about the sketch -->
+            <img src="../../images/pencil.png" draggable="false" class="buttonImage"
+              onclick="changeWorkflowDescription(event)" onmouseover="changeWorkflowDescription(event)">
+          </paper-button>
         </div>
         <div class="clr"></div>
       </div>
@@ -496,10 +507,6 @@
           <arrow-table id="arrowTable" style="display: none;"></arrow-table>
           <workflow-table id="workflowTable" style="display: none;"></workflow-table>
           <br>
-          <div id="arrowInstruction" style="display: none;">
-            <p>Use the table to describe dependencies or relationships between two tasks.</p>
-            <p>For example: install xxx package OR require 90%+ accuracy to start the next task </p>
-          </div>
         </div>
         <div class="right-div full-height float-left">
 

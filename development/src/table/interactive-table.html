@@ -58,12 +58,12 @@
     <br><br>
 
     <div>
-      <table>
+      <table id="tasktable">
         <template is="dom-repeat" items="{{details}}">
           <tr class="descriptionRow" id="[[index]]">
             <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="name[[index]]"
               on-keypress="save">[[item.name]]</td>
-            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="detail[[index]]"
+            <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="[[item.name]]"
               on-keypress="save">[[item.detail]]</td>
             <td contenteditable="false" on-click="onDeleteClick"><span title="Delete" class="clickable"><b>X</b></span>
             </td>
@@ -71,16 +71,16 @@
         </template>
       </table>
     </div>
-    <br>
 
     <template is="dom-if" if="[[hasTools]]">
-      <select onclick="toolsFunction(event)">
+      <select onchange="toolsFunction(event)">
         <option value="default" selected="selected">Choose a Tool</option>
         <template is="dom-repeat" items="{{tools}}">
           <option onclick="cust(event)" value="[[item.count]]">[[item.name]]</option>
         </template>
       </select>
       <br><br>
+
     </template>
 
     <template is="dom-if" if='[[isChild]]'>
@@ -88,6 +88,9 @@
     </template>
 
     <button on-click="addNewProperty">Add property</button>
+    <br>
+
+    <p>Select the task and then use the delete/backspace button on your keyboard to delete this task</p>
 
   </template>
 
@@ -155,7 +158,23 @@
       // method to delete property 
       onDeleteClick(event) {
         let rowToDelete = event.model.children.find(child => child.nodeName == "TR");
-        this.details = this.details.filter((val, idx) => idx != rowToDelete.id);
+        var rowChildId = event.model.children[1].children[1].id
+
+        if (rowChildId == "Tools used") {
+          var i = 0
+          var subSize = globalJSON.subcomponent_details.length
+          while (i < subSize) { //iterate through all of the tasks that have tool(s)
+            if (globalJSON.subcomponent_details[i].parentId == this.id) {//delete all the tools under it
+              globalJSON.subcomponent_details[i].details = []
+              this.tools = [];
+              this.hasTools = false;
+              globalJSON.mainObjects[this.parentId].toolsUsed = []
+            }
+            i += 1
+          }
+        }
+
+        this.details = this.details.filter((val, idx) => idx != rowToDelete.id); //delete a row
         // update the globalJSON object with the modified array
         globalJSON.details[this.parentId] = this.details;
       }
@@ -217,7 +236,9 @@
             this.loadDropDown(details, json, index);
           }
         }
-
+        // console.log("loading table1", this.$.tasktable)
+        // console.log("loading table3", this.$.tasktable.querySelectorAll("tr"))
+        // console.log("this.$", this.shadowRoot.querySelectorAll("tr"))
       }
 
       loadDropDown(details, json, index) {
@@ -253,9 +274,9 @@
 
         if (globalJSON.subcomponent_details[i].parentId == descriptionTable.id) {
           resetTable();
-          descriptionTable.style.visibility = "visible";
-          descriptionTable.editName("Sub-Component : " + globalJSON.mainObjects[i].toolsUsed[event.target.value][0]);
-          descriptionTable.loadDetails(globalJSON.subcomponent_details[i].details[event.target.value], globalJSON, -1);
+          descriptionTable.style.display = "block";
+          descriptionTable.editName("Tool: " + globalJSON.mainObjects[i].toolsUsed[event.target.value][0]);
+          descriptionTable.loadDetails(globalJSON.subcomponent_details[i].details[event.target.value].slice(0, -1), globalJSON, -1);
           break;
         }
       }
@@ -277,8 +298,18 @@
             deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.mainObjects[i]["toolsUsed"][selectedSubElement["index"]])));
             deletedSubElementData.push(JSON.parse(JSON.stringify(globalJSON.subcomponent_details[i].details[selectedSubElement["index"]])));
             deletedSubElementData.push(selectedSubElement["index"]);
+
+            //remove the specific tool and , from the task table if a tool is deleted
+            var toolName = deletedSubElementData[1][0]
+            var temp = globalJSON.details[i][4]["detail"]
+
+            temp = temp.replace(toolName + ", ", '')
+            temp = temp.replace(toolName, '')
+            globalJSON.details[i][4]["detail"] = temp
+
             globalJSON.mainObjects[i]["toolsUsed"].splice(selectedSubElement["index"], 1);
             globalJSON.subcomponent_details[i]["details"].splice(selectedSubElement["index"], 1);
+            resetTable()
             break;
           }
         }
@@ -290,7 +321,7 @@
         resetTable();
         drawToCanvas(globalJSON, null);
 
-      } 
+      }
     }
   </script>
 </dom-module>
