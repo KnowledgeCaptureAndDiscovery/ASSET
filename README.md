@@ -26,7 +26,7 @@ At the moment, the demo will only work on **Google Chrome**
 
 See the following link https://asset-6b864.firebaseapp.com/tutorial.html for a simple tutorial of the tool.
 
-## Customize ASSET Tasks
+## Customize ASSET Tasks and Tools
 If you want to add your own set(s) of tasks to replace or add onto the current sets of tasks, including common tasks, data science tools, common tools, and earthcube tools, please follow the instructions below.
 
 1. If you have git installed on your computer, ```git clone``` the repository. Otherwise, click on the green button on the top right corner that says code and click on Download ZIP.
