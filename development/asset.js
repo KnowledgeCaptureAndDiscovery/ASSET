@@ -48,8 +48,6 @@ function initialize() {
 	localStorage.setItem("globalJSON", JSON.stringify(globalJSON)); //maps tuple of two lists (main Objects and edges)
 
 	assetAppElement = Polymer.dom(this.root).querySelector("asset-app"); //adds asset-app as a field
-	console.log("assetAppElement", assetAppElement)
-	console.log("tableElement", Polymer.dom(this.root).querySelector("#interactive-table"))
 
 	//adds popup element as field
 	popupElement = Polymer.dom(assetAppElement.root).querySelector("#popup");
@@ -68,6 +66,7 @@ function initialize() {
 	arrowTable = Polymer.dom(assetAppElement.root).querySelector("#arrowTable")
 	workflowTable = Polymer.dom(assetAppElement.root).querySelector("#workflowTable")
 
+	//templates for three different tables (on the left side of the screen)
 	detailTemplate = [
 		{ name: 'Name', detail: '' },
 		{ name: 'Description', detail: '' },
@@ -179,11 +178,6 @@ function initialize() {
 
 			var populateWorkflowElementsElement = Polymer.dom(assetAppElement.root).querySelector("#WorkFlowElementsSection");
 			populateWorkflowElementsElement.innerHTML = workflowElementsString;
-
-			//to load the images
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tasks']")), 'click');
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='EarthCube Tools']")), 'click');
-			//eventFire((Polymer.dom((Polymer.dom(assetAppElement.root).querySelector("#elementsSelect")).root).querySelector("[id='Common Tools']")), 'click');
 		}
 	};
 	requestObject.open("GET", "content.json", true);
@@ -440,6 +434,7 @@ function saveTitle(e) {
 	}
 }
 
+//removeSpace in titles for exporting
 function removeSpace(val) {
 	var idx = val.indexOf("&nbsp");
 	if (idx != -1) {
@@ -452,6 +447,7 @@ function removeSpace(val) {
 	}
 	return val;
 }
+
 /*
 	Called when the description loses focus or pressed enter
 
@@ -595,13 +591,6 @@ function canvasClick(e) {
 				arrowTable.editName("Arrow");
 				arrowTable.loadDetails(globalJSON.details[i], globalJSON, i, selectedEdge, globalJSON.arrowDetails[globalJSON.arrowDetails.length - 1], globalJSON.arrowDetails.length - 1);
 				undoArray.push([3]);
-				/*if (checkIfCycleExists()) {
-					alert("You created a cycle!");
-					globalJSON.edges.pop();
-					undoArray.pop();
-				} else {
-					redoArray = [];
-				}*/
 				edge = null;
 			}
 
@@ -651,7 +640,7 @@ function newWorkflowTemplate() {
 }
 
 /*
-	Clear table and reset it
+	Clear table and hide it
 */
 function resetTable() {
 	descriptionTable.clear();
