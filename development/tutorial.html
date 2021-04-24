@@ -56,7 +56,8 @@
   <!-- Navbar (sit on top) -->
   <div class="w3-top">
     <div class="w3-bar w3-white w3-card center-align-tabs-content" id="myNavbar">
-      <a href="https://www.asset-project.info/index.html" target="_blank" class="w3-bar-item w3-button" title="About the ASSET Project">
+      <a href="https://www.asset-project.info/index.html" target="_blank" class="w3-bar-item w3-button"
+        title="About the ASSET Project">
         <img src="images/asset.png" class="asset-logo-height" alt="ASSET LOGO" />
       </a>
       <!-- Right-sided navbar links -->
@@ -90,18 +91,21 @@
       <h1>ASSET Tutorial</h1>
       This document highlights the main activities covered by ASSET
       <ol>
-        <li><a href="#rename">Renaming your document</a></li>
+        <li><a href="#rename">Renaming your sketch title</a></li>
+        <li><a href="#describeSketch">Describe your sketch</a></li>
         <li><a href="#addElement">Adding an element to your sketch</a></li>
         <li><a href="#describe">Describing an element in your sketch</a></li>
         <li><a href="#delete">Deleting an element in your sketch</a></li>
-        <li><a href="#connect">Connecting two elements in your sketch</a></li>
-        <li><a href="#tools">Describing which tools were used in a sketch</a></li>
+        <li><a href="#connect">Connecting two elements in your sketch using an arrow</a></li>
+        <li><a href="#describeConnect">Describing a connection/arrow</a></li>
+        <li><a href="#tools">Describing which tools were used in a task</a></li>
+        <li><a href="#deleteTool">Delete one tool under a task</a></li>
+        <li><a href="#deleteTools">Delete all tools under a task</a></li>
         <li><a href="#export">Exporting your sketch</a></li>
         <li><a href="#import">Importing a sketch</a></li>
-
       </ol>
 
-      <h3 id="rename" style="padding-top:100px">Renaming your document</h3>
+      <h3 id="rename" style="padding-top:100px">Renaming your sketch title</h3>
       <p class="w3-justify">
         In order to rename your current sketch, you have to hover your mouse over the title and click:
       </p>
@@ -110,13 +114,22 @@
         The title will become editable and will be saved with the new text entered.
       </p>
 
+      <h3 id="describeSketch" style="padding-top:100px">Describe your sketch</h3>
+      <p class="w3-justify">
+        Hover your mouse over the pencil icon and a table will appear on the left of the screen. Any of the properties
+        of the table can be edited or deleted. By clicking on "Add property", a new row will be added in the table.
+      </p>
+      <img src="images/tutorial/describeSketch.png" width="70%" style='border:1px solid #000000'
+        alt="Describing a sketch" />
+
       <h3 id="addElement" style="padding-top:100px">Adding an element to your sketch</h3>
       <p class="w3-justify">
         <!-- First, click on any of the buttons placed in the left of the screen (e.g., "Common Tasks"). This will trigger a
         list of tools to appear at the bottom of the screen. -->
-        On loading the ASSET sketching interface, at the bottom of the screen, a list of common tools (corresponding to the "Common Tasks" button) will be loaded in the tools panel 
+        On loading the ASSET sketching interface, at the bottom of the screen, a list of common tools (corresponding to
+        the "Common Tasks" button) will be loaded in the tools panel
         adjacent to the 3 buttons. Clicking on the other buttons will load their respective tools in the tools panel.
-        <br/>
+        <br />
         Hovering over an item in the tools panel will show the item's name.
       </p>
       <img src="images/tutorial/hoverElement.png" width="70%" style='border:1px solid #000000'
@@ -125,7 +138,7 @@
         Now just click the desired element and drag it to the canvas:
       </p>
       <img src="images/tutorial/clickAndDrag.png" width="70%" style='border:1px solid #000000'
-        alt="Hovering over element" />
+        alt="Click and drag an element" />
 
       <h3 id="describe" style="padding-top:100px">Describing an element in your sketch</h3>
       <p class="w3-justify">
@@ -140,36 +153,86 @@
         Select an element (an arrow or a task in the canvas) and press the "delete" key on your keyboard.
       </p>
 
-      <h3 id="connect" style="padding-top:100px">Connecting two elements in your sketch</h3>
+      <h3 id="connect" style="padding-top:100px">Connecting two elements in your sketch using an arrow</h3>
       <p class="w3-justify">
         First, add the two elements you which to connect in your canvas. Double click on one of the elements to turn it
         red.
       </p>
-      <img src="images/tutorial/doubleClick.png" width="70%" style='border:1px solid #000000' alt="Selecting an element" />
+      <img src="images/tutorial/doubleClick.png" width="70%" style='border:1px solid #000000'
+        alt="Double click an element" />
       <p class="w3-justify">
         Then click on the target element and an arrow will be drawn:
       </p>
       <img src="images/tutorial/paintArrow.png" width="70%" style='border:1px solid #000000'
         alt="Connecting two elements" />
 
-      <h3 id="tools" style="padding-top:100px">Describing which tools were used in a step</h3>
+      <h3 id="describeConnect" style="padding-top:100px">Describing a connection/arrow</h3>
       <p class="w3-justify">
-        To show what tools you used in a certain step of your sketch, first create a sketch and add a step.
+        Click on the desired arrow, the arrow will turn red and a table will appear on the left of the screen. You can
+        name and describe the connection/arrow. The "Name" property will be displayed on the sketch.
       </p>
-      <img src="images/tutorial/stepSelected.png" width="70%" style='border:1px solid #000000' alt="Sketch with step'" />
+      <img src="images/tutorial/describeArrow.png" width="70%" style='border:1px solid #000000'
+        alt="Describing an Arrow" />
+
+      <h3 id="delete" style="padding-top:100px">Deleting an element in your sketch</h3>
+      <p class="w3-justify">
+        Select an element (an arrow or a task in the canvas) and press the "delete" key on your keyboard.
+      </p>
+
+      <h3 id="tools" style="padding-top:100px">Describing which tools were used in a task</h3>
+      <p class="w3-justify">
+        To show what tools you used in a certain task of your sketch, first create a sketch and add a task.
+      </p>
+      <img src="images/tutorial/stepSelected.png" width="70%" style='border:1px solid #000000' alt="Add a task'" />
       <p class="w3-justify">
         Next, drag your desired tool from the bottom to the target element in your sketch and drop it. The selected tool
         will be shown under the element and will expand when the element is hovered over. In the description table,
         "tools used" will be automatically updated.
       </p>
-      <img src="images/tutorial/toolsDropped.png" width="70%" style='border:1px solid #000000' alt="Tool is dropped;" />
+      <img src="images/tutorial/toolsDropped.png" width="70%" style='border:1px solid #000000'
+        alt="Add a tool to a task" />
+
+      <h3 id="deleteTool" style="padding-top:100px">Delete one tool under a task</h3>
+      <p class="w3-justify">
+        Click on the "Choose a Tool" dropdown menu and select the tool that you want to delete.
+      </p>
+      <img src="images/tutorial/toolDropdown.png" width="70%" style='border:1px solid #000000' alt="Tool dropdown" />
+      <p class="w3-justify">
+        Next, you will see a new table populated for the specific tool that you just selected, in this example: Pytorch.
+        Click on the delete button under the table to remove Pytorch from this task.
+      </p>
+      <img src="images/tutorial/deleteTool.png" width="70%" style='border:1px solid #000000' alt="Delete a tool'" />
+      <p class="w3-justify">
+        Click on the task will show that the task description no longer has Pytorch under the "Tools used" row and the
+        Pytorch icon is also removed from the canvas. Deleting a tool will not delete any description associated with
+        the task.
+      </p>
+      <img src="images/tutorial/afterDeleteTool.png" width="70%" style='border:1px solid #000000'
+        alt="A tool is deleted" />
+
+      <h3 id="deleteTools" style="padding-top:100px">Delete all tools under a task</h3>
+      <p class="w3-justify">
+        Click on the x icon in the "Tools used" row to delete all tools under a task.
+      </p>
+      <img src="images/tutorial/deleteAllTools.png" width="70%" style='border:1px solid #000000'
+        alt="Delete all tools'" />
+      <p class="w3-justify">
+        The tools used row will be removed and all of the task icons would be removed from the canvas. If you want to
+        add more tool(s), follow the instructions in "Describing which tools were used in a step", and a new "Tools
+        used" row will be populated.
+      </p>
+      <img src="images/tutorial/afterDeleteAllTools.png" width="70%" style='border:1px solid #000000'
+        alt="All tools are deleted" />
+
       <h3 id="export" style="padding-top:100px">Exporting your sketch</h3>
       <p class="w3-justify">
         Click on the "Export Sketch" link on the lower part of the screen.
       </p>
+
       <h3 id="import" style="padding-top:100px">Importing a sketch</h3>
       <p class="w3-justify">
-        Click on the "Import Sketch" link on the lower part of the screen and choose a previously exported sketch from your file system.
+        Click on the "Import Sketch" link on the lower part of the screen and choose a previously exported sketch from
+        your file system.
       </p>
       <img src="images/tutorial/importSketch.png" width="70%" style='border:1px solid #000000' alt="Import Sketch;" />
     </div>
