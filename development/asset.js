@@ -11,6 +11,7 @@ var selectedElement;
 var selectedSubElement;
 var descriptionElement;
 var descriptionTable;
+var deleteInstruction;
 var detailTemplate;
 var arrowDetailTemplate
 var title;
@@ -63,6 +64,7 @@ function initialize() {
 
 	descriptionElement = Polymer.dom(assetAppElement.root).querySelector("#descriptionSection"); //description section added
 	descriptionTable = Polymer.dom(assetAppElement.root).querySelector("#table");
+	deleteInstruction = Polymer.dom(assetAppElement.root).querySelector("#deleteInstruction");
 	arrowTable = Polymer.dom(assetAppElement.root).querySelector("#arrowTable")
 	workflowTable = Polymer.dom(assetAppElement.root).querySelector("#workflowTable")
 
@@ -601,6 +603,8 @@ function canvasClick(e) {
 
 			selected = true;
 			descriptionTable.style.display = "block";
+			deleteInstruction.style.display = "block";
+
 			descriptionTable.editName(element.name);
 			descriptionTable.loadDetails(globalJSON.details[i], globalJSON, i);
 
@@ -645,6 +649,7 @@ function newWorkflowTemplate() {
 function resetTable() {
 	descriptionTable.clear();
 	descriptionTable.style.display = "none";
+	deleteInstruction.style.display = "none";
 	arrowTable.clear();
 	arrowTable.style.display = "none";
 	workflowTable.clear();
@@ -710,6 +715,7 @@ function drop(e) {
 		redoArray = [];
 		selectedElement = newElement.id;
 		descriptionTable.style.display = "block";
+		deleteInstruction.style.display = "block";
 		descriptionTable.editName(newElement.name);
 		descriptionTable.loadDetails(globalJSON.details[globalJSON.details.length - 1], globalJSON, globalJSON.details.length - 1);
 		drawToCanvas(globalJSON);
@@ -735,6 +741,7 @@ function drop(e) {
 		selectedElement = addToElement.id;
 		drawToCanvas(globalJSON);
 		descriptionTable.style.display = "block";
+		deleteInstruction.style.display = "block";
 		descriptionTable.editName(addToElement.name);
 		resetTable();
 		setTimeout(() => descriptionTable.loadDetails(globalJSON.details[index], globalJSON, index), 10);
