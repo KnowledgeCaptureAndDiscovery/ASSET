@@ -54,8 +54,8 @@
       }
 
       [contenteditable] {
-          -webkit-user-select: text;
-          user-select: text;
+        -webkit-user-select: text;
+        user-select: text;
       }
     </style>
     <h2 id="title">[[elementTitle]]</h2>
@@ -64,14 +64,16 @@
 
     <div>
       <table id="tasktable">
-        <template is="dom-repeat" items="{{details}}"><tr class="descriptionRow" id="[[index]]">
+        <template is="dom-repeat" items="{{details}}">
+          <tr class="descriptionRow" id="[[index]]">
             <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="name" id="name[[index]]"
               on-keypress="save">[[item.name]]</td>
             <td contenteditable="true" on-focus="focusing" on-blur="onBlur" class="detail" id="detail[[index]]"
               on-keypress="save">[[item.detail]]</td>
             <td contenteditable="false" on-click="onDeleteClick"><span title="Delete" class="clickable"><b>X</b></span>
             </td>
-          </tr></template>
+          </tr>
+        </template>
       </table>
     </div>
 
