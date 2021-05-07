@@ -159,9 +159,10 @@
       // method to delete property 
       onDeleteClick(event) {
         let rowToDelete = event.model.children.find(child => child.nodeName == "TR");
-        var rowChildId = event.model.children[0].children[0].id
+        var divId = "#" + event.model.children[1].children[0].id
+        var columnName = rowToDelete.querySelector(divId).innerText
 
-        if (rowChildId == "Tools used") {
+        if (columnName == "Tools used") {
           var i = 0
           var subSize = globalJSON.subcomponent_details.length
           while (i < subSize) { //iterate through all of the tasks that have tool(s)
