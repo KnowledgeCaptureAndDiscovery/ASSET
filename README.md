@@ -36,4 +36,4 @@ If you want to add your own set(s) of tasks to replace or add onto the current s
 5. To name the set of multiple tasks, change the ```"name": "Common Task"``` into another name. 
 6. To name each individual task, change the ```"elementName": "Query Database"``` into another name.
 7. To update the icon of an individual task, change the path of the icon in ```"imageSource": "/images/commonTasks/queryDatabase.png"``` to the folder name and image name that you created in step 3.
-8. Make sure you save all of your changes in *content.json* and you are in the development folder in your terminal. Then, type in ```polymer serve``` and copy paste this URL (http://127.0.0.1:8081) into your browser to see all of the new tasks that you just added. 
+8. Make sure you save all of your changes in *content.json* and you are in the development folder in your terminal. Then type `polymer install` to install all components; and `polymer serve` to start the server. The server will be available on http://127.0.0.1:8081; and by copying that URL into your browser to see all of the new tasks that you just added. 
